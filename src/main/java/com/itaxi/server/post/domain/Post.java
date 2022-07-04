@@ -24,8 +24,6 @@ public class Post extends BaseEntity {
 
     private LocalDateTime deptTime;
 
-    private LocalDateTime dstTime;
-
     private int capacity;
 
     private int status;
