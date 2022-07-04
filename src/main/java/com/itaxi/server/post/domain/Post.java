@@ -1,6 +1,7 @@
 package com.itaxi.server.post.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -30,5 +31,5 @@ public class Post extends BaseEntity {
     private int status;
 
     @OneToMany(mappedBy = "post")
-    private List<Joiner> joiners;
+    private List<Joiner> joiners = new ArrayList<>();
 }

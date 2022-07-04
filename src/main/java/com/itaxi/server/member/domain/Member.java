@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.post.domain.Joiner;
+import com.itaxi.server.report.domain.Report;
 
 import lombok.Getter;
 
@@ -34,4 +35,6 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Joiner> joiners = new ArrayList<>();
 
+    @OneToMany(mappedBy = "writer")
+    private List<Report> reports = new ArrayList<>();
 }
