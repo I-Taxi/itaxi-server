@@ -2,7 +2,7 @@
 name: Feature request
 about: feature 등록
 title: ''
-labels: feat, fix
+labels: feat
 assignees: ''
 
 ---
