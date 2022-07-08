@@ -26,7 +26,7 @@ public class Notice extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    private Long viewCnt;
+    private long viewCnt = 0;
 
     public Notice(NoticeCreateDto noticeCreateDto) {
         String title = noticeCreateDto.getTitle();
@@ -41,7 +41,6 @@ public class Notice extends BaseEntity {
             throw new NoticeContentEmptyException();
         }
         this.content = content;
-        this.viewCnt = (long)0;
     }
 
     public void setTitle(String title) {
@@ -52,7 +51,7 @@ public class Notice extends BaseEntity {
         this.title = content;
     }
 
-    public void setViewCnt(Long viewCnt) {
+    public void setViewCnt(long viewCnt) {
         this.viewCnt = viewCnt;
     }
 }
