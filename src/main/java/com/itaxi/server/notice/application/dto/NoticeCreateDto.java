@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeCreateDto {
-    private Long noticeId;
     private String title;
     private String content;
-    private Long viewCnt;
 
     public static NoticeCreateDto from(NoticeCreateRequest request) {
-        return new NoticeCreateDto(request.getNoticeId(), request.getTitle(), request.getContent(), request.getViewCnt());
+        return new NoticeCreateDto(request.getTitle(), request.getContent());
     }
 }

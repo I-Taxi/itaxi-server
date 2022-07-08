@@ -3,6 +3,11 @@ package com.itaxi.server.notice.domain;
 import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
+import com.itaxi.server.exception.notice.NoticeContentEmptyException;
+import com.itaxi.server.exception.notice.NoticeException;
+import com.itaxi.server.exception.notice.NoticeTitleEmptyException;
+import com.itaxi.server.notice.application.dto.NoticeCreateDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,8 +28,18 @@ public class Notice extends BaseEntity {
 
     private Long viewCnt;
 
-    public Notice(String title, String content) {
+    public Notice(NoticeCreateDto noticeCreateDto) {
+        String title = noticeCreateDto.getTitle();
+        String content = noticeCreateDto.getContent();
+
+        if (title == null || title.trim().isEmpty()) {
+            throw new NoticeTitleEmptyException();
+        }
         this.title = title;
+
+        if (content == null || content.trim().isEmpty()) {
+            throw new NoticeContentEmptyException();
+        }
         this.content = content;
         this.viewCnt = (long)0;
     }
@@ -37,7 +52,7 @@ public class Notice extends BaseEntity {
         this.title = content;
     }
 
-    public void setViewCnt(String viewCnt) {
-        this.title = viewCnt;
+    public void setViewCnt(Long viewCnt) {
+        this.viewCnt = viewCnt;
     }
 }

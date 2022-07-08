@@ -10,8 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class NoticeCreateRequest {
-    private Long noticeId;
     private String title;
     private String content;
-    private Long viewCnt;
 }
