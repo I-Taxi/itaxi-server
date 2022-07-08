@@ -28,6 +28,8 @@ public class Notice extends BaseEntity {
 
     private long viewCnt = 0;
 
+    private boolean deleted = false;
+
     public Notice(NoticeCreateDto noticeCreateDto) {
         String title = noticeCreateDto.getTitle();
         String content = noticeCreateDto.getContent();
@@ -53,5 +55,9 @@ public class Notice extends BaseEntity {
 
     public void setViewCnt(long viewCnt) {
         this.viewCnt = viewCnt;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
