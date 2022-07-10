@@ -7,6 +7,7 @@ import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.domain.repository.NoticeRepository;
 import com.itaxi.server.notice.domain.Notice;
 
+import com.itaxi.server.notice.presentation.response.NoticeReadResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +64,25 @@ public class NoticeService {
 
             return "Failed";
         }
+    }
 
+    public NoticeReadResponse readNotice(Long noticeId) {
+        NoticeReadResponse response = null;
+        try {
+            Optional<Notice> notice = noticeRepository.findById(noticeId);
+            if (notice.isPresent()) {
+                Notice noticeInfo = notice.get();
+                noticeInfo.setDeleted(true);
+                noticeRepository.save(noticeInfo);
+
+                response = new NoticeReadResponse(noticeInfo.getTitle(), noticeInfo.getContent(), noticeInfo.getViewCnt(), noticeInfo.getCreatedAt());
+            } else {
+                throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (NoticeNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 }
