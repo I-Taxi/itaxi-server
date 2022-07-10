@@ -3,8 +3,9 @@ package com.itaxi.server.notice.presentation;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.notice.application.NoticeService;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
+import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.presentation.request.NoticeCreateRequest;
-import io.swagger.annotations.Api;
+import com.itaxi.server.notice.presentation.request.NoticeUpdateRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,10 @@ public class NoticeController {
         return ResponseEntity.ok(id);
     }
 
-    @ApiOperation(value = ApiDoc.DELETE_NOTICE)
-    @DeleteMapping("/{noticeId}")
-    public ResponseEntity<String> deleteNotice(@PathVariable Long noticeId) {
-        String result = noticeService.deleteNotice(noticeId);
+    @ApiOperation(value = ApiDoc.UPDATE_NOTICE)
+    @PutMapping("/{noticeId}")
+    public ResponseEntity<String> updateNotice(@PathVariable Long noticeId, @RequestBody NoticeUpdateRequest request) {
+        String result = noticeService.updateNotice(noticeId, NoticeUpdateDto.from(request));
 
         return ResponseEntity.ok(result);
     }
