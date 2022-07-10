@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -37,13 +39,13 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
 
-//    @ApiOperation(value = ApiDoc.READ_ALL_NOTICES)
-//    @GetMapping
-//    public ResponseEntity<String> readAllNotices(@PathVariable Long noticeId) {
-//        String result = noticeService.readAllNotices(noticeId);
-//
-//        return ResponseEntity.ok(result);
-//    }
+    @ApiOperation(value = ApiDoc.READ_ALL_NOTICES)
+    @GetMapping
+    public ResponseEntity<List> readAllNotices() {
+        List<NoticeReadResponse> result = noticeService.readAllNotices();
+
+        return ResponseEntity.ok(result);
+    }
 
     @ApiOperation(value = ApiDoc.UPDATE_NOTICE)
     @PutMapping("/{noticeId}")

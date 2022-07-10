@@ -10,10 +10,13 @@ import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Notice extends BaseEntity {
 
     @Id
@@ -43,21 +46,5 @@ public class Notice extends BaseEntity {
             throw new NoticeContentEmptyException();
         }
         this.content = content;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.title = content;
-    }
-
-    public void setViewCnt(long viewCnt) {
-        this.viewCnt = viewCnt;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,6 +26,39 @@ public class NoticeService {
         Notice savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
 
         return savedNotice.getId();
+    }
+
+
+    public NoticeReadResponse readNotice(Long noticeId) {
+        NoticeReadResponse response = null;
+        try {
+            Optional<Notice> notice = noticeRepository.findById(noticeId);
+            if (notice.isPresent()) {
+                Notice noticeInfo = notice.get();
+                noticeInfo.setDeleted(true);
+                noticeRepository.save(noticeInfo);
+
+                response = new NoticeReadResponse(noticeId, noticeInfo.getTitle(), noticeInfo.getContent(), noticeInfo.getViewCnt(), noticeInfo.getCreatedAt());
+            } else {
+                throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (NoticeNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+
+    public List<NoticeReadResponse> readAllNotices() {
+        List<NoticeReadResponse> result = new ArrayList<>();
+        for (Notice notice : noticeRepository.findAll()) {
+            if (notice != null) {
+                result.add(new NoticeReadResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getViewCnt(), notice.getCreatedAt()));
+            }
+        }
+
+        return result;
     }
 
     public String updateNotice(Long noticeId, NoticeUpdateDto noticeUpdateDto) {
@@ -64,25 +99,5 @@ public class NoticeService {
 
             return "Failed";
         }
-    }
-
-    public NoticeReadResponse readNotice(Long noticeId) {
-        NoticeReadResponse response = null;
-        try {
-            Optional<Notice> notice = noticeRepository.findById(noticeId);
-            if (notice.isPresent()) {
-                Notice noticeInfo = notice.get();
-                noticeInfo.setDeleted(true);
-                noticeRepository.save(noticeInfo);
-
-                response = new NoticeReadResponse(noticeInfo.getTitle(), noticeInfo.getContent(), noticeInfo.getViewCnt(), noticeInfo.getCreatedAt());
-            } else {
-                throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (NoticeNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return response;
     }
 }
