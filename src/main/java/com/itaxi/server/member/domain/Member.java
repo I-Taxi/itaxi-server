@@ -9,9 +9,11 @@ import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.report.domain.Report;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 public class Member extends BaseEntity {
 
     @Id
