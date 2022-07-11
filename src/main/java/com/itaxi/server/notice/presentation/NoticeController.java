@@ -6,6 +6,7 @@ import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.presentation.request.NoticeCreateRequest;
 import com.itaxi.server.notice.presentation.request.NoticeUpdateRequest;
+import com.itaxi.server.notice.presentation.response.NoticeReadAllResponse;
 import com.itaxi.server.notice.presentation.response.NoticeReadResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class NoticeController {
     @ApiOperation(value = ApiDoc.READ_ALL_NOTICES)
     @GetMapping
     public ResponseEntity<List> readAllNotices() {
-        List<NoticeReadResponse> result = noticeService.readAllNotices();
+        List<NoticeReadAllResponse> result = noticeService.readAllNotices();
 
         return ResponseEntity.ok(result);
     }

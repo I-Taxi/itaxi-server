@@ -8,4 +8,5 @@ public class Message {
 
     public static final String NOTICE_TITLE_EMPTY_EXCEPTION = "공지사항의 제목이 없습니다";
     public static final String NOTICE_CONTENT_EMPTY_EXCEPTION = "공지사항의 내용이 없습니다";
+    public static final String NOTICE_DELETED = "이미 삭제된 게시글입니다.";
 }
