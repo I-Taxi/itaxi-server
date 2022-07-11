@@ -43,8 +43,6 @@ public class PlaceController {
         return placeRepository.findByDeleted();
     }
 
-
-
     @RequestMapping(value = "/dto", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public PlaceDto.Res create(@RequestBody final PlaceDto.AddPlaceReq dto) {
@@ -62,14 +60,4 @@ public class PlaceController {
     public void delete(@PathVariable final long id, @RequestBody final PlaceDto.DeletePlaceReq dto) {
         placeService.deletePlace(id, dto);
     }
-    /*
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
-    public void update(@PathVariable Long id, @RequestBody PlaceDto.PlaceUpdateDto dto) {
-        placeService.update(id, dto);
-    }
-    */
-
-
-
 }

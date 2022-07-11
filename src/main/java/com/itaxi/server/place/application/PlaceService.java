@@ -22,7 +22,7 @@ public class PlaceService {
     }
     @Transactional(readOnly = true)
     public Place findById(long id) {
-        final Place place = placeRepository.getReferenceById(id);
+        final Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
         if (place == null)
             throw new PlaceNotFoundException();
         return place;
@@ -33,15 +33,6 @@ public class PlaceService {
         place.updatePlace(dto);
         return place;
     }
-
-    /*
-    @Transactional
-    public void update(Long id, PlaceDto.PlaceUpdateDto dto) {
-        final Place place = placeRepository.findById(id).orElseThrow(() ->
-                new PlaceNotFoundException(HttpStatus.NOT_FOUND)
-        );
-        place.update(dto.getName());
-    }*/
 
     @Transactional
     public Place deletePlace(Long id, PlaceDto.DeletePlaceReq dto) {
