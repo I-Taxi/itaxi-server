@@ -22,7 +22,7 @@ public class PlaceService {
     }
     @Transactional(readOnly = true)
     public Place findById(long id) {
-        final Place place = placeRepository.getReferenceById(id);
+        final Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
         if (place == null)
             throw new PlaceNotFoundException();
         return place;
