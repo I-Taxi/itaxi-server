@@ -1,4 +1,5 @@
 package com.itaxi.server.post.domain;
+import com.itaxi.server.place.domain.Place;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
