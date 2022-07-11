@@ -34,15 +34,6 @@ public class PlaceService {
         return place;
     }
 
-    /*
-    @Transactional
-    public void update(Long id, PlaceDto.PlaceUpdateDto dto) {
-        final Place place = placeRepository.findById(id).orElseThrow(() ->
-                new PlaceNotFoundException(HttpStatus.NOT_FOUND)
-        );
-        place.update(dto.getName());
-    }*/
-
     @Transactional
     public Place deletePlace(Long id, PlaceDto.DeletePlaceReq dto) {
         final Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);;
