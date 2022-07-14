@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/place")
+@RequestMapping("/api/place")
 public class PlaceController {
     private final PlaceService placeService;
     private final PlaceRepository placeRepository;
