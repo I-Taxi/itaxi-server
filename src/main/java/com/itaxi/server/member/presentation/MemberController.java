@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/member")
+@RequestMapping(value = "/api/member")
 public class MemberController {
 
     private final MemberService memberService;
