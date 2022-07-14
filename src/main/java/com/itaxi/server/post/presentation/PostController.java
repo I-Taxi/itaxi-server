@@ -3,7 +3,11 @@ package com.itaxi.server.post.presentation;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.post.application.PostService;
 
+import com.itaxi.server.post.application.dto.JoinerCreateDto;
 import com.itaxi.server.post.application.dto.PostJoinDto;
+import com.itaxi.server.post.domain.Joiner;
+import com.itaxi.server.post.domain.Post;
+import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.presentation.request.PostExitRequest;
 import com.itaxi.server.post.presentation.request.PostJoinRequest;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
@@ -27,15 +31,16 @@ public class PostController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/{postId}/chat")
+    @PostMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.JOIN_POST)
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
-        PostInfoResponse result = postService.joinPost(postId, PostJoinDto.from(request));
+        Post postInfo = postService.joinPost(postId, PostJoinDto.from(request));
+        PostInfoResponse result = postService.readPost(postInfo);
 
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/{postId}/chat")
+    @PutMapping("/{postId/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
     public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
         String result = postService.exitPost(postId, request.getUid());

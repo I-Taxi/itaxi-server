@@ -9,7 +9,9 @@ import javax.persistence.*;
 import com.itaxi.server.common.BaseEntity;
 
 import lombok.Getter;
+import org.hibernate.annotations.Where;
 
+@Where(clause = "deleted=false")
 @Entity
 @Getter
 public class Post extends BaseEntity {
@@ -29,6 +31,18 @@ public class Post extends BaseEntity {
 
     private int status;
 
+    private boolean deleted = false;
+
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
+
+    // TODO : delete test
+    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, boolean deleted) {
+        this.departure = departure;
+        this.destination = destination;
+        this.deptTime = deptTime;
+        this.capacity = capacity;
+        this.status = status;
+        this.deleted = deleted;
+    }
 }
