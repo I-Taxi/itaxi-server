@@ -60,6 +60,7 @@ public class PostService {
         return postInfo;
     }
 
+    // TODO : test 하면서 많이 수정
     public PostInfoResponse readPost(Post post) {
         // 정보 가져와서 result에 넣기
         return new PostInfoResponse(post.getId(), post.getDeparture(), post.getDestination(), post.getDeptTime(), post.getCapacity(), post.getStatus(), post.getJoiners());
@@ -93,7 +94,7 @@ public class PostService {
             e.printStackTrace();
         }
 
-        Optional<Joiner> joiner = JoinerRepository.findJoinerByPostandMember(postInfo, memberInfo);
+        Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (joiner.isPresent()) {
             Joiner joinerInfo = joiner.get();
             joinerInfo.setPost(postInfo);
