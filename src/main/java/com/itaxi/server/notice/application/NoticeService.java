@@ -1,7 +1,6 @@
 package com.itaxi.server.notice.application;
 
 import com.itaxi.server.exception.notice.NoticeDeletedException;
-import com.itaxi.server.exception.notice.NoticeException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
