@@ -47,4 +47,8 @@ public class Notice extends BaseEntity {
         }
         this.content = content;
     }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
 }

@@ -1,5 +1,6 @@
 package com.itaxi.server.notice.application;
 
+import com.itaxi.server.exception.notice.NoticeDeletedException;
 import com.itaxi.server.exception.notice.NoticeException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
@@ -7,6 +8,7 @@ import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.domain.repository.NoticeRepository;
 import com.itaxi.server.notice.domain.Notice;
 
+import com.itaxi.server.notice.presentation.response.NoticeReadAllResponse;
 import com.itaxi.server.notice.presentation.response.NoticeReadResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,14 +37,15 @@ public class NoticeService {
             Optional<Notice> notice = noticeRepository.findById(noticeId);
             if (notice.isPresent()) {
                 Notice noticeInfo = notice.get();
-                noticeInfo.setDeleted(true);
-                noticeRepository.save(noticeInfo);
-
-                response = new NoticeReadResponse(noticeId, noticeInfo.getTitle(), noticeInfo.getContent(), noticeInfo.getViewCnt(), noticeInfo.getCreatedAt());
+                if (!noticeInfo.isDeleted()) {
+                    response = new NoticeReadResponse(noticeInfo.getTitle(), noticeInfo.getContent(), noticeInfo.getViewCnt(), noticeInfo.getCreatedAt());
+                } else {
+                    throw new NoticeDeletedException(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             } else {
                 throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (NoticeNotFoundException e) {
+        } catch (NoticeNotFoundException | NoticeDeletedException e) {
             e.printStackTrace();
         }
 
@@ -50,11 +53,13 @@ public class NoticeService {
     }
 
 
-    public List<NoticeReadResponse> readAllNotices() {
-        List<NoticeReadResponse> result = new ArrayList<>();
+    public List<NoticeReadAllResponse> readAllNotices() {
+        List<NoticeReadAllResponse> result = new ArrayList<>();
         for (Notice notice : noticeRepository.findAll()) {
             if (notice != null) {
-                result.add(new NoticeReadResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getViewCnt(), notice.getCreatedAt()));
+                if (!notice.isDeleted()) {
+                    result.add(new NoticeReadAllResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getViewCnt(), notice.getCreatedAt()));
+                }
             }
         }
 
@@ -66,15 +71,19 @@ public class NoticeService {
             Optional<Notice> notice = noticeRepository.findById(noticeId);
             if (notice.isPresent()) {
                 Notice noticeInfo = notice.get();
-                noticeInfo.setTitle(noticeUpdateDto.getTitle());
-                noticeInfo.setContent(noticeUpdateDto.getContent());
-                noticeRepository.save(noticeInfo);
+                if (!noticeInfo.isDeleted()) {
+                    noticeInfo.setTitle(noticeUpdateDto.getTitle());
+                    noticeInfo.setContent(noticeUpdateDto.getContent());
+                    noticeRepository.save(noticeInfo);
+                } else {
+                    throw new NoticeDeletedException(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             } else {
                 throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             return "Success";
-        } catch (NoticeNotFoundException e) {
+        } catch (NoticeNotFoundException | NoticeDeletedException e) {
             e.printStackTrace();
 
             return "Failed";
@@ -87,14 +96,19 @@ public class NoticeService {
             Optional<Notice> notice = noticeRepository.findById(noticeId);
             if (notice.isPresent()) {
                 Notice noticeInfo = notice.get();
-                noticeInfo.setDeleted(true);
-                noticeRepository.save(noticeInfo);
+                // 이미 지워졌는지 확인
+                if (!noticeInfo.isDeleted()) {
+                    noticeInfo.setDeleted(true);
+                    noticeRepository.save(noticeInfo);
+                } else {
+                    throw new NoticeDeletedException(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             } else {
                 throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             return "Success";
-        } catch (NoticeNotFoundException e) {
+        } catch (NoticeNotFoundException | NoticeDeletedException e) {
             e.printStackTrace();
 
             return "Failed";

@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  database:
+    platform: linux/amd64
+    image: library/mysql:8.0.26
+    container_name: itaxi_db
+
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_USER: itaxiuser
+      MYSQL_DATABASE: itaxi
+      MYSQL_PASSWORD: itaxi2022!@
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    volumes:
+      - "./database/:/var/project/db"
+    ports:
+      - "3306:3306"
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://itaxi_db:3306/itaxi?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+      SPRING_DATASOURCE_USERNAME: itaxiuser
+      SPRING_DATASOURCE_PASSWORD: itaxi2022!@
+
+
+
+
