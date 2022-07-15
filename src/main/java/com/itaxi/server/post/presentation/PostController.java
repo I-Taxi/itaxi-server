@@ -1,5 +1,8 @@
 package com.itaxi.server.post.presentation;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceDto;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
@@ -12,10 +15,13 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.itaxi.server.post.application.dto.JoinerCreateDto;
+import com.itaxi.server.post.application.dto.PostJoinDto;
+import com.itaxi.server.post.domain.Joiner;
+import com.itaxi.server.post.presentation.request.PostExitRequest;
+import com.itaxi.server.post.presentation.request.PostJoinRequest;
+import com.itaxi.server.post.presentation.response.PostInfoResponse;
 
-
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,5 +76,22 @@ public class PostController {
         final Place destination = placeRepository.getById(dto.getDstId());
         PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
         return new PostDto.Res(postService.create(postPlaceDto));
+    }
+
+    @PostMapping("/{postId}/join")
+    @ApiOperation(value = ApiDoc.JOIN_POST)
+    public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
+        Post postInfo = postService.joinPost(postId, PostJoinDto.from(request));
+        PostInfoResponse result = postService.readPost(postInfo);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{postId/join")
+    @ApiOperation(value = ApiDoc.EXIT_POST)
+    public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
+        String result = postService.exitPost(postId, request.getUid());
+
+        return ResponseEntity.ok(result);
     }
 }

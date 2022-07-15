@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.place.domain.Place;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

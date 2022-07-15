@@ -16,7 +16,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
+@Where(clause = "deleted=false")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,17 +43,19 @@ public class Post extends BaseEntity {
 
     private int status;
 
+    private boolean deleted = false;
+
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
+    // TODO : delete test
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status) {
         this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
-
     }
 }
 
