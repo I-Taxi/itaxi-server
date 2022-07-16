@@ -27,6 +27,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final JoinerRepository joinerRepository;
 
     public List<PostLog> getPostLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
@@ -50,9 +51,6 @@ public class PostService {
     public Post create(PostDto.AddPostPlaceReq dto) {
         return postRepository.save(dto.toEntity());
     }
-
-    private final MemberRepository memberRepository;
-    private final JoinerRepository joinerRepository;
 
     public Post joinPost(Long postId, PostJoinDto postJoinDto) {
         Post postInfo = null;

@@ -86,7 +86,7 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/{postId/join")
+    @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
     public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
         String result = postService.exitPost(postId, request.getUid());
