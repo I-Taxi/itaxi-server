@@ -2,8 +2,11 @@ package com.itaxi.server.member.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.member.application.MemberService;
+import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.dto.LoginResponse;
 import com.itaxi.server.member.domain.dto.MemberInfo;
+
+import com.itaxi.server.member.domain.dto.MemberJoinInfo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 

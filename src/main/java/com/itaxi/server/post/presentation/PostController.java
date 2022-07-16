@@ -16,6 +16,9 @@ import com.itaxi.server.post.presentation.request.PostExitRequest;
 import com.itaxi.server.post.presentation.request.PostJoinRequest;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 
+import com.itaxi.server.post.domain.dto.PostLog;
+import com.itaxi.server.post.domain.dto.PostLogDetail;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +26,28 @@ import io.swagger.annotations.ApiOperation;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
 public class PostController {
+
     private final PostService postService;
     private final PostRepository postRepository;
     private final PlaceRepository placeRepository;
+
+    @GetMapping(value = "history")
+    public List<PostLog> getPostLog(HttpServletRequest httpServletRequest) {
+        String uid = httpServletRequest.getParameter("uid");
+        return postService.getPostLog(uid);
+    }
+
+    @GetMapping(value = "history/{postId}")
+    public PostLogDetail getPostLogDetail(@PathVariable long postId) {
+        return postService.getPostLogDetail(postId);
+    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Iterable<Post> findAllPost() {
