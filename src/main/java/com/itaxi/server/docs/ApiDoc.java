@@ -14,4 +14,6 @@ public class ApiDoc {
     public static final String MEMBER_LOGIN = "로그인";
     public static final String MEMBER_UPDATE = "회원정보 업데이트";
     public static final String MEMBER_DELETE = "회원 탈퇴";
+    public static final String JOIN_POST = "채팅방 입장";
+    public static final String EXIT_POST = "채팅방 나가기";
 }

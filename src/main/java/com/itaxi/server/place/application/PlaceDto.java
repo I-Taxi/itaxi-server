@@ -10,12 +10,6 @@ public class PlaceDto {
         private String name;
         private Long cnt = 0L;
 
-        @Builder
-        public AddPlaceReq(String name) {
-            this.name = name;
-            this.cnt = 0L;
-        }
-
         public Place toEntity() {
             return Place.builder()
                     .name(this.name)
@@ -27,12 +21,6 @@ public class PlaceDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdatePlaceReq {
         private String name;
-
-        @Builder
-        public UpdatePlaceReq(String name) {
-            this.name = name;
-        }
-
     }
 
     @Getter
