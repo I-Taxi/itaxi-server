@@ -1,5 +1,6 @@
 package com.itaxi.server.post.presentation;
 
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
@@ -38,12 +39,14 @@ public class PostController {
     private final PostRepository postRepository;
     private final PlaceRepository placeRepository;
 
+    @ApiOperation(value = ApiDoc.POST_HISTORY)
     @GetMapping(value = "history")
     public List<PostLog> getPostLog(HttpServletRequest httpServletRequest) {
         String uid = httpServletRequest.getParameter("uid");
         return postService.getPostLog(uid);
     }
 
+    @ApiOperation(value = ApiDoc.POST_HISTORY_DETAIL)
     @GetMapping(value = "history/{postId}")
     public PostLogDetail getPostLogDetail(@PathVariable long postId) {
         return postService.getPostLogDetail(postId);

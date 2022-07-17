@@ -16,4 +16,8 @@ public class ApiDoc {
     public static final String MEMBER_DELETE = "회원 탈퇴";
     public static final String JOIN_POST = "채팅방 입장";
     public static final String EXIT_POST = "채팅방 나가기";
+
+    /* Post 관련 API 명세 */
+    public static final String POST_HISTORY = "탑승내역 조회";
+    public static final String POST_HISTORY_DETAIL = "탑승내역 상세조회";
 }
