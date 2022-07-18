@@ -76,7 +76,7 @@ public class PostDto{
             this.destination = post.getDestination();
             this.deptTime = post.getDeptTime();
             this.capacity = post.getCapacity();
-            this.participantNum = post.getJoiners().size();
+//            this.participantNum = post.getJoiners().size();
             this.status = post.getStatus();
         }
     }

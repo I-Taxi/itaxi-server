@@ -70,23 +70,26 @@ public class PostController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Post create(@RequestBody final PostDto.AddPostReq dto) {
+    @ApiOperation(value = ApiDoc.CREATE_POST)
+    public ResponseEntity<PostInfoResponse> create(@RequestBody final PostDto.AddPostReq dto) {
         final Place departure = placeRepository.getById(dto.getDepId());
         final Place destination = placeRepository.getById(dto.getDstId());
         PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
         PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage());
-        Post postInfo = postService.joinPost(result.getId(), joinDto);
-        return postInfo;
+//        Post postInfo = postService.joinPost(result.getId(), joinDto);
+        PostInfoResponse postInfo = postService.joinPost(result.getId(), joinDto);
+
+        return ResponseEntity.ok(postInfo);
     }
 
     @PostMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.JOIN_POST)
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
-        Post postInfo = postService.joinPost(postId, PostJoinDto.from(request));
-        PostInfoResponse result = postService.readPost(postInfo);
+//        Post postInfo = postService.joinPost(postId, PostJoinDto.from(request));
+        PostInfoResponse postInfo = postService.joinPost(postId, PostJoinDto.from(request));
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(postInfo);
     }
 
     @PutMapping("/{postId}/join")

@@ -1,7 +1,5 @@
 package com.itaxi.server.post.domain;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.itaxi.server.place.application.PlaceDto;
 import com.itaxi.server.place.domain.Place;
 
 import java.time.LocalDateTime;
@@ -11,6 +9,7 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 
+import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,12 +28,12 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     private Place departure;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     private Place destination;
 
     private LocalDateTime deptTime;
@@ -45,11 +44,11 @@ public class Post extends BaseEntity {
 
     private boolean deleted = false;
 
-    @OneToMany(mappedBy = "post")
-    private List<Joiner> joiners = new ArrayList<>();
+    // TODO : 이거 지우는 방법 모색
+//    @OneToMany(mappedBy = "post")
+//    private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
-    // TODO : delete test
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status) {
         this.departure = departure;
         this.destination = destination;

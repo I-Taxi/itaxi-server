@@ -52,7 +52,7 @@ public class PostService {
         return postRepository.save(dto.toEntity());
     }
 
-    public Post joinPost(Long postId, PostJoinDto postJoinDto) {
+    public PostInfoResponse joinPost(Long postId, PostJoinDto postJoinDto) {
         Post postInfo = null;
         Member memberInfo = null;
 
@@ -74,7 +74,7 @@ public class PostService {
             if (member.isPresent()) {
                 memberInfo = member.get();
             } else {
-                throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (PostNotFoundException e) {
             e.printStackTrace();
@@ -84,14 +84,19 @@ public class PostService {
         JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getStatus(), postJoinDto.getLuggage());
         joinerRepository.save(new Joiner(joinerCreateDto));
 
-        return postInfo;
+        // joiner 가져오기
+        List<Joiner> joiners = joinerRepository.findJoinerByPost(postInfo);
+
+        assert postInfo != null;
+        return new PostInfoResponse(postInfo, joiners);
+//        return postInfo;
     }
 
     // TODO : test 하면서 많이 수정
-    public PostInfoResponse readPost(Post post) {
-        // 정보 가져와서 result에 넣기
-        return new PostInfoResponse(post.getId(), post.getDeparture(), post.getDestination(), post.getDeptTime(), post.getCapacity(), post.getStatus(), post.getJoiners());
-    }
+//    public PostInfoResponse readPost(Post post) {
+//        // 정보 가져와서 result에 넣기
+//        return new PostInfoResponse(post.getId(), post.getDeparture(), post.getDestination(), post.getDeptTime(), post.getCapacity(), post.getStatus(), post.getJoiners());
+//    }
 
     public String exitPost(Long postId, String uid) {
         Post postInfo = null;
