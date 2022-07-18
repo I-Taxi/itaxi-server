@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.ApiOperation;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,11 +39,11 @@ public class PostController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<PostDto.Res> getPostDto(@RequestParam("depId")final Long depId, @RequestParam("dstId")final Long dstId, @RequestParam("time")final LocalDateTime time) {
+    public List<PostDto.Res> getPostDto(@RequestParam("depId")final Long depId, @RequestParam("dstId")final Long dstId, @RequestParam("time")@DateTimeFormat(iso=ISO.DATE_TIME) final LocalDateTime time) {
         final Long departureId = depId;
         final Place departure = placeRepository.getById(depId);
         final Place destination = placeRepository.getById(dstId);
-        List<PostDto.Res> resultList = (postRepository.findAllByDepartureAndDestinationAndDeptTime(departure, destination, time)).stream()
+        List<PostDto.Res> resultList = (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetween(departure, destination, time, time)).stream()
                 .map(m -> new PostDto.Res(m))
                 .collect(Collectors.toList());
         return resultList;
