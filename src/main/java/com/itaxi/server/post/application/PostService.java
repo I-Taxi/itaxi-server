@@ -10,24 +10,47 @@ import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
+import com.itaxi.server.exception.member.MemberNotFoundException;
+import com.itaxi.server.member.domain.dto.MemberJoinInfo;
+import com.itaxi.server.post.domain.dto.PostLog;
+import com.itaxi.server.post.domain.dto.PostLogDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
+    private final JoinerRepository joinerRepository;
+
+    public List<PostLog> getPostLog(String uid) {
+        Optional<Member> member = memberRepository.findMemberByUid(uid);
+        if(member.isPresent()) {
+            MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
+            List<PostLog> postLogs = new ArrayList<>();
+            for(Post post : joinInfo.getPosts())
+                postLogs.add(new PostLog(post));
+            return postLogs;
+        }
+        throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public PostLogDetail getPostLogDetail(Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isPresent())
+            return new PostLogDetail(post.get());
+        throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     public Post create(PostDto.AddPostPlaceReq dto) {
         return postRepository.save(dto.toEntity());
     }
-
-    private final MemberRepository memberRepository;
-    private final JoinerRepository joinerRepository;
 
     public Post joinPost(Long postId, PostJoinDto postJoinDto) {
         Post postInfo = null;

@@ -5,6 +5,7 @@ import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.dto.LoginResponse;
 import com.itaxi.server.member.domain.dto.MemberInfo;
+import com.itaxi.server.member.domain.dto.MemberJoinInfo;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 
 import org.springframework.http.HttpStatus;
