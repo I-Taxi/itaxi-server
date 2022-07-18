@@ -70,14 +70,9 @@ public class PostController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Post create(@RequestBody final PostDto.AddPostReq dto) {
-        final Place departure = placeRepository.getById(dto.getDepId());
-        final Place destination = placeRepository.getById(dto.getDstId());
-        PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
-        PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage());
-        Post postInfo = postService.joinPost(result.getId(), joinDto);
-        return postInfo;
+    public ResponseEntity<Long> create(@RequestBody final PostDto.AddPostReq dto) {
+        Long result = postService.create(dto);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{postId}/join")

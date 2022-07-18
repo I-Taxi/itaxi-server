@@ -1,5 +1,7 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.place.domain.Place;
+import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.member.domain.Member;
@@ -28,6 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final JoinerRepository joinerRepository;
+    private final PlaceRepository placeRepository;
 
     public List<PostLog> getPostLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
@@ -48,8 +51,17 @@ public class PostService {
         throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public Post create(PostDto.AddPostPlaceReq dto) {
-        return postRepository.save(dto.toEntity());
+    public Long create(PostDto.AddPostReq addPostReq) {
+
+        final Place departure = placeRepository.getById(addPostReq.getDepId());
+        final Place destination = placeRepository.getById(addPostReq.getDstId());
+        PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(addPostReq, departure, destination);
+
+        Post savedPost = postRepository.save(postPlaceDto.toEntity());
+
+        this.joinPost(savedPost.getId(), new PostJoinDto(addPostReq.getUid(),0,addPostReq.getLuggage()));
+
+        return savedPost.getId();
     }
 
     public Post joinPost(Long postId, PostJoinDto postJoinDto) {
