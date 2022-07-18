@@ -14,7 +14,7 @@ public class PostLogDetail extends PostLog {
     public PostLogDetail(Post p) {
         super(p);
         joiners = new ArrayList<>();
-//        for(Joiner joiner : p.getJoiners())
-//            joiners.add(new JoinerInfo(joiner));
+        for(Joiner joiner : p.getJoiners())
+            joiners.add(new JoinerInfo(joiner));
     }
 }

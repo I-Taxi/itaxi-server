@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class JoinerCreateDto {
     private Member member;
     private Post post;
-    private int status;
     private int luggage;
 }

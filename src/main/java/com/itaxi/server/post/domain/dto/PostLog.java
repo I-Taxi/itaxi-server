@@ -14,7 +14,7 @@ public class PostLog {
     private final LocalDateTime deptTime;
     private final int capacity;
     private final int status;
-//    private final int participantNum;
+    private final int participantNum;
 
     public PostLog(Post p) {
         this.id = p.getId();
@@ -23,6 +23,6 @@ public class PostLog {
         this.deptTime = p.getDeptTime();
         this.capacity = p.getCapacity();
         this.status = p.getStatus();
-//        this.participantNum = p.getJoiners().size();
+        this.participantNum = p.getJoiners().size();
     }
 }
