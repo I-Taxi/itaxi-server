@@ -15,5 +15,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Iterable<Post> findByDepartureId(long departureId);
 
     List<Post> findAllByDepartureAndDestinationAndDeptTime(Place departure, Place destination, LocalDateTime deptTime);
-    List<Post> findAllByDepartureAndDestination(Place departure, Place destination);
+    List<Post> findAllByDepartureAndDestinationAndDeptTimeBetween(Place departure, Place destination, LocalDateTime deptTime1, LocalDateTime deptTime2);
 }
