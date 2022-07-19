@@ -16,4 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     //List<Post> findAllByDepartureAndDestinationAndDeptTimeBetween(Place departure, Place destination, LocalDateTime deptTime1, LocalDateTime deptTime2);
     List<Post> findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(Place departure, Place destination, LocalDateTime deptTime1, LocalDateTime deptTime2);
+    List<Post> findAllByDeptTimeBetweenOrderByDeptTime(LocalDateTime deptTime1, LocalDateTime deptTime2);
 }
