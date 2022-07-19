@@ -61,6 +61,7 @@ public class PostController {
         return postRepository.findAll();
     }
 
+    @ApiOperation(value = ApiDoc.POST_READ)
     @RequestMapping(method = RequestMethod.GET)
     public List<PostDto.Res> getPostDto(@RequestParam("depId")final Long depId, @RequestParam("dstId")final Long dstId, @RequestParam("time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time) {
         final Long departureId = depId;
@@ -74,6 +75,7 @@ public class PostController {
         return resultList;
     }
 
+    @ApiOperation(value = ApiDoc.POST_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public Post create(@RequestBody final PostDto.AddPostReq dto) {
