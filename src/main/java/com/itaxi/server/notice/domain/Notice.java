@@ -11,9 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
+@Where(clause = "deleted=false")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,8 +36,8 @@ public class Notice extends BaseEntity {
     private boolean deleted = false;
 
     public Notice(NoticeCreateDto noticeCreateDto) {
-        String title = noticeCreateDto.getTitle();
-        String content = noticeCreateDto.getContent();
+        this.title = noticeCreateDto.getTitle();
+        this.content = noticeCreateDto.getContent();
 
         if (title == null || title.trim().isEmpty()) {
             throw new NoticeTitleEmptyException();
