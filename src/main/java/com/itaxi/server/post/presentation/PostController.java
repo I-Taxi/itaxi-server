@@ -69,9 +69,17 @@ public class PostController {
         final Place destination = placeRepository.getById(dstId);
         final LocalDateTime startDateTime = (time == LocalDate.now())? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
-        List<PostDto.Res> resultList = (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime)).stream()
+        List<PostDto.Res> resultList;
+        resultList = (depId == null && dstId == null) ?
+                ((postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)).stream()
                 .map(m -> new PostDto.Res(m))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())) :
+                ((postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime)).stream()
+                .map(m -> new PostDto.Res(m))
+                .collect(Collectors.toList()));
+        /*List<PostDto.Res> resultList = (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime)).stream()
+                .map(m -> new PostDto.Res(m))
+                .collect(Collectors.toList());*/
         return resultList;
     }
 
