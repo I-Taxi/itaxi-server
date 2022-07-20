@@ -41,6 +41,6 @@ public class Joiner extends BaseEntity {
         this.post = joinerCreateDto.getPost();
         this.status = 1;
         this.luggage = joinerCreateDto.getLuggage();
-        this.owner = false;
+        this.owner = joinerCreateDto.isOwner();
     }
 }

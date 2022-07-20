@@ -86,7 +86,7 @@ public class PostController {
         final Place destination = placeRepository.getById(dto.getDstId());
         PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
         PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage());
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage(), true);
         PostInfoResponse response = postService.joinPost(result.getId(), joinDto);
 
         return ResponseEntity.ok(response);
@@ -96,14 +96,14 @@ public class PostController {
     @ApiOperation(value = ApiDoc.JOIN_POST)
     // TODO : 사람 다 찼을 때 모집 완료로 status 변경
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
-        PostInfoResponse result = postService.joinPost(postId, PostJoinDto.from(request));
+        PostInfoResponse result = postService.joinPost(postId, PostJoinDto.from(request, false));
 
         return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
-    // TODO : 사람 다시 파졌을 때 모집 중으로 status 변경
+    // TODO : 사람 다시 파졌을 때 모집 중으로 status 변경 + 방장 나가면 owner 바뀌게 ??
     public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
         String result = postService.exitPost(postId, request.getUid());
 

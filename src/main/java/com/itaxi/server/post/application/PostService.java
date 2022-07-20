@@ -75,7 +75,7 @@ public class PostService {
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
-            JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage());
+            JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage(), postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
             throw new JoinerDuplicateMemberException(HttpStatus.INTERNAL_SERVER_ERROR);
