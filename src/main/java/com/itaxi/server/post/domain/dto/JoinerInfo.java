@@ -13,7 +13,7 @@ public class JoinerInfo {
     private final boolean owner;
 
     public JoinerInfo(Joiner joiner) {
-        this.memberId = joiner.getId();
+        this.memberId = joiner.getMember().getId();
         this.memberName = joiner.getMember().getName();
         this.memberPhone = joiner.getMember().getPhone();
         this.luggage = joiner.getLuggage();
