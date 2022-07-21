@@ -30,22 +30,21 @@ public class PostService {
     private final JoinerRepository joinerRepository;
 
     public List<PostLog> getPostLog(String uid) {
-        Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(member.isPresent()) {
-            MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
-            List<PostLog> postLogs = new ArrayList<>();
-            for(Post post : joinInfo.getPosts())
-                postLogs.add(new PostLog(post));
-            return postLogs;
-        }
-        throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
+        if(!member.isPresent())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
+        List<PostLog> postLogs = new ArrayList<>();
+        for(Post post : joinInfo.getPosts())
+            postLogs.add(new PostLog(post));
+        return postLogs;
     }
 
     public PostLogDetail getPostLogDetail(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
-        if(post.isPresent())
-            return new PostLogDetail(post.get());
-        throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!post.isPresent())
+            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new PostLogDetail(post.get());
     }
 
     public Post create(PostDto.AddPostPlaceReq dto) {
@@ -70,7 +69,7 @@ public class PostService {
 
         // Member에서 UID 가진 Member 찾기
         try {
-            Optional<Member> member = memberRepository.findMemberByUid(postJoinDto.getUid());
+            Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(postJoinDto.getUid());
             if (member.isPresent()) {
                 memberInfo = member.get();
             } else {
@@ -111,7 +110,7 @@ public class PostService {
 
         // Member에서 UID 가진 Member 찾기
         try {
-            Optional<Member> member = memberRepository.findMemberByUid(uid);
+            Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
             if (member.isPresent()) {
                 memberInfo = member.get();
             } else {
