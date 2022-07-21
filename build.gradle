@@ -10,8 +10,8 @@ sourceCompatibility = '1.8'
 apply plugin: 'war'
 
 bootWar{
-	archiveBaseName = 'i-taxiServer'
-	archiveFileName = 'i-taxiServer.war'
+	archiveBaseName = 'itaxi'
+	archiveFileName = 'itaxi.war'
 	archiveVersion = "0.0.0"
 }
 war.enabled = true
