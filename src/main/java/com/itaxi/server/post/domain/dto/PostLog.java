@@ -1,6 +1,7 @@
 package com.itaxi.server.post.domain.dto;
 
 import com.itaxi.server.place.domain.Place;
+import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,11 @@ public class PostLog {
         this.deptTime = p.getDeptTime();
         this.capacity = p.getCapacity();
         this.status = p.getStatus();
-        this.participantNum = p.getJoiners().size();
+        int tmp = 0;
+        for(Joiner joiner : p.getJoiners()) {
+            if(joiner.getStatus() == 1)
+                tmp += 1;
+        }
+        this.participantNum = tmp;
     }
 }

@@ -16,7 +16,9 @@ public class MemberJoinInfo {
     public MemberJoinInfo(Member m) {
         List<Joiner> joiners = m.getJoiners();
         this.posts = new ArrayList<>();
-        for(Joiner joiner : joiners)
-            posts.add(joiner.getPost());
+        for(Joiner joiner : joiners) {
+            if(joiner.getStatus() == 1)
+                posts.add(joiner.getPost());
+        }
     }
 }
