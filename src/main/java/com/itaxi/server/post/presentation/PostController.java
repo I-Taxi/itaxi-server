@@ -94,7 +94,6 @@ public class PostController {
 
     @PostMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.JOIN_POST)
-    // TODO : 사람 다 찼을 때 모집 완료로 status 변경
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
         PostInfoResponse result = postService.joinPost(postId, PostJoinDto.from(request, false));
 
@@ -103,7 +102,6 @@ public class PostController {
 
     @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
-    // TODO : 사람 다시 파졌을 때 모집 중으로 status 변경 + 방장 나가면 owner 바뀌게 ??
     public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
         String result = postService.exitPost(postId, request.getUid());
 

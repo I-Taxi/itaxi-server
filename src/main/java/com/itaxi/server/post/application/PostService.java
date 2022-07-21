@@ -1,6 +1,8 @@
 package com.itaxi.server.post.application;
 
 import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
+import com.itaxi.server.exception.post.JoinerNotFoundException;
+import com.itaxi.server.exception.post.PostMemberFullException;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.member.domain.Member;
@@ -60,10 +62,12 @@ public class PostService {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
             postInfo = post.get();
-            postInfo.setStatus(postJoinDto.getStatus());
-            postRepository.save(postInfo);
         } else {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (postInfo.getStatus() == 2) {
+            throw new PostMemberFullException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(postJoinDto.getUid());
@@ -79,6 +83,15 @@ public class PostService {
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
             throw new JoinerDuplicateMemberException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);
+        postInfo.setJoiners(joiners);
+
+        int joinerSize = postInfo.getJoiners().size();
+        if (joinerSize >= postInfo.getCapacity()) {
+            postInfo.setStatus(2);                          // 2 : 모집 완료
+            postRepository.save(postInfo);
         }
 
         return postInfo.toPostInfoResponse();
@@ -103,13 +116,29 @@ public class PostService {
         }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
+        int joinerSize = postInfo.getJoiners().size();
         if (joiner.isPresent()) {
             Joiner joinerInfo = joiner.get();
             joinerInfo.setStatus(0);
             joinerInfo.setDeleted(true);
             joinerRepository.save(joinerInfo);
+
+            System.out.println(joinerSize);
+            if (joinerSize == 1){
+                postInfo.setStatus(0);                              // 0 : 모집 종료
+                postInfo.setDeleted(true);
+            }  else if (joinerSize == postInfo.getCapacity()) {
+                postInfo.setStatus(1);                              // 1 : 모집 중
+            }
+            postRepository.save(postInfo);
+
+            if (joinerSize > 1 && joinerInfo.isOwner()) {
+                Joiner joinerBeOwner = postInfo.getJoiners().get(1);
+                joinerBeOwner.setOwner(true);
+                joinerRepository.save(joinerBeOwner);
+            }
         } else {
-            return "Failed";
+            throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return "Success";
