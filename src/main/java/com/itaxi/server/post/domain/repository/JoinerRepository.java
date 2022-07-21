@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface JoinerRepository extends JpaRepository<Joiner, Long> {
     Optional<Joiner> findJoinerByPostAndMember(Post post, Member member);
-    List<Joiner> findJoinerByPost(Post post);
+    List<Joiner> findJoinersByPost(Post post);
 }
