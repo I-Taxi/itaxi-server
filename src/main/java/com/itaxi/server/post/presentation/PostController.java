@@ -1,7 +1,5 @@
 package com.itaxi.server.post.presentation;
 
-import com.itaxi.server.member.domain.dto.MemberUidDTO;
-import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
@@ -19,20 +17,16 @@ import com.itaxi.server.post.application.dto.PostJoinDto;
 import com.itaxi.server.post.presentation.request.PostExitRequest;
 import com.itaxi.server.post.presentation.request.PostJoinRequest;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
-
 import com.itaxi.server.post.domain.dto.PostLog;
 import com.itaxi.server.post.domain.dto.PostLogDetail;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import io.swagger.annotations.ApiOperation;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import com.itaxi.server.member.domain.dto.MemberUidDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Sort;
 
 @RestController
@@ -86,21 +80,21 @@ public class PostController {
     @ApiOperation(value = ApiDoc.POST_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Post create(@RequestBody final PostDto.AddPostReq dto) {
+    public ResponseEntity<PostInfoResponse> create(@RequestBody final PostDto.AddPostReq dto) {
         final Place departure = placeRepository.getById(dto.getDepId());
         final Place destination = placeRepository.getById(dto.getDstId());
         PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
         PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage());
-        Post postInfo = postService.joinPost(result.getId(), joinDto);
-        return postInfo;
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage(), true);
+        PostInfoResponse response = postService.joinPost(result.getId(), joinDto);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.JOIN_POST)
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
-        Post postInfo = postService.joinPost(postId, PostJoinDto.from(request));
-        PostInfoResponse result = postService.readPost(postInfo);
+        PostInfoResponse result = postService.joinPost(postId, PostJoinDto.from(request, false));
 
         return ResponseEntity.ok(result);
     }

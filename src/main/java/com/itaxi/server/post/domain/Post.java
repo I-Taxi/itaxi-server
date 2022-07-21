@@ -1,7 +1,6 @@
 package com.itaxi.server.post.domain;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.itaxi.server.place.application.PlaceDto;
+import com.itaxi.server.place.application.PlaceResponse;
 import com.itaxi.server.place.domain.Place;
 
 import java.time.LocalDateTime;
@@ -11,15 +10,15 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.itaxi.server.post.domain.dto.JoinerInfo;
+import com.itaxi.server.post.presentation.response.PostInfoResponse;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 @Where(clause = "deleted=false")
 @Entity
+@Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
@@ -30,11 +29,9 @@ public class Post extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    //@JsonIgnore
     private Place departure;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    //@JsonIgnore
     private Place destination;
 
     private LocalDateTime deptTime;
@@ -49,13 +46,25 @@ public class Post extends BaseEntity {
     private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
-    // TODO : delete test
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status) {
         this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
+    }
+
+    public PostInfoResponse toPostInfoResponse() {
+        PlaceResponse deptResponse = new PlaceResponse(departure.getId(), departure.getName(), departure.getCnt());
+        PlaceResponse destResponse = new PlaceResponse(destination.getId(), destination.getName(), destination.getCnt());
+
+        List<JoinerInfo> joinerResponse = new ArrayList<>();
+
+        for(Joiner joiner : joiners) {
+            joinerResponse.add(new JoinerInfo(joiner));
+        }
+
+        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, joinerResponse);
     }
 }
 

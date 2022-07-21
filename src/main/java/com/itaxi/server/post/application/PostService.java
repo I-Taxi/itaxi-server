@@ -1,5 +1,8 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
+import com.itaxi.server.exception.post.JoinerNotFoundException;
+import com.itaxi.server.exception.post.PostMemberFullException;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.member.domain.Member;
@@ -51,83 +54,90 @@ public class PostService {
         return postRepository.save(dto.toEntity());
     }
 
-    public Post joinPost(Long postId, PostJoinDto postJoinDto) {
+    public PostInfoResponse joinPost(Long postId, PostJoinDto postJoinDto) {
         Post postInfo = null;
         Member memberInfo = null;
 
-        // Post에서 id 가진 Post 찾기
-        try {
-            Optional<Post> post = postRepository.findById(postId);
-            if (post.isPresent()) {
-                postInfo = post.get();
-            } else {
-                throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (PostNotFoundException e) {
-            e.printStackTrace();
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isPresent()) {
+            postInfo = post.get();
+        } else {
+            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // Member에서 UID 가진 Member 찾기
-        try {
-            Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(postJoinDto.getUid());
-            if (member.isPresent()) {
-                memberInfo = member.get();
-            } else {
-                throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (PostNotFoundException e) {
-            e.printStackTrace();
+        if (postInfo.getStatus() == 2) {
+            throw new PostMemberFullException(HttpStatus.BAD_REQUEST);
         }
 
-        // Joiner에 정보 저장하고 repository에 save
-        JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getStatus(), postJoinDto.getLuggage());
-        joinerRepository.save(new Joiner(joinerCreateDto));
+        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(postJoinDto.getUid());
+        if (member.isPresent()) {
+            memberInfo = member.get();
+        } else {
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return postInfo;
-    }
+        Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
+        if (!joiner.isPresent()) {
+            JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage(), postJoinDto.isOwner());
+            joinerRepository.save(new Joiner(joinerCreateDto));
+        } else {
+            throw new JoinerDuplicateMemberException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-    // TODO : test 하면서 많이 수정
-    public PostInfoResponse readPost(Post post) {
-        // 정보 가져와서 result에 넣기
-        return new PostInfoResponse(post.getId(), post.getDeparture(), post.getDestination(), post.getDeptTime(), post.getCapacity(), post.getStatus(), post.getJoiners());
+        List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);
+        postInfo.setJoiners(joiners);
+
+        int joinerSize = postInfo.getJoiners().size();
+        if (joinerSize >= postInfo.getCapacity()) {
+            postInfo.setStatus(2);                          // 2 : 모집 완료
+            postRepository.save(postInfo);
+        }
+
+        return postInfo.toPostInfoResponse();
     }
 
     public String exitPost(Long postId, String uid) {
         Post postInfo = null;
         Member memberInfo = null;
 
-        // Post에서 id 가진 Post 찾기
-        try {
-            Optional<Post> post = postRepository.findById(postId);
-            if (post.isPresent()) {
-                postInfo = post.get();
-            } else {
-                throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (PostNotFoundException e) {
-            e.printStackTrace();
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isPresent()) {
+            postInfo = post.get();
+        } else {
+            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // Member에서 UID 가진 Member 찾기
-        try {
-            Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
-            if (member.isPresent()) {
-                memberInfo = member.get();
-            } else {
-                throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (PostNotFoundException e) {
-            e.printStackTrace();
+        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
+        if (member.isPresent()) {
+            memberInfo = member.get();
+        } else {
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
+        int joinerSize = postInfo.getJoiners().size();
         if (joiner.isPresent()) {
             Joiner joinerInfo = joiner.get();
-            joinerInfo.setPost(postInfo);
-            joinerInfo.setMember(memberInfo);
+            joinerInfo.setStatus(0);
+            joinerInfo.setDeleted(true);
             joinerRepository.save(joinerInfo);
+
+            System.out.println(joinerSize);
+            if (joinerSize == 1){
+                postInfo.setStatus(0);                              // 0 : 모집 종료
+                postInfo.setDeleted(true);
+            }  else if (joinerSize == postInfo.getCapacity()) {
+                postInfo.setStatus(1);                              // 1 : 모집 중
+            }
+            postRepository.save(postInfo);
+
+            if (joinerSize > 1 && joinerInfo.isOwner()) {
+                Joiner joinerBeOwner = postInfo.getJoiners().get(1);
+                joinerBeOwner.setOwner(true);
+                joinerRepository.save(joinerBeOwner);
+            }
         } else {
-            return "Failed";
+            throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return "Success";
