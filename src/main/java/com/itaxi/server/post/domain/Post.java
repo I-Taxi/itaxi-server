@@ -49,7 +49,6 @@ public class Post extends BaseEntity {
     private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
-    // TODO : delete test
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage) {this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
@@ -63,7 +62,6 @@ public class Post extends BaseEntity {
         PlaceResponse destResponse = new PlaceResponse(destination.getId(), destination.getName(), destination.getCnt());
 
         List<JoinerInfo> joinerResponse = new ArrayList<>();
-
         for(Joiner joiner : joiners) {
             joinerResponse.add(new JoinerInfo(joiner));
         }

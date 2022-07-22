@@ -36,17 +36,17 @@ public class Notice extends BaseEntity {
     public Notice(NoticeCreateDto noticeCreateDto) {
         this.title = noticeCreateDto.getTitle();
         this.content = noticeCreateDto.getContent();
+        this.setDeleted(false);
+        checkTitleAndContent(title, content);
+    }
 
+    private void checkTitleAndContent(String title, String content) {
         if (title == null || title.trim().isEmpty()) {
             throw new NoticeTitleEmptyException();
         }
-        this.title = title;
 
         if (content == null || content.trim().isEmpty()) {
             throw new NoticeContentEmptyException();
         }
-        this.content = content;
-
-        this.setDeleted(false);
     }
 }
