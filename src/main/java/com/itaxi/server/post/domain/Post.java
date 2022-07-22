@@ -1,7 +1,6 @@
 package com.itaxi.server.post.domain;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.itaxi.server.place.application.PlaceDto;
+import com.itaxi.server.place.application.PlaceResponse;
 import com.itaxi.server.place.domain.Place;
 
 import java.time.LocalDateTime;
@@ -11,15 +10,15 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.itaxi.server.post.domain.dto.JoinerInfo;
+import com.itaxi.server.post.presentation.response.PostInfoResponse;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 @Where(clause = "deleted=false")
 @Entity
+@Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
@@ -29,12 +28,10 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     private Place departure;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     private Place destination;
 
     private LocalDateTime deptTime;
@@ -42,6 +39,8 @@ public class Post extends BaseEntity {
     private int capacity;
 
     private int status;
+    
+    private int postType;
 
     private boolean deleted = false;
     private int luggage;
@@ -51,13 +50,25 @@ public class Post extends BaseEntity {
 
     @Builder
     // TODO : delete test
-    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage) {
-        this.departure = departure;
+    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage) {this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
         this.luggage = luggage;
+    }
+
+    public PostInfoResponse toPostInfoResponse() {
+        PlaceResponse deptResponse = new PlaceResponse(departure.getId(), departure.getName(), departure.getCnt());
+        PlaceResponse destResponse = new PlaceResponse(destination.getId(), destination.getName(), destination.getCnt());
+
+        List<JoinerInfo> joinerResponse = new ArrayList<>();
+
+        for(Joiner joiner : joiners) {
+            joinerResponse.add(new JoinerInfo(joiner));
+        }
+
+        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, joinerResponse);
     }
 }
 

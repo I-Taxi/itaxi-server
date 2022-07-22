@@ -6,6 +6,7 @@ import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.member.domain.Member;
 
 import com.itaxi.server.post.application.dto.JoinerCreateDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Joiner extends BaseEntity {
 
     @Id
@@ -32,12 +34,13 @@ public class Joiner extends BaseEntity {
 
     private int luggage;
 
-    private boolean owner = false;
+    private boolean owner;
 
     public Joiner(JoinerCreateDto joinerCreateDto) {
         this.member = joinerCreateDto.getMember();
         this.post = joinerCreateDto.getPost();
-        this.status = joinerCreateDto.getStatus();
+        this.status = 1;
         this.luggage = joinerCreateDto.getLuggage();
+        this.owner = joinerCreateDto.isOwner();
     }
 }

@@ -9,12 +9,14 @@ import java.util.List;
 
 @Getter
 public class PostLogDetail extends PostLog {
-    private List<JoinerInfo> joiners;
+    private final List<JoinerInfo> joiners;
 
     public PostLogDetail(Post p) {
         super(p);
         joiners = new ArrayList<>();
-        for(Joiner joiner : p.getJoiners())
-            joiners.add(new JoinerInfo(joiner));
+        for(Joiner joiner : p.getJoiners()) {
+            if (joiner.getStatus() == 1)
+                joiners.add(new JoinerInfo(joiner));
+        }
     }
 }

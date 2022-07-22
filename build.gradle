@@ -7,6 +7,14 @@ plugins {
 group = 'com.itaxi'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+apply plugin: 'war'
+
+bootWar{
+	archiveBaseName = 'itaxi'
+	archiveFileName = 'itaxi.war'
+	archiveVersion = "0.0.0"
+}
+war.enabled = true
 
 configurations {
 	compileOnly {
@@ -29,6 +37,3 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}

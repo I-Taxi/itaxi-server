@@ -3,9 +3,6 @@ package com.itaxi.server.post.application;
 import com.itaxi.server.place.domain.Place;
 import lombok.*;
 import com.itaxi.server.post.domain.Post;
-
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 public class PostDto{
