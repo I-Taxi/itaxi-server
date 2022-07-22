@@ -25,8 +25,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import com.itaxi.server.member.domain.dto.MemberUidDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Sort;
 
 @RestController
@@ -40,9 +40,8 @@ public class PostController {
 
     @ApiOperation(value = ApiDoc.POST_HISTORY)
     @GetMapping(value = "history")
-    public List<PostLog> getPostLog(HttpServletRequest httpServletRequest) {
-        String uid = httpServletRequest.getParameter("uid");
-        return postService.getPostLog(uid);
+    public List<PostLog> getPostLog(@RequestBody MemberUidDTO memberUidDTO) {
+        return postService.getPostLog(memberUidDTO.getUid());
     }
 
     @ApiOperation(value = ApiDoc.POST_HISTORY_DETAIL)

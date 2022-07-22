@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findMemberByUid(String uid);
-    Optional<MemberInfo> findMemberInfoByUid(String uid);
-    Optional<LoginResponse> findMemberForLoginByUid(String uid);
+    Optional<Member> findMemberByUidAndDeletedFalse(String uid);
+    Optional<MemberInfo> findMemberInfoByUidAndDeletedFalse(String uid);
+    Optional<LoginResponse> findMemberForLoginByUidAndDeletedFalse(String uid);
 }
