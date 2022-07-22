@@ -44,18 +44,20 @@ public class Post extends BaseEntity {
     private int status;
 
     private boolean deleted = false;
+    private int luggage;
 
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
     // TODO : delete test
-    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status) {
+    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage) {
         this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
+        this.luggage = luggage;
     }
 }
 

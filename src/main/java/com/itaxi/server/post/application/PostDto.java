@@ -38,6 +38,7 @@ public class PostDto{
         private LocalDateTime deptTime;
         private int capacity;
         private int status;
+        private int luggage;
 
         @Builder
         public AddPostPlaceReq(AddPostReq req, Place departure, Place destination) {
@@ -55,6 +56,7 @@ public class PostDto{
                     .deptTime(this.deptTime)
                     .capacity(this.capacity)
                     .status(this.status)
+                    .luggage(this.luggage)
                     .build();
         }
     }
