@@ -39,6 +39,8 @@ public class Post extends BaseEntity {
     private int capacity;
 
     private int status;
+    
+    private int postType;
 
     private boolean deleted = false;
 
