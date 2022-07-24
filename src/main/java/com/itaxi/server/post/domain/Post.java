@@ -40,7 +40,7 @@ public class Post extends BaseEntity {
 
     private int status;
     
-    private int postType;
+    private Integer postType;
 
     private boolean deleted = false;
     private int luggage;
@@ -50,12 +50,14 @@ public class Post extends BaseEntity {
 
     @Builder
     // TODO : delete test
-    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage) {this.departure = departure;
+    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage, Integer postType) {
+        this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
         this.luggage = luggage;
+        this.postType = postType;
     }
 
     public PostInfoResponse toPostInfoResponse() {

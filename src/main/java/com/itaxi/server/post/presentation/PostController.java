@@ -2,6 +2,7 @@ package com.itaxi.server.post.presentation;
 
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
+import com.itaxi.server.place.application.PlaceService;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.PostService;
 import com.itaxi.server.post.domain.repository.PostRepository;
@@ -28,6 +29,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.itaxi.server.member.domain.dto.MemberUidDTO;
 
 import org.springframework.data.domain.Sort;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ import org.springframework.data.domain.Sort;
 public class PostController {
 
     private final PostService postService;
+    private final PlaceService placeService;
     private final PostRepository postRepository;
     private final PlaceRepository placeRepository;
 
@@ -57,23 +60,15 @@ public class PostController {
 
     @ApiOperation(value = ApiDoc.POST_READ)
     @RequestMapping(method = RequestMethod.GET)
-    public List<PostDto.Res> getPostDto(@RequestParam("depId")final Long depId, @RequestParam("dstId")final Long dstId, @RequestParam("time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time) {
-        final Long departureId = depId;
-        final Place departure = placeRepository.getById(depId);
-        final Place destination = placeRepository.getById(dstId);
+    public List<PostDto.Res> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
+        final Place departure = (depId == null) ? null : placeRepository.getById(depId);
+        final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
         final LocalDateTime startDateTime = (time == LocalDate.now())? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
-        List<PostDto.Res> resultList;
-        resultList = (depId == null && dstId == null) ?
-                ((postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)).stream()
-                .map(m -> new PostDto.Res(m))
-                .collect(Collectors.toList())) :
-                ((postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime)).stream()
-                .map(m -> new PostDto.Res(m))
-                .collect(Collectors.toList()));
-        /*List<PostDto.Res> resultList = (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime)).stream()
-                .map(m -> new PostDto.Res(m))
-                .collect(Collectors.toList());*/
+
+
+        List<PostDto.Res> resultList = null;
+
         return resultList;
     }
 
@@ -87,6 +82,8 @@ public class PostController {
         PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage(), true);
         PostInfoResponse response = postService.joinPost(result.getId(), joinDto);
+        placeService.updateView(dto.getDepId());
+        placeService.updateView(dto.getDstId());
 
         return ResponseEntity.ok(response);
     }
