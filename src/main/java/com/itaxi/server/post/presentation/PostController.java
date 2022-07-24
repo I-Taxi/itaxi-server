@@ -66,9 +66,18 @@ public class PostController {
         final LocalDateTime startDateTime = (time == LocalDate.now())? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
+        List<Post> posts = (postType == null) ?
+                ((depId == null && dstId == null)? (postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)):
+                        (depId == null ? (postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime)):
+                                (dstId == null ? (postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) : (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
+                                ))) :
+                (depId == null && dstId == null? (postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime)):
+                        (depId == null ? (postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime)):
+                                (dstId == null ? (postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime)) : (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
+                                )));
 
-        List<PostDto.Res> resultList = null;
-
+        List<PostDto.Res> resultList = posts.stream().map(m -> new PostDto.Res(m)).collect(Collectors.toList());
+        
         return resultList;
     }
 
