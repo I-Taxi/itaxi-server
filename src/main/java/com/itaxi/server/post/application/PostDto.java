@@ -25,6 +25,7 @@ public class PostDto{
         private int capacity;
         private int status = 0;
         private int luggage;
+        private Integer postType;
     }
 
     @Getter
@@ -35,12 +36,14 @@ public class PostDto{
         private LocalDateTime deptTime;
         private int capacity;
         private int status;
+        private Integer postType;
         private int luggage;
 
         @Builder
         public AddPostPlaceReq(AddPostReq req, Place departure, Place destination) {
             this.departure = departure;
             this.destination = destination;
+            this.postType = req.getPostType();
             this.deptTime = req.getDeptTime();
             this.capacity = req.getCapacity();
             this.status = 1;
@@ -54,6 +57,7 @@ public class PostDto{
                     .capacity(this.capacity)
                     .status(this.status)
                     .luggage(this.luggage)
+                    .postType(this.postType)
                     .build();
         }
     }
@@ -67,6 +71,7 @@ public class PostDto{
         private int capacity;
         private int participantNum;
         private int status;
+        private Integer postType;
 
         @Builder
         public Res(Post post) {
@@ -77,6 +82,7 @@ public class PostDto{
             this.capacity = post.getCapacity();
             this.participantNum = post.getJoiners().size();
             this.status = post.getStatus();
+            this.postType = post.getPostType();
         }
     }
 }
