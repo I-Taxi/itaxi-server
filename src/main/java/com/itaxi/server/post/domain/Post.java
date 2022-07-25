@@ -40,7 +40,7 @@ public class Post extends BaseEntity {
 
     private int status;
     
-    private int postType;
+    private Integer postType;
 
     private int luggage;
 
