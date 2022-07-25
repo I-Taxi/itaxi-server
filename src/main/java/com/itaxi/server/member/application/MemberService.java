@@ -43,14 +43,14 @@ public class MemberService {
 
     /* READ */
     public MemberInfo getMember(String uid) {
-        Optional<MemberInfo> member = memberRepository.findMemberInfoByUidAndDeletedFalse(uid);
+        Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
         if(member.isPresent())
             return member.get();
         throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public LoginResponse login(String uid) {
-        Optional<LoginResponse> response = memberRepository.findMemberForLoginByUidAndDeletedFalse(uid);
+        Optional<LoginResponse> response = memberRepository.findMemberForLoginByUid(uid);
         if(response.isPresent())
             return response.get();
         throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -58,7 +58,7 @@ public class MemberService {
 
     /* UPDATE */
     public String updateMember(MemberUpdateRequestDTO memberUpdateRequestDTO) {
-        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(memberUpdateRequestDTO.getUid());
+        Optional<Member> member = memberRepository.findMemberByUid(memberUpdateRequestDTO.getUid());
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -81,7 +81,7 @@ public class MemberService {
 
     /* DELETE */
     public String deleteMember(String uid) {
-        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
+        Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         Member memberInfo = member.get();
