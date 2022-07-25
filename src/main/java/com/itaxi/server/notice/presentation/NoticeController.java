@@ -24,9 +24,7 @@ public class NoticeController {
 
     @ApiOperation(value = ApiDoc.CREATE_NOTICE)
     @PostMapping
-    // reponse entity써야 httpstatus와 body 같은거 넣기 좋음
     public ResponseEntity<Long> createNotice(@RequestBody NoticeCreateRequest request) {
-        // create 함수로 noticecreateDto 보내기
         Long id = noticeService.createNotice(NoticeCreateDto.from(request));
 
         return ResponseEntity.ok(id);
