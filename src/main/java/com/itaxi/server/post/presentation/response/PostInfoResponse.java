@@ -19,5 +19,6 @@ public class PostInfoResponse {
     private LocalDateTime deptTime;
     private int capacity;
     private int status;
+    private int postType;
     private List<JoinerInfo> joiners;
 }
