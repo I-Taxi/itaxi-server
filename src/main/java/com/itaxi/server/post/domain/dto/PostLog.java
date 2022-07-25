@@ -15,6 +15,7 @@ public class PostLog {
     private final LocalDateTime deptTime;
     private final int capacity;
     private final int status;
+    private final Integer postType;
     private final int participantNum;
 
     public PostLog(Post p) {
@@ -24,6 +25,7 @@ public class PostLog {
         this.deptTime = p.getDeptTime();
         this.capacity = p.getCapacity();
         this.status = p.getStatus();
+        this.postType = p.getPostType();
         int tmp = 0;
         for(Joiner joiner : p.getJoiners()) {
             if(joiner.getStatus() == 1)
