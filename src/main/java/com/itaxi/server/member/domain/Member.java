@@ -16,8 +16,10 @@ import com.itaxi.server.report.domain.Report;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import org.springframework.http.HttpStatus;
 
+@Where(clause = "deleted=false")
 @Entity
 @Getter
 @Setter
