@@ -42,7 +42,6 @@ public class Post extends BaseEntity {
     
     private Integer postType;
 
-    private boolean deleted = false;
     private int luggage;
 
     @OneToMany(mappedBy = "post")
@@ -68,7 +67,7 @@ public class Post extends BaseEntity {
             joinerResponse.add(new JoinerInfo(joiner));
         }
 
-        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, joinerResponse);
+        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, postType, joinerResponse);
     }
 }
 
