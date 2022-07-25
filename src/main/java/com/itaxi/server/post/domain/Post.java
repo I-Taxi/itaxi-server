@@ -48,6 +48,7 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
 
+    @Builder
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage, Integer postType) {
         this.departure = departure;
         this.destination = destination;
