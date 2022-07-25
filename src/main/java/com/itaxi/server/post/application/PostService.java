@@ -33,7 +33,7 @@ public class PostService {
     private final JoinerRepository joinerRepository;
 
     public List<PostLog> getPostLog(String uid) {
-        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
+        Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
@@ -69,7 +69,7 @@ public class PostService {
             throw new PostMemberFullException(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(postJoinDto.getUid());
+        Optional<Member> member = memberRepository.findMemberByUid(postJoinDto.getUid());
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
@@ -107,7 +107,7 @@ public class PostService {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        Optional<Member> member = memberRepository.findMemberByUidAndDeletedFalse(uid);
+        Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
