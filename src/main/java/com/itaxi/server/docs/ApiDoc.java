@@ -7,6 +7,7 @@ public class ApiDoc {
     public static final String READ_NOTICE = "공지사항 단일 조회";
     public static final String UPDATE_NOTICE = "공지사항 수정";
     public static final String DELETE_NOTICE = "공지사항 삭제";
+    public static final String UPDATE_NOTICE_VIEWCNT = "공지사항 조회수 증가";
 
     /* Member 관련 API 명세 */
     public static final String MEMBER_CREATE = "회원가입";

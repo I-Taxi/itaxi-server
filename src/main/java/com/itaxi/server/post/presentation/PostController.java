@@ -29,6 +29,8 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.itaxi.server.member.domain.dto.MemberUidDTO;
 
 import org.springframework.data.domain.Sort;
+
+import javax.transaction.Transactional;
 import java.util.stream.Stream;
 
 @RestController
@@ -97,6 +99,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PostMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.JOIN_POST)
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
@@ -105,6 +108,7 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
     public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {

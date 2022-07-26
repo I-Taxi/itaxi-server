@@ -76,4 +76,18 @@ public class NoticeService {
 
         return "Success";
     }
+
+    public long updateNoticeViewCnt(Long noticeId) {
+        Notice noticeInfo = null;
+        Optional<Notice> notice = noticeRepository.findById(noticeId);
+        if (notice.isPresent()) {
+            noticeInfo = notice.get();
+            noticeInfo.setViewCnt(noticeInfo.getViewCnt() + 1);
+            noticeRepository.save(noticeInfo);
+        } else {
+            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return noticeInfo.getViewCnt();
+    }
 }
