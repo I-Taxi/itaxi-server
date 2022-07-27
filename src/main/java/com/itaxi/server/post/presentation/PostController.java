@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.itaxi.server.member.domain.dto.MemberUidDTO;
-
+import java.util.Objects;
 import org.springframework.data.domain.Sort;
 import java.util.stream.Stream;
 
@@ -63,21 +63,23 @@ public class PostController {
     public List<PostDto.Res> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
         final Place departure = (depId == null) ? null : placeRepository.getById(depId);
         final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
-        final LocalDateTime startDateTime = (time == LocalDate.now())? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
+        final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
         List<Post> posts = (postType == null) ?
                 ((depId == null && dstId == null)? (postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)):
                         (depId == null ? (postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime)):
-                                (dstId == null ? (postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) : (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
+                                (dstId == null ? (postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) :
+                                        (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
                                 ))) :
                 (depId == null && dstId == null? (postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime)):
                         (depId == null ? (postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime)):
-                                (dstId == null ? (postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime)) : (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
+                                (dstId == null ? (postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime)) :
+                                        (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
                                 )));
 
         List<PostDto.Res> resultList = posts.stream().map(m -> new PostDto.Res(m)).collect(Collectors.toList());
-        
+
         return resultList;
     }
 
