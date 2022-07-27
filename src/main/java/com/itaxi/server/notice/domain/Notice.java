@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
-@Getter
-@Setter
 @Where(clause = "deleted=false")
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notice extends BaseEntity {
@@ -33,24 +33,20 @@ public class Notice extends BaseEntity {
 
     private long viewCnt = 0;
 
-    private boolean deleted = false;
-
     public Notice(NoticeCreateDto noticeCreateDto) {
         this.title = noticeCreateDto.getTitle();
         this.content = noticeCreateDto.getContent();
+        this.setDeleted(false);
+        checkTitleAndContent(title, content);
+    }
 
+    private void checkTitleAndContent(String title, String content) {
         if (title == null || title.trim().isEmpty()) {
             throw new NoticeTitleEmptyException();
         }
-        this.title = title;
 
         if (content == null || content.trim().isEmpty()) {
             throw new NoticeContentEmptyException();
         }
-        this.content = content;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
     }
 }

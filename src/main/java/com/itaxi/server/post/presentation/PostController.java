@@ -29,6 +29,8 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.itaxi.server.member.domain.dto.MemberUidDTO;
 import java.util.Objects;
 import org.springframework.data.domain.Sort;
+
+import javax.transaction.Transactional;
 import java.util.stream.Stream;
 
 @RestController
@@ -91,7 +93,7 @@ public class PostController {
         final Place destination = placeRepository.getById(dto.getDstId());
         PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
         PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage(), true);
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
         PostInfoResponse response = postService.joinPost(result.getId(), joinDto);
         placeService.updateView(dto.getDepId());
         placeService.updateView(dto.getDstId());
@@ -99,6 +101,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PostMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.JOIN_POST)
     public ResponseEntity<PostInfoResponse> joinPost(@PathVariable Long postId, @RequestBody PostJoinRequest request) {
@@ -107,6 +110,7 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
     public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {

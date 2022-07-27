@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -22,11 +23,10 @@ import java.util.List;
 public class NoticeController {
     private final NoticeService noticeService;
 
+    @Transactional
     @ApiOperation(value = ApiDoc.CREATE_NOTICE)
     @PostMapping
-    // reponse entity써야 httpstatus와 body 같은거 넣기 좋음
     public ResponseEntity<Long> createNotice(@RequestBody NoticeCreateRequest request) {
-        // create 함수로 noticecreateDto 보내기
         Long id = noticeService.createNotice(NoticeCreateDto.from(request));
 
         return ResponseEntity.ok(id);
@@ -48,6 +48,7 @@ public class NoticeController {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     @ApiOperation(value = ApiDoc.UPDATE_NOTICE)
     @PutMapping("/{noticeId}")
     public ResponseEntity<String> updateNotice(@PathVariable Long noticeId, @RequestBody NoticeUpdateRequest request) {
@@ -56,10 +57,20 @@ public class NoticeController {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     @ApiOperation(value = ApiDoc.DELETE_NOTICE)
     @DeleteMapping("/{noticeId}")
     public ResponseEntity<String> deleteNotice(@PathVariable Long noticeId) {
         String result = noticeService.deleteNotice(noticeId);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Transactional
+    @ApiOperation(value = ApiDoc.UPDATE_NOTICE_VIEWCNT)
+    @PutMapping("/{noticeId}/view")
+    public ResponseEntity<Long> updateNoticeViewCnt(@PathVariable Long noticeId) {
+        Long result = noticeService.updateNoticeViewCnt(noticeId);
 
         return ResponseEntity.ok(result);
     }

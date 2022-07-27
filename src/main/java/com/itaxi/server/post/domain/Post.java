@@ -42,14 +42,12 @@ public class Post extends BaseEntity {
     
     private Integer postType;
 
-    private boolean deleted = false;
     private int luggage;
 
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
-    // TODO : delete test
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage, Integer postType) {
         this.departure = departure;
         this.destination = destination;
@@ -65,12 +63,11 @@ public class Post extends BaseEntity {
         PlaceResponse destResponse = new PlaceResponse(destination.getId(), destination.getName(), destination.getCnt());
 
         List<JoinerInfo> joinerResponse = new ArrayList<>();
-
         for(Joiner joiner : joiners) {
             joinerResponse.add(new JoinerInfo(joiner));
         }
 
-        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, joinerResponse);
+        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, postType, joinerResponse);
     }
 }
 
