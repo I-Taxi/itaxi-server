@@ -91,7 +91,7 @@ public class PostController {
         final Place destination = placeRepository.getById(dto.getDstId());
         PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
         PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getStatus(), dto.getLuggage(), true);
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
         PostInfoResponse response = postService.joinPost(result.getId(), joinDto);
         placeService.updateView(dto.getDepId());
         placeService.updateView(dto.getDstId());
