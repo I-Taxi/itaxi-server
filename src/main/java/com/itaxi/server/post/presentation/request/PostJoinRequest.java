@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostJoinRequest {
     private String uid;
-    private int status;
     private int luggage;
 }
