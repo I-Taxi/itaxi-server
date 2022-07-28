@@ -27,13 +27,13 @@ public class MemberController {
 
     /* READ */
     @ApiOperation(value = ApiDoc.MEMBER_READ)
-    @GetMapping(value = "")
+    @PostMapping(value = "/info")
     public MemberInfo getMember(@RequestBody MemberUidDTO memberUidDTO) {
         return memberService.getMember(memberUidDTO.getUid());
     }
 
     @ApiOperation(value = ApiDoc.MEMBER_LOGIN)
-    @GetMapping(value = "/login")
+    @PostMapping(value = "/login")
     public LoginResponse login(@RequestBody MemberUidDTO memberUidDTO) {
         return memberService.login(memberUidDTO.getUid());
     }

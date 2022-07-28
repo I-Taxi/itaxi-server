@@ -44,7 +44,7 @@ public class PostController {
     private final PlaceRepository placeRepository;
 
     @ApiOperation(value = ApiDoc.POST_HISTORY)
-    @GetMapping(value = "history")
+    @PostMapping(value = "history")
     public List<PostLog> getPostLog(@RequestBody MemberUidDTO memberUidDTO) {
         return postService.getPostLog(memberUidDTO.getUid());
     }
