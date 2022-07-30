@@ -16,5 +16,5 @@ public class NoticeReadAllResponse {
     private String title;
     private String content;
     private Long viewCnt;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 }
