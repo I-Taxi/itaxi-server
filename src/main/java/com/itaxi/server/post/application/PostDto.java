@@ -3,7 +3,12 @@ package com.itaxi.server.post.application;
 import com.itaxi.server.place.domain.Place;
 import lombok.*;
 import com.itaxi.server.post.domain.Post;
+import com.itaxi.server.post.domain.Joiner;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 public class PostDto{
     @Getter
@@ -46,6 +51,7 @@ public class PostDto{
             this.postType = req.getPostType();
             this.deptTime = req.getDeptTime();
             this.capacity = req.getCapacity();
+            this.luggage = req.getLuggage();
             this.status = 1;
         }
 
@@ -72,6 +78,8 @@ public class PostDto{
         private int participantNum;
         private int status;
         private Integer postType;
+        private int largeLuggageNum = 0;
+        private int smallLuggageNum = 0;
 
         @Builder
         public Res(Post post) {
@@ -83,6 +91,37 @@ public class PostDto{
             this.participantNum = post.getJoiners().size();
             this.status = post.getStatus();
             this.postType = post.getPostType();
+        }
+    }
+
+    @Getter
+    public static class PostGetRes {
+        private Long id;
+        private Place departure;
+        private Place destination;
+        private LocalDateTime deptTime;
+        private int capacity;
+        private int participantNum;
+        private int status;
+        private Integer postType;
+        private int largeLuggageNum = 0;
+        private int smallLuggageNum = 0;
+
+        @Builder
+        public PostGetRes(Post post, List<Integer> luggage) {
+            this.id = post.getId();
+            this.departure = post.getDeparture();
+            this.destination = post.getDestination();
+            this.deptTime = post.getDeptTime();
+            this.capacity = post.getCapacity();
+            this.participantNum = post.getJoiners().size();
+            this.status = post.getStatus();
+            this.postType = post.getPostType();
+            //int count = Collections.frequency(post.getJoiners(), 1);
+            //post.getJoiners().stream().map(m -> m.getLuggage()==1? this.smallLuggageNum++ : (m.getLuggage() == 2? this.largeLuggageNum++:(null)));
+            //List<Integer> luggage = post.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList());
+            this.smallLuggageNum = Collections.frequency(luggage, 1);
+            this.largeLuggageNum = Collections.frequency(luggage, 2);
         }
     }
 }
