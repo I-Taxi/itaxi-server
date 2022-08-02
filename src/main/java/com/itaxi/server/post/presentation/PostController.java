@@ -1,5 +1,6 @@
 package com.itaxi.server.post.presentation;
 
+import com.itaxi.server.post.domain.Joiner;
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceService;
@@ -62,7 +63,7 @@ public class PostController {
 
     @ApiOperation(value = ApiDoc.POST_READ)
     @RequestMapping(method = RequestMethod.GET)
-    public List<PostDto.Res> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
+    public List<PostDto.PostGetRes> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
         final Place departure = (depId == null) ? null : placeRepository.getById(depId);
         final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
         final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
@@ -80,7 +81,9 @@ public class PostController {
                                         (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
                                 )));
 
-        List<PostDto.Res> resultList = posts.stream().map(m -> new PostDto.Res(m)).collect(Collectors.toList());
+        List<PostDto.PostGetRes> resultList = posts.stream()
+                .map(m -> new PostDto.PostGetRes(m, m.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList())))
+        .collect(Collectors.toList());
 
         return resultList;
     }
