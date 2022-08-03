@@ -3,6 +3,7 @@ package com.itaxi.server.place.application;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,9 @@ public class PlaceService {
 
     public Place create(PlaceDto.AddPlaceReq dto) {
         return placeRepository.save(dto.toEntity());
+    }
+    public Iterable<Place> findAll() {
+        return placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"));
     }
     @Transactional
     public Place updatePlace(long id, PlaceDto.UpdatePlaceReq dto) {

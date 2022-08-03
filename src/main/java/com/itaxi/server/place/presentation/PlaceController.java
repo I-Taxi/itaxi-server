@@ -4,10 +4,8 @@ import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceDto;
 import com.itaxi.server.place.application.PlaceService;
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.place.domain.repository.PlaceRepository;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/place")
 public class PlaceController {
     private final PlaceService placeService;
-    private final PlaceRepository placeRepository;
 
     @ApiOperation(value = ApiDoc.PLACE_READ)
     @RequestMapping(method = RequestMethod.GET)
     public Iterable<Place> findAllPlace() {
-        return placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"));
+        return placeService.findAll();
     }
 
-    @RequestMapping(value = "/deleted", method = RequestMethod.GET)
-    public Iterable<Place> findAllPlaceNotDeleted() {
-        return placeRepository.findByDeleted();
-    }
     @ApiOperation(value = ApiDoc.PLACE_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
