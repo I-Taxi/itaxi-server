@@ -1,10 +1,8 @@
 package com.itaxi.server.place.domain;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.*;
 import com.itaxi.server.common.BaseEntity;
-import com.itaxi.server.place.application.PlaceDto;
+import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +29,7 @@ public class Place extends BaseEntity {
         this.cnt = cnt;
     }
 
-    public void updatePlace(PlaceDto.UpdatePlaceReq dto) {
+    public void updatePlace(UpdatePlaceDto dto) {
         this.name = dto.getName();
     }
 }

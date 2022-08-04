@@ -5,12 +5,11 @@ import com.itaxi.server.exception.post.JoinerNotFoundException;
 import com.itaxi.server.exception.post.PostMemberFullException;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
+import com.itaxi.server.post.application.dto.*;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
-import com.itaxi.server.post.application.dto.JoinerCreateDto;
-import com.itaxi.server.post.application.dto.PostJoinDto;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
@@ -19,12 +18,9 @@ import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.domain.dto.MemberJoinInfo;
 import com.itaxi.server.post.domain.dto.PostLog;
 import com.itaxi.server.post.domain.dto.PostLogDetail;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,23 +57,23 @@ public class PostService {
         return new PostLogDetail(post.get());
     }
 
-    public Post create(PostDto.AddPostPlaceReq dto) {
+    public Post create(AddPostPlaceDto dto) {
 
         return postRepository.save(dto.toEntity());
     }
 
-    public PostInfoResponse createPost(PostDto.AddPostReq dto) {
+    public PostInfoResponse createPost(AddPostDto dto) {
         final Place departure = placeRepository.getById(dto.getDepId());
         final Place destination = placeRepository.getById(dto.getDstId());
-        PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
-        PostDto.Res result = new PostDto.Res(create(postPlaceDto));
+        AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
+        ResDto result = new ResDto(create(postPlaceDto));
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 
         return response;
     }
 
-    public List<PostDto.PostGetRes> getPost(final Long depId, final Long dstId,  final LocalDate time, final Integer postType) {
+    public List<PostGetResDto> getPost(final Long depId, final Long dstId,  final LocalDate time, final Integer postType) {
         final Place departure = (depId == null) ? null : placeRepository.getById(depId);
         final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
         final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
@@ -95,8 +91,8 @@ public class PostService {
                                         (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
                                 )));
 
-        List<PostDto.PostGetRes> resultList = posts.stream()
-                .map(m -> new PostDto.PostGetRes(m, m.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList())))
+        List<PostGetResDto> resultList = posts.stream()
+                .map(m -> new PostGetResDto(m, m.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList())))
                 .collect(Collectors.toList());
 
         return resultList;
