@@ -17,6 +17,8 @@ public class PostLog {
     private final int status;
     private final Integer postType;
     private final int participantNum;
+    private int smallLuggageNum;
+    private int largeLuggageNum;
 
     public PostLog(Post p) {
         this.id = p.getId();
@@ -26,10 +28,16 @@ public class PostLog {
         this.capacity = p.getCapacity();
         this.status = p.getStatus();
         this.postType = p.getPostType();
+        this.smallLuggageNum = 0;
+        this.largeLuggageNum = 0;
         int tmp = 0;
         for(Joiner joiner : p.getJoiners()) {
             if(joiner.getStatus() == 1)
                 tmp += 1;
+            if(joiner.getLuggage() == 1)
+                smallLuggageNum++;
+            else if(joiner.getLuggage() == 2)
+                largeLuggageNum++;
         }
         this.participantNum = tmp;
     }
