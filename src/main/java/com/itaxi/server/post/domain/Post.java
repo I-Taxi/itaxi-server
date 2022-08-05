@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 
-import com.itaxi.server.post.domain.dto.JoinerInfo;
+import com.itaxi.server.post.application.dto.JoinerInfo;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;

@@ -2,7 +2,7 @@ package com.itaxi.server.member.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.member.application.MemberService;
-import com.itaxi.server.member.domain.dto.*;
+import com.itaxi.server.member.application.dto.*;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;

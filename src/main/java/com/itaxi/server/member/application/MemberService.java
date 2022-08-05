@@ -2,10 +2,10 @@ package com.itaxi.server.member.application;
 
 import com.itaxi.server.exception.member.*;
 import com.itaxi.server.member.domain.Member;
-import com.itaxi.server.member.domain.dto.LoginResponse;
-import com.itaxi.server.member.domain.dto.MemberCreateRequestDTO;
-import com.itaxi.server.member.domain.dto.MemberInfo;
-import com.itaxi.server.member.domain.dto.MemberUpdateRequestDTO;
+import com.itaxi.server.member.application.dto.LoginResponse;
+import com.itaxi.server.member.application.dto.MemberCreateRequestDTO;
+import com.itaxi.server.member.application.dto.MemberInfo;
+import com.itaxi.server.member.application.dto.MemberUpdateRequestDTO;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 
 import org.springframework.http.HttpStatus;
