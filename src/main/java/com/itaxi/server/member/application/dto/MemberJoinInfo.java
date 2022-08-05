@@ -1,4 +1,4 @@
-package com.itaxi.server.member.domain.dto;
+package com.itaxi.server.member.application.dto;
 
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.domain.Joiner;

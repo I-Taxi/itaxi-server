@@ -12,15 +12,15 @@ import com.itaxi.server.post.application.dto.PostJoinDto;
 import com.itaxi.server.post.presentation.request.PostExitRequest;
 import com.itaxi.server.post.presentation.request.PostJoinRequest;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
-import com.itaxi.server.post.domain.dto.PostLog;
-import com.itaxi.server.post.domain.dto.PostLogDetail;
+import com.itaxi.server.post.application.dto.PostLog;
+import com.itaxi.server.post.application.dto.PostLogDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-import com.itaxi.server.member.domain.dto.MemberUidDTO;
+import com.itaxi.server.member.application.dto.MemberUidDTO;
 import javax.transaction.Transactional;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.itaxi.server.member.domain.dto;
+package com.itaxi.server.member.application.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
