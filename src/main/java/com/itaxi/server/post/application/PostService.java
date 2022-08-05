@@ -2,12 +2,13 @@ package com.itaxi.server.post.application;
 
 import com.itaxi.server.exception.post.JoinerNotFoundException;
 import com.itaxi.server.exception.post.PostMemberFullException;
+import com.itaxi.server.place.domain.Place;
+import com.itaxi.server.place.domain.repository.PlaceRepository;
+import com.itaxi.server.post.application.dto.*;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
-import com.itaxi.server.post.application.dto.JoinerCreateDto;
-import com.itaxi.server.post.application.dto.PostJoinDto;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
@@ -20,14 +21,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final PlaceRepository placeRepository;
     private final MemberRepository memberRepository;
     private final JoinerRepository joinerRepository;
 
@@ -49,8 +56,45 @@ public class PostService {
         return new PostLogDetail(post.get());
     }
 
-    public Post create(PostDto.AddPostPlaceReq dto) {
+    public Post create(AddPostPlaceDto dto) {
+
         return postRepository.save(dto.toEntity());
+    }
+
+    public PostInfoResponse createPost(AddPostDto dto) {
+        final Place departure = placeRepository.getById(dto.getDepId());
+        final Place destination = placeRepository.getById(dto.getDstId());
+        AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
+        ResDto result = new ResDto(create(postPlaceDto));
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
+        PostInfoResponse response = joinPost(result.getId(), joinDto);
+
+        return response;
+    }
+
+    public List<PostGetResDto> getPost(final Long depId, final Long dstId,  final LocalDate time, final Integer postType) {
+        final Place departure = (depId == null) ? null : placeRepository.getById(depId);
+        final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
+        final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
+        final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
+
+        List<Post> posts = (postType == null) ?
+                ((depId == null && dstId == null)? (postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)):
+                        (depId == null ? (postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime)):
+                                (dstId == null ? (postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) :
+                                        (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
+                                ))) :
+                (depId == null && dstId == null? (postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime)):
+                        (depId == null ? (postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime)):
+                                (dstId == null ? (postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime)) :
+                                        (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
+                                )));
+
+        List<PostGetResDto> resultList = posts.stream()
+                .map(m -> new PostGetResDto(m, m.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
+        return resultList;
     }
 
     public PostInfoResponse joinPost(Long postId, PostJoinDto postJoinDto) {

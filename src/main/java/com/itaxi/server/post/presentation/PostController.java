@@ -1,20 +1,13 @@
 package com.itaxi.server.post.presentation;
 
-import com.itaxi.server.post.domain.Joiner;
+import com.itaxi.server.post.application.dto.AddPostDto;
+import com.itaxi.server.post.application.dto.PostGetResDto;
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceService;
-import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.PostService;
-import com.itaxi.server.post.domain.repository.PostRepository;
-import com.itaxi.server.post.domain.Post;
-import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.application.PostDto;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.itaxi.server.post.application.dto.PostJoinDto;
 import com.itaxi.server.post.presentation.request.PostExitRequest;
 import com.itaxi.server.post.presentation.request.PostJoinRequest;
@@ -28,21 +21,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.itaxi.server.member.domain.dto.MemberUidDTO;
-import java.util.Objects;
-import org.springframework.data.domain.Sort;
-
 import javax.transaction.Transactional;
-import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
 public class PostController {
-
     private final PostService postService;
     private final PlaceService placeService;
-    private final PostRepository postRepository;
-    private final PlaceRepository placeRepository;
 
     @ApiOperation(value = ApiDoc.POST_HISTORY)
     @PostMapping(value = "history")
@@ -56,48 +42,17 @@ public class PostController {
         return postService.getPostLogDetail(postId);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Iterable<Post> findAllPost() {
-        return postRepository.findAll();
-    }
-
     @ApiOperation(value = ApiDoc.POST_READ)
     @RequestMapping(method = RequestMethod.GET)
-    public List<PostDto.PostGetRes> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
-        final Place departure = (depId == null) ? null : placeRepository.getById(depId);
-        final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
-        final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
-        final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
-
-        List<Post> posts = (postType == null) ?
-                ((depId == null && dstId == null)? (postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)):
-                        (depId == null ? (postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime)):
-                                (dstId == null ? (postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) :
-                                        (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
-                                ))) :
-                (depId == null && dstId == null? (postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime)):
-                        (depId == null ? (postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime)):
-                                (dstId == null ? (postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime)) :
-                                        (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
-                                )));
-
-        List<PostDto.PostGetRes> resultList = posts.stream()
-                .map(m -> new PostDto.PostGetRes(m, m.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList())))
-        .collect(Collectors.toList());
-
-        return resultList;
+    public List<PostGetResDto> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
+        return postService.getPost(depId, dstId, time, postType);
     }
 
     @ApiOperation(value = ApiDoc.POST_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<PostInfoResponse> create(@RequestBody final PostDto.AddPostReq dto) {
-        final Place departure = placeRepository.getById(dto.getDepId());
-        final Place destination = placeRepository.getById(dto.getDstId());
-        PostDto.AddPostPlaceReq postPlaceDto = new PostDto.AddPostPlaceReq(dto, departure, destination);
-        PostDto.Res result = new PostDto.Res(postService.create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
-        PostInfoResponse response = postService.joinPost(result.getId(), joinDto);
+    public ResponseEntity<PostInfoResponse> create(@RequestBody final AddPostDto dto) {
+        PostInfoResponse response = postService.createPost(dto);
         placeService.updateView(dto.getDepId());
         placeService.updateView(dto.getDstId());
 
