@@ -1,5 +1,7 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.place.PlaceNotFoundException;
+import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.post.JoinerNotFoundException;
 import com.itaxi.server.exception.post.PostMemberFullException;
 import com.itaxi.server.place.domain.Place;
@@ -62,8 +64,8 @@ public class PostService {
     }
 
     public PostInfoResponse createPost(AddPostDto dto) {
-        final Place departure = placeRepository.getById(dto.getDepId());
-        final Place destination = placeRepository.getById(dto.getDstId());
+        final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
+        final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
         ResDto result = new ResDto(create(postPlaceDto));
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
@@ -73,8 +75,8 @@ public class PostService {
     }
 
     public List<PostGetResDto> getPost(final Long depId, final Long dstId,  final LocalDate time, final Integer postType) {
-        final Place departure = (depId == null) ? null : placeRepository.getById(depId);
-        final Place destination = (dstId == null) ? null : placeRepository.getById(dstId);
+        final Place departure = (depId == null) ? null : placeRepository.findById(depId).orElseThrow(PlaceNotFoundException::new);
+        final Place destination = (dstId == null) ? null : placeRepository.findById(dstId).orElseThrow(PlaceNotFoundException::new);
         final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
