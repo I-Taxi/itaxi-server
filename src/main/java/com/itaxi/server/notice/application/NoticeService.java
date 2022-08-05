@@ -43,7 +43,7 @@ public class NoticeService {
         List<NoticeReadAllResponse> result = new ArrayList<>();
         for (Notice notice : noticeRepository.findAll()) {
             if (notice != null) {
-                result.add(new NoticeReadAllResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getViewCnt(), notice.getCreatedAt()));
+                result.add(0, new NoticeReadAllResponse(notice.getId(), notice.getTitle(), notice.getContent(), notice.getViewCnt(), notice.getCreatedAt()));
             }
         }
 

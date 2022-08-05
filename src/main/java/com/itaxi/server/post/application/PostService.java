@@ -16,9 +16,9 @@ import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import com.itaxi.server.exception.member.MemberNotFoundException;
-import com.itaxi.server.member.domain.dto.MemberJoinInfo;
-import com.itaxi.server.post.domain.dto.PostLog;
-import com.itaxi.server.post.domain.dto.PostLogDetail;
+import com.itaxi.server.member.application.dto.MemberJoinInfo;
+import com.itaxi.server.post.application.dto.PostLog;
+import com.itaxi.server.post.application.dto.PostLogDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -126,7 +126,7 @@ public class PostService {
             JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage(), postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
-            throw new JoinerDuplicateMemberException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return postInfo.toPostInfoResponse();
         }
 
         List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);

@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 
-import com.itaxi.server.post.domain.dto.JoinerInfo;
+import com.itaxi.server.post.application.dto.JoinerInfo;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -42,19 +42,16 @@ public class Post extends BaseEntity {
     
     private Integer postType;
 
-    private int luggage;
-
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
 
     @Builder
-    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, int luggage, Integer postType) {
+    public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, Integer postType) {
         this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
-        this.luggage = luggage;
         this.postType = postType;
     }
 
