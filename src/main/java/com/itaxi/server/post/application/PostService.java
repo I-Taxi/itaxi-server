@@ -1,6 +1,5 @@
 package com.itaxi.server.post.application;
 
-import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.post.JoinerNotFoundException;
 import com.itaxi.server.exception.post.PostMemberFullException;
 import com.itaxi.server.place.domain.Place;
@@ -125,7 +124,7 @@ public class PostService {
             JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage(), postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
-            throw new JoinerDuplicateMemberException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return postInfo.toPostInfoResponse();
         }
 
         List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);
