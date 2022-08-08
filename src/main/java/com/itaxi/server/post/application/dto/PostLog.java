@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class PostLog {
+public class PostLog implements Comparable<PostLog> {
     private final Long id;
     private final Place departure;
     private final Place destination;
@@ -40,5 +40,10 @@ public class PostLog {
                 largeLuggageNum++;
         }
         this.participantNum = tmp;
+    }
+
+    @Override
+    public int compareTo(PostLog postLog) {
+        return this.deptTime.compareTo(postLog.getDeptTime());
     }
 }

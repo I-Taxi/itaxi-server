@@ -26,10 +26,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,8 +43,13 @@ public class PostService {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
+        PriorityQueue<PostLog> pQueue = new PriorityQueue<>(Collections.reverseOrder());
+        // 출발시각(deptTime) 기준으로 정렬
         for(Post post : joinInfo.getPosts())
-            postLogs.add(new PostLog(post));
+            pQueue.add(new PostLog(post));
+        // 정렬된 결과를 List에 주입
+        while(pQueue.size() > 0)
+            postLogs.add(pQueue.poll());
         return postLogs;
     }
 
