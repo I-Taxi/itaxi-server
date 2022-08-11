@@ -13,9 +13,9 @@ import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import com.itaxi.server.exception.member.MemberNotFoundException;
-import com.itaxi.server.member.domain.dto.MemberJoinInfo;
-import com.itaxi.server.post.domain.dto.PostLog;
-import com.itaxi.server.post.domain.dto.PostLogDetail;
+import com.itaxi.server.member.application.dto.MemberJoinInfo;
+import com.itaxi.server.post.application.dto.PostLog;
+import com.itaxi.server.post.application.dto.PostLogDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,8 +40,13 @@ public class PostService {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
+        PriorityQueue<PostLog> pQueue = new PriorityQueue<>(Collections.reverseOrder());
+        // 출발시각(deptTime) 기준으로 정렬
         for(Post post : joinInfo.getPosts())
-            postLogs.add(new PostLog(post));
+            pQueue.add(new PostLog(post));
+        // 정렬된 결과를 List에 주입
+        while(pQueue.size() > 0)
+            postLogs.add(pQueue.poll());
         return postLogs;
     }
 
@@ -122,7 +124,7 @@ public class PostService {
             JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage(), postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
-            throw new JoinerDuplicateMemberException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return postInfo.toPostInfoResponse();
         }
 
         List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);

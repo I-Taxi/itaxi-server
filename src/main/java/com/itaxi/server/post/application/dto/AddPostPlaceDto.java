@@ -34,7 +34,6 @@ public class AddPostPlaceDto {
                 .deptTime(this.deptTime)
                 .capacity(this.capacity)
                 .status(this.status)
-                .luggage(this.luggage)
                 .postType(this.postType)
                 .build();
     }
