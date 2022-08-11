@@ -3,7 +3,6 @@ package com.itaxi.server.post.application.dto;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
-import com.itaxi.server.post.domain.dto.JoinerInfo;
 import lombok.Builder;
 import lombok.Getter;
 
