@@ -22,6 +22,7 @@ public class PlaceService {
     public Iterable<Place> findAll() {
         return placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"));
     }
+
     @Transactional
     public Place updatePlace(long id, UpdatePlaceDto dto) {
         final Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
@@ -32,7 +33,6 @@ public class PlaceService {
     @Transactional
     public Place deletePlace(Long id, DeletePlaceDto dto) {
         final Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);;
-        //final BaseEntity base = findById(id);
         place.deletePlace(dto);
         return place;
     }
