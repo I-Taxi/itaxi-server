@@ -1,14 +1,11 @@
 package com.itaxi.server.post.application;
 
 import com.itaxi.server.exception.place.PlaceNotFoundException;
-import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
-import com.itaxi.server.exception.post.JoinerNotFoundException;
-import com.itaxi.server.exception.post.PostMemberFullException;
+import com.itaxi.server.exception.post.*;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
 import com.itaxi.server.post.domain.Post;
-import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.post.domain.Joiner;
@@ -59,7 +56,6 @@ public class PostService {
     }
 
     public Post create(AddPostPlaceDto dto) {
-
         return postRepository.save(dto.toEntity());
     }
 

@@ -1,11 +1,14 @@
 package com.itaxi.server.post.application.dto;
 
 import com.itaxi.server.place.domain.Place;
+import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
+import com.itaxi.server.post.domain.dto.JoinerInfo;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +25,9 @@ public class PostGetResDto {
     private int largeLuggageNum = 0;
     private int smallLuggageNum = 0;
 
+    private List<JoinerInfo> joiners;
+
+
     @Builder
     public PostGetResDto(Post post, List<Integer> luggage) {
         this.id = post.getId();
@@ -34,5 +40,10 @@ public class PostGetResDto {
         this.postType = post.getPostType();
         this.smallLuggageNum = Collections.frequency(luggage, 1);
         this.largeLuggageNum = Collections.frequency(luggage, 2);
+        joiners = new ArrayList<>();
+        for(Joiner joiner : post.getJoiners()) {
+            if (joiner.getStatus() == 1)
+                joiners.add(new JoinerInfo(joiner));
+        }
     }
 }
