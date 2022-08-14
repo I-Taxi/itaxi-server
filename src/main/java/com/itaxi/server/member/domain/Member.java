@@ -9,7 +9,7 @@ import com.itaxi.server.exception.member.MemberEmailNullException;
 import com.itaxi.server.exception.member.MemberNameNullException;
 import com.itaxi.server.exception.member.MemberPhoneNullException;
 import com.itaxi.server.exception.member.MemberUidNullException;
-import com.itaxi.server.member.domain.dto.MemberCreateRequestDTO;
+import com.itaxi.server.member.application.dto.MemberCreateRequestDTO;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.report.domain.Report;
 
