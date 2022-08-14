@@ -1,7 +1,7 @@
 package com.itaxi.server.post.application;
 
-import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.post.*;
+import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
@@ -23,7 +23,10 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,6 +107,9 @@ public class PostService {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
             postInfo = post.get();
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+            }
         } else {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -146,6 +152,9 @@ public class PostService {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
             postInfo = post.get();
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+            }
         } else {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -184,5 +193,17 @@ public class PostService {
         }
 
         return "Success";
+    }
+
+    public static int compareMinute(LocalDateTime date1, LocalDateTime date2) {
+        LocalDateTime dayDate1 = date1.truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime dayDate2 = date2.truncatedTo(ChronoUnit.MINUTES);
+        int compareResult = dayDate1.compareTo(dayDate2);
+        System.out.println("=== 분 단위 비교 ===");
+        System.out.println("date1.truncatedTo(ChronoUnit.MINUTES) : " + dayDate1);
+        System.out.println("date2.truncatedTo(ChronoUnit.MINUTES) : " + dayDate2);
+        System.out.println("결과 : " + compareResult);
+
+        return compareResult;
     }
 }
