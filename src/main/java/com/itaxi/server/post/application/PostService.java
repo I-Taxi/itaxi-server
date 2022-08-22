@@ -197,10 +197,6 @@ public class PostService {
         LocalDateTime dayDate1 = date1.truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime dayDate2 = date2.truncatedTo(ChronoUnit.MINUTES);
         int compareResult = dayDate1.compareTo(dayDate2);
-        System.out.println("=== 분 단위 비교 ===");
-        System.out.println("date1.truncatedTo(ChronoUnit.MINUTES) : " + dayDate1);
-        System.out.println("date2.truncatedTo(ChronoUnit.MINUTES) : " + dayDate2);
-        System.out.println("결과 : " + compareResult);
 
         return compareResult;
     }
