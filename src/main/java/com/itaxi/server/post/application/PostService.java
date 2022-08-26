@@ -109,7 +109,7 @@ public class PostService {
                 throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         if (postInfo.getStatus() == 2) {
@@ -120,7 +120,7 @@ public class PostService {
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
@@ -154,14 +154,14 @@ public class PostService {
                 throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
