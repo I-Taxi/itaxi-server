@@ -16,9 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlaceService {
     private final PlaceRepository placeRepository;
 
+    @Transactional
     public Place create(AddPlaceDto dto) {
         return placeRepository.save(dto.toEntity());
     }
+
+    @Transactional
     public Iterable<Place> findAll() {
         return placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"));
     }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     /* CREATE */
+    @Transactional
     public String createMember(MemberCreateRequestDTO memberCreateRequestDTO) {
         try {
             memberRepository.save(new Member(memberCreateRequestDTO));
@@ -42,6 +44,7 @@ public class MemberService {
     }
 
     /* READ */
+    @Transactional
     public MemberInfo getMember(String uid) {
         Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
         if(member.isPresent())
@@ -49,6 +52,7 @@ public class MemberService {
         throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Transactional
     public LoginResponse login(String uid) {
         Optional<LoginResponse> response = memberRepository.findMemberForLoginByUid(uid);
         if(response.isPresent())
@@ -57,6 +61,7 @@ public class MemberService {
     }
 
     /* UPDATE */
+    @Transactional
     public String updateMember(MemberUpdateRequestDTO memberUpdateRequestDTO) {
         Optional<Member> member = memberRepository.findMemberByUid(memberUpdateRequestDTO.getUid());
         if(!member.isPresent())
@@ -80,6 +85,7 @@ public class MemberService {
     }
 
     /* DELETE */
+    @Transactional
     public String deleteMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
