@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,8 +14,10 @@ public class AddPostDto {
     private Long depId;
     private Long dstId;
     private LocalDateTime deptTime;
+    @NotBlank
     private int capacity;
     private int status = 0;
+    @NotBlank
     private int luggage;
     private Integer postType;
 }

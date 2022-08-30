@@ -63,6 +63,9 @@ public class PostService {
     }
 
     public PostInfoResponse createPost(AddPostDto dto) {
+        if (dto.getDepId() == null || dto.getDstId() == null)
+            throw new PlaceNotFoundException();
+
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);

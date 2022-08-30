@@ -22,4 +22,5 @@ public class Message {
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
     public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 post입니다.";
     public static String Joiner_NOT_FOUND = "존재하지 않는 Joiner입니다.";
+    public static String PLACE_NOT_FOUND = "존재하지 않는 PLACE입니다.";
 }

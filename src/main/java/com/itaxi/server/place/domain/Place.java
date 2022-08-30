@@ -1,6 +1,8 @@
 package com.itaxi.server.place.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import lombok.AccessLevel;
@@ -20,6 +22,7 @@ public class Place extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String name;
     private Long cnt;
 
