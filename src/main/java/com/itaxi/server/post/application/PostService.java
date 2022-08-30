@@ -1,5 +1,6 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.place.domain.Place;
@@ -68,6 +69,9 @@ public class PostService {
 
     @Transactional
     public PostInfoResponse createPost(AddPostDto dto) {
+        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null)
+            throw new PlaceParamException();
+
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);

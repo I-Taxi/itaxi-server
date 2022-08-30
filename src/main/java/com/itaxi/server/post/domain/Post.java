@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import com.itaxi.server.common.BaseEntity;
 
@@ -39,7 +40,7 @@ public class Post extends BaseEntity {
     private int capacity;
 
     private int status;
-    
+
     private Integer postType;
 
     @OneToMany(mappedBy = "post")
