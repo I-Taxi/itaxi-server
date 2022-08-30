@@ -5,6 +5,7 @@ public class Message {
     public static final String MEMBER_NOT_FOUND = "존재하지 않는 멤버입니다.";
     public static final String NOTICE_NOT_FOUND = "존재하지 않는 공지입니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
+    public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
 
     /* Member 관련 추가 Exception Message */
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";

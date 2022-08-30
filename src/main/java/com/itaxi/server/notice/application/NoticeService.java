@@ -10,6 +10,8 @@ import com.itaxi.server.notice.presentation.response.NoticeReadResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +21,14 @@ import java.util.Optional;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
+    @Transactional
     public Long createNotice(NoticeCreateDto noticeCreateDto) {
         Notice savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
 
         return savedNotice.getId();
     }
 
+    @Transactional
     public NoticeReadResponse readNotice(Long noticeId) {
         NoticeReadResponse response = null;
 
@@ -39,6 +43,7 @@ public class NoticeService {
         return response;
     }
 
+    @Transactional
     public List<NoticeReadAllResponse> readAllNotices() {
         List<NoticeReadAllResponse> result = new ArrayList<>();
         for (Notice notice : noticeRepository.findAll()) {
@@ -50,6 +55,7 @@ public class NoticeService {
         return result;
     }
 
+    @Transactional
     public String updateNotice(Long noticeId, NoticeUpdateDto noticeUpdateDto) {
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
@@ -64,6 +70,7 @@ public class NoticeService {
         return "Success";
     }
 
+    @Transactional
     public String deleteNotice(Long noticeId) {
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
@@ -77,6 +84,7 @@ public class NoticeService {
         return "Success";
     }
 
+    @Transactional
     public long updateNoticeViewCnt(Long noticeId) {
         Notice noticeInfo = null;
         Optional<Notice> notice = noticeRepository.findById(noticeId);
