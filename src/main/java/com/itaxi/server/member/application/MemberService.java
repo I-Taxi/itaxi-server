@@ -8,11 +8,15 @@ import com.itaxi.server.member.application.dto.MemberInfo;
 import com.itaxi.server.member.application.dto.MemberUpdateRequestDTO;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 
+import com.itaxi.server.post.application.PostService;
+import com.itaxi.server.post.application.dto.PostLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +24,10 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PostService postService;
 
     /* CREATE */
+    @Transactional
     public String createMember(MemberCreateRequestDTO memberCreateRequestDTO) {
         try {
             memberRepository.save(new Member(memberCreateRequestDTO));
@@ -42,6 +48,7 @@ public class MemberService {
     }
 
     /* READ */
+    @Transactional
     public MemberInfo getMember(String uid) {
         Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
         if(member.isPresent())
@@ -49,6 +56,7 @@ public class MemberService {
         throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Transactional
     public LoginResponse login(String uid) {
         Optional<LoginResponse> response = memberRepository.findMemberForLoginByUid(uid);
         if(response.isPresent())
@@ -57,6 +65,7 @@ public class MemberService {
     }
 
     /* UPDATE */
+    @Transactional
     public String updateMember(MemberUpdateRequestDTO memberUpdateRequestDTO) {
         Optional<Member> member = memberRepository.findMemberByUid(memberUpdateRequestDTO.getUid());
         if(!member.isPresent())
@@ -80,19 +89,31 @@ public class MemberService {
     }
 
     /* DELETE */
+    @Transactional
     public String deleteMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         Member memberInfo = member.get();
-        memberInfo.setDeleted(true);
+        boolean isAvailable = true; // 삭제가능 여부
 
-        try {
-            memberRepository.save(memberInfo);
-            return "Success";
+        List<PostLog> memberLogs = postService.getPostLog(uid);
+        for(PostLog log : memberLogs)
+            if(log.getStatus() == 1 || log.getStatus() == 2)
+                isAvailable = false;
+
+        if(isAvailable) {
+            memberInfo.setDeleted(true);
+            try {
+                memberRepository.save(memberInfo);
+                return "Success";
+            }
+            catch(MemberException e) {
+                throw new MemberDeleteFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
-        catch(MemberException e) {
-            throw new MemberDeleteFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
+        else {
+            throw new MemberConstraintViolationException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

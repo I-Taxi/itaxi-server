@@ -1,5 +1,6 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.place.domain.Place;
@@ -19,6 +20,7 @@ import com.itaxi.server.post.application.dto.PostLogDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +37,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final JoinerRepository joinerRepository;
 
+    @Transactional
     public List<PostLog> getPostLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
@@ -51,6 +54,7 @@ public class PostService {
         return postLogs;
     }
 
+    @Transactional
     public PostLogDetail getPostLogDetail(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
         if(!post.isPresent())
@@ -58,11 +62,16 @@ public class PostService {
         return new PostLogDetail(post.get());
     }
 
+    @Transactional
     public Post create(AddPostPlaceDto dto) {
         return postRepository.save(dto.toEntity());
     }
 
+    @Transactional
     public PostInfoResponse createPost(AddPostDto dto) {
+        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null)
+            throw new PlaceParamException();
+
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
@@ -73,6 +82,7 @@ public class PostService {
         return response;
     }
 
+    @Transactional
     public List<PostGetResDto> getPost(final Long depId, final Long dstId,  final LocalDate time, final Integer postType) {
         final Place departure = (depId == null) ? null : placeRepository.findById(depId).orElseThrow(PlaceNotFoundException::new);
         final Place destination = (dstId == null) ? null : placeRepository.findById(dstId).orElseThrow(PlaceNotFoundException::new);
@@ -98,6 +108,7 @@ public class PostService {
         return resultList;
     }
 
+    @Transactional
     public PostInfoResponse joinPost(Long postId, PostJoinDto postJoinDto) {
         Post postInfo = null;
         Member memberInfo = null;
@@ -143,6 +154,7 @@ public class PostService {
         return postInfo.toPostInfoResponse();
     }
 
+    @Transactional
     public String exitPost(Long postId, String uid) {
         Post postInfo = null;
         Member memberInfo = null;
