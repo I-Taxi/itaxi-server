@@ -42,12 +42,11 @@ public class BannerService {
         Optional<Member> member = memberRepository.findMemberByUid(saveBanner.getUid());
         BannerCreateResponse bannerCreateResponse = null;
         if(member.isPresent()){
-            for(Place place : placeRepository.findAll()){
-                if(place.getId()!= saveBanner.getDepartureId() ||place.getId()!= saveBanner.getDestinationId()){
-                    throw new PlaceNotFoundException();
-                }
-            }
-            bannerCreateResponse = new BannerCreateResponse(saveBanner.getId(),member.get().getName(),saveBanner.getUid(), saveBanner.getWeatherStatus(), saveBanner.getDepartureId(),saveBanner.getDestinationId(),saveBanner.getReportAt(), saveBanner.getBannerType());
+            Optional<Place> placeDepart = placeRepository.findById(saveBanner.getDepartureId());
+            Optional<Place> placeDest = placeRepository.findById(saveBanner.getDestinationId());
+            if(placeDepart.isPresent() && placeDest.isPresent())
+                bannerCreateResponse = new BannerCreateResponse(saveBanner.getId(),member.get().getName(),saveBanner.getUid(), saveBanner.getWeatherStatus(), saveBanner.getDepartureId(),saveBanner.getDestinationId(),saveBanner.getReportAt(), saveBanner.getBannerType());
+            else throw new PlaceNotFoundException();
         }
 
         return bannerCreateResponse;
@@ -63,12 +62,10 @@ public class BannerService {
             bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
             bannerInfo.setDepartureId(bannerUpdateDto.getDepId());
             bannerInfo.setDestinationId(bannerUpdateDto.getDesId());
-            for(Place place : placeRepository.findAll()){
-                if(place.getId()!= bannerInfo.getDepartureId() ||place.getId()!= bannerInfo.getDestinationId()){
-                    throw new PlaceNotFoundException();
-                }
-            }
-            bannerRepository.save(bannerInfo);
+            Optional<Place> placeDepart = placeRepository.findById(bannerInfo.getDepartureId());
+            Optional<Place> placeDest = placeRepository.findById(bannerInfo.getDestinationId());
+            if(placeDepart.isPresent() && placeDest.isPresent())  bannerRepository.save(bannerInfo);
+            else throw new PlaceNotFoundException();
             result = new BannerUpdateResponse(bannerInfo.getUid(),bannerInfo.getWeatherStatus(),bannerInfo.getDepartureId(),bannerInfo.getDestinationId());
 
         }
@@ -108,25 +105,38 @@ public class BannerService {
         String[] notice_type={"일반","긴급","정전","점검"};
         String output = "";
         for(Banner banner : bannerRepository.findAll()){
+            Optional<Place> placeDepart = placeRepository.findById(banner.getDepartureId());
+            Optional<Place> placeDest = placeRepository.findById(banner.getDestinationId());
+
             output = "제보자: ";
             Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());
 
             if(member.isPresent()){
               output = output.concat(member.get().getName());
             }
-
-            if(time.minusHours(1).isAfter(banner.getReportAt())){
+            LocalDateTime time1 = LocalDateTime.of(time.getYear(), time.getMonth(), time.getDayOfMonth(), time.getHour()-1, time.getMinute(), time.getSecond());
+            if(time.isAfter(banner.getReportAt()) ) {
                 output= output.concat(" , 제보시각 :");
                 output = output.concat(banner.getReportAt().format(DateTimeFormatter.ofPattern("a HH시 mm분")));
                 output = output.concat(" , 장소 : ");
             }
-
-            if(banner.getDestinationId() == banner.getDepartureId()){
-                output = output.concat("특정 장소 A ");
+            if(placeDepart.isPresent() && placeDest.isPresent()){
+                if(banner.getDestinationId() == banner.getDepartureId()){
+                    output = output.concat("특정 장소 ");
+                    output = output.concat(placeDepart.get().getName());
+                }
+                else{
+                    output = output.concat(placeDepart.get().getName());
+                    output = output.concat("에서 ");
+                    output = output.concat(placeDest.get().getName());
+                    output = output.concat("로 가는 도로");
+                }
             }
             else{
-                output = output.concat("A에서 B가는 도로 ");
+                throw new PlaceNotFoundException();
             }
+
+
             if(0<=banner.getWeatherStatus() && banner.getWeatherStatus()<= weather.length-1){
                 output = output.concat(" , 요인 : ");
                 output = output.concat(weather[banner.getWeatherStatus()]);
