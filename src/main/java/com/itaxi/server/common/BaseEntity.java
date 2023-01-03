@@ -32,3 +32,4 @@ public class BaseEntity {
         this.deleted = dto.isDeleted();
     }
 }
+

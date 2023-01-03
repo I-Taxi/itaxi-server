@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
+
 @Where(clause = "deleted=false")
 @Entity
 @Getter
@@ -31,11 +33,22 @@ public class Notice extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int bannerType;
+    @Column(nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(nullable = false)
+    private LocalDateTime endTime;
+
     private long viewCnt = 0;
 
     public Notice(NoticeCreateDto noticeCreateDto) {
         this.title = noticeCreateDto.getTitle();
         this.content = noticeCreateDto.getContent();
+        this.bannerType = noticeCreateDto.getBannerType();
+        this.startTime = noticeCreateDto.getStartTime();
+        this.endTime = noticeCreateDto.getEndTime();
         this.setDeleted(false);
         checkTitleAndContent(title, content);
     }
