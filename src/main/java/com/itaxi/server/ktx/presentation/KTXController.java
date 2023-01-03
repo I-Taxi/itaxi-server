@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,20 +26,20 @@ public class KTXController {
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY)
     @PostMapping(value = "history")
-    public List<KTXLog> getKTXLog(@RequestBody MemberUidDTO memberUidDTO) {
-        return ktxService.getPostLog(memberUidDTO.getUid());
+    public ResponseEntity<List<KTXLog>> getKTXLog(@RequestBody MemberUidDTO memberUidDTO) {
+        return ResponseEntity.ok(ktxService.getPostLog(memberUidDTO.getUid()));
     }
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY_DETAIL)
     @GetMapping(value = "history/{ktxId}")
-    public KTXLogDetail getKTXLogDetail(@PathVariable long ktxId) {
-        return ktxService.getKTXLogDetail(ktxId);
+    public ResponseEntity<KTXLogDetail> getKTXLogDetail(@PathVariable long ktxId) {
+        return ResponseEntity.ok(ktxService.getKTXLogDetail(ktxId));
     }
 
     @ApiOperation(value = ApiDoc.KTX_READ)
     @RequestMapping(method = RequestMethod.GET)
-    public List<KTXGetResDto> getKTXDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=DateTimeFormat.ISO.DATE)final LocalDate time) {
-        return ktxService.getKTX(depId, dstId, time);
+    public ResponseEntity<List<KTXGetResDto>> getKTXDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=DateTimeFormat.ISO.DATE)final LocalDate time) {
+        return ResponseEntity.ok(ktxService.getKTX(depId, dstId, time));
     }
 
     @ApiOperation(value = ApiDoc.KTX_CREATE)
@@ -52,14 +53,14 @@ public class KTXController {
         return ResponseEntity.ok(response);
     }
 
-    @ApiOperation(value = ApiDoc.JOIN_POST)
+    @ApiOperation(value = ApiDoc.JOIN_KTX)
     @PostMapping("/{ktxId}/join")
     public ResponseEntity<KTXInfoResponse> joinKTX(@PathVariable Long ktxId, @RequestBody KTXJoinRequest request) {
         KTXInfoResponse result = ktxService.joinKTX(ktxId, KTXJoinDto.from(request, false));
         return ResponseEntity.ok(result);
     }
 
-    @ApiOperation(value = ApiDoc.EXIT_POST)
+    @ApiOperation(value = ApiDoc.EXIT_KTX)
     @PutMapping("/{ktxId}/join")
     public ResponseEntity<String> exitKTX(@PathVariable Long ktxId, @RequestBody KTXExitRequest request) {
         String result = ktxService.exitKTX(ktxId, request.getUid());

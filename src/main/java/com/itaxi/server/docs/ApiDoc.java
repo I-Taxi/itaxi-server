@@ -44,4 +44,6 @@ public class ApiDoc {
     public static final String KTX_HISTORY = "KTX 탑승내역 조회";
     public static final String KTX_HISTORY_DETAIL = "KTX 탑승내역 상세조회";
     public static final String KTX_STOP = "KTX 모집 중단";
+    public static final String JOIN_KTX = "KTX 채팅방 입장";
+    public static final String EXIT_KTX = "KTX 채팅방 나가기";
 }
