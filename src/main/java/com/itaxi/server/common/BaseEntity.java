@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
+import com.itaxi.server.ktxPlace.application.dto.DeleteKTXPlaceDto;
 import com.itaxi.server.place.application.dto.DeletePlaceDto;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,6 +30,10 @@ public class BaseEntity {
     private boolean deleted;
 
     public void deletePlace(DeletePlaceDto dto) {
+        this.deleted = dto.isDeleted();
+    }
+
+    public void deleteKTXPlace(DeleteKTXPlaceDto dto) {
         this.deleted = dto.isDeleted();
     }
 }
