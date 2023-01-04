@@ -5,7 +5,6 @@ import com.itaxi.server.ktx.application.KTXService;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import com.itaxi.server.member.application.dto.MemberUidDTO;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.time.LocalDate;
 import java.util.List;
 
