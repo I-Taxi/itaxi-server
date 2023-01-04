@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BannerUpdateDto {
-    private String uid;
     private int weatherStatus;
     private Long depId;
     private Long desId;
     public static BannerUpdateDto from(BannerUpdateRequest request) {
-        return new BannerUpdateDto(request.getUid(), request.getWeatherStatus(),request.getDepId(),request.getDesId());
+        return new BannerUpdateDto( request.getWeatherStatus(),request.getDepId(),request.getDesId());
     }
 }

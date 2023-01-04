@@ -46,4 +46,13 @@ public class ApiDoc {
     public static final String KTX_STOP = "KTX 모집 중단";
     public static final String JOIN_KTX = "KTX 채팅방 입장";
     public static final String EXIT_KTX = "KTX 채팅방 나가기";
+
+    /* BANNER 관련 API 명세 */
+    public static final String BANNER_CREATE = "BANNER 생성";
+    public static final String BANNER_READ = "BANNER 단일 조회";
+    public static final String BANNER_READ_ALL = "BANNER 다건 조회";
+    public static final String BANNER_READ_RECENT_ALL = "BANNER 최근 조회";
+    public static final String BANNER_UPDATE = "BANNER 수정";
+    public static final String BANNER_DELETE = "BANNER 삭제";
+
 }

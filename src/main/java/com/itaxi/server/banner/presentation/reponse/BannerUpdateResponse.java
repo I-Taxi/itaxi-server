@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BannerUpdateResponse {
-    private String uid;
     private int weatherStatus;
     private Long depId;
     private Long desId;

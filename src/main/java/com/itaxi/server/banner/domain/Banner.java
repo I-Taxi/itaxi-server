@@ -2,6 +2,7 @@ package com.itaxi.server.banner.domain;
 
 import com.itaxi.server.banner.application.dto.BannerCreateDto;
 import com.itaxi.server.common.BaseEntity;
+import com.itaxi.server.exception.banner.BannerUidEmptyException;
 import com.itaxi.server.exception.notice.NoticeContentEmptyException;
 import com.itaxi.server.exception.notice.NoticeTitleEmptyException;
 import com.itaxi.server.member.domain.repository.MemberRepository;
@@ -54,8 +55,8 @@ public class Banner extends BaseEntity {
     }
 
     private void checkUid(String uid) {
-        if (uid == null || uid.trim().isEmpty()) {
-//            throw new NoticeTitleEmptyException();
+        if ((uid == null || uid.trim().isEmpty())) {
+            throw new BannerUidEmptyException();
         }
     }
 }
