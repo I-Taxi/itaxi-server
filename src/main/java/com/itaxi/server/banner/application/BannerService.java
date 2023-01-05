@@ -5,6 +5,8 @@ import com.itaxi.server.banner.application.dto.BannerUpdateDto;
 import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.banner.domain.repository.BannerRepository;
 import com.itaxi.server.banner.presentation.reponse.*;
+import com.itaxi.server.bannerPlace.domain.BANNERPlace;
+import com.itaxi.server.bannerPlace.domain.repository.BANNERPlaceRepository;
 import com.itaxi.server.exception.banner.BannerBadWeatherStatusException;
 import com.itaxi.server.exception.banner.BannerNotFoundException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
@@ -35,7 +37,7 @@ import java.util.Optional;
 public class BannerService {
     private final MemberRepository memberRepository;
     private final BannerRepository bannerRepository;
-    private final PlaceRepository placeRepository;
+    private final BANNERPlaceRepository bannerplaceRepository;
     private final NoticeRepository noticeRepository;
 
 
@@ -45,8 +47,8 @@ public class BannerService {
         Optional<Member> member = memberRepository.findMemberByUid(saveBanner.getUid());
         BannerCreateResponse bannerCreateResponse = null;
         if(member.isPresent()){
-            Optional<Place> placeDepart = placeRepository.findById(saveBanner.getDepartureId());
-            Optional<Place> placeDest = placeRepository.findById(saveBanner.getDestinationId());
+            Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(saveBanner.getDepartureId());
+            Optional<BANNERPlace> placeDest = bannerplaceRepository.findById(saveBanner.getDestinationId());
             if(placeDepart.isPresent() && placeDest.isPresent())
                 if(saveBanner.getWeatherStatus()>=0&& saveBanner.getWeatherStatus()<=3){
                     bannerCreateResponse = new BannerCreateResponse(saveBanner.getId(),member.get().getName(),saveBanner.getUid(), saveBanner.getWeatherStatus(), saveBanner.getDepartureId(),saveBanner.getDestinationId(),saveBanner.getReportAt(), saveBanner.getBannerType());
@@ -69,8 +71,8 @@ public class BannerService {
             bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
             bannerInfo.setDepartureId(bannerUpdateDto.getDepId());
             bannerInfo.setDestinationId(bannerUpdateDto.getDesId());
-            Optional<Place> placeDepart = placeRepository.findById(bannerInfo.getDepartureId());
-            Optional<Place> placeDest = placeRepository.findById(bannerInfo.getDestinationId());
+            Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(bannerInfo.getDepartureId());
+            Optional<BANNERPlace> placeDest = bannerplaceRepository.findById(bannerInfo.getDestinationId());
             if(placeDepart.isPresent() && placeDest.isPresent()) {
                 if(bannerInfo.getWeatherStatus()>=0&& bannerInfo.getWeatherStatus()<=3){
                         bannerRepository.save(bannerInfo);
@@ -127,8 +129,8 @@ public class BannerService {
         String[] notice_type={"일반","긴급","정전","점검"};
         String output = "";
         for(Banner banner : bannerRepository.findAll()){
-            Optional<Place> placeDepart = placeRepository.findById(banner.getDepartureId());
-            Optional<Place> placeDest = placeRepository.findById(banner.getDestinationId());
+            Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(banner.getDepartureId());
+            Optional<BANNERPlace> placeDest = bannerplaceRepository.findById(banner.getDestinationId());
 
             output = "제보자: ";
             Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());

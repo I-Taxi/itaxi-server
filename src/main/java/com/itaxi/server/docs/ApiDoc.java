@@ -55,4 +55,10 @@ public class ApiDoc {
     public static final String BANNER_UPDATE = "BANNER 수정";
     public static final String BANNER_DELETE = "BANNER 삭제";
 
+    public static final String BANNER_PLACE_CREATE = "BANNER 장소 생성";
+    public static final String BANNER_PLACE_READ = "BANNER 장소 조회";
+    public static final String BANNER_PLACE_UPDATE_COUNT = "BANNER 장소 조회수 증가";
+    public static final String BANNER_PLACE_UPDATE = "BANNER 장소 수정";
+    public static final String BANNER_PLACE_DELETE = "BANNER 장소 삭제";
+
 }
