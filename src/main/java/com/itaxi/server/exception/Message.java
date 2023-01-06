@@ -7,6 +7,7 @@ public class Message {
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
+    public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
 
     /* Member 관련 추가 Exception Message */
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";
@@ -25,5 +26,13 @@ public class Message {
     public static final String JOINER_DUPLICATE_MEMBER = "이미 해당 post에 존재하는 멤버입니다";
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
     public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 post입니다.";
-    public static String Joiner_NOT_FOUND = "존재하지 않는 Joiner입니다.";
+
+    public static final String BANNER_UID_EMPTY_EXCEPTION = "UID 값이 올바르지 않습니다.";
+    public static final String BANNER_BAD_WEATHER_STATUS_EXCEPTION = "존재하지 않는 날씨 상태입니다.";
+
+    public static final String Joiner_NOT_FOUND = "존재하지 않는 Joiner입니다.";
+    public static final String JOINER_NOT_OWNER = "Joiner가 해당 post의 owner가 아닙니다.";
+    public static final String KTX_MEMBER_FULL = "KTX 게시글의 인원이 이미 최대입니다.";
+    public static final String KTX_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 KTX 게시글입니다.";
+    public static final String KTX_NOT_FOUND = "존재하지 않는 KTX 게시글입니다.";
 }
