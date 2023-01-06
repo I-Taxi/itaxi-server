@@ -1,12 +1,12 @@
 package com.itaxi.server.ktx.application;
 
 import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
+import com.itaxi.server.exception.ktx.KTXMemberFullException;
+import com.itaxi.server.exception.ktx.KTXNotFoundException;
+import com.itaxi.server.exception.ktx.KTXTimeOutException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.JoinerNotFoundException;
-import com.itaxi.server.exception.post.PostMemberFullException;
-import com.itaxi.server.exception.post.PostNotFoundException;
-import com.itaxi.server.exception.post.PostTimeOutException;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.ktxPlace.domain.KTXPlace;
@@ -18,10 +18,6 @@ import com.itaxi.server.ktx.domain.repository.KTXRepository;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
-import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.application.dto.PostGetResDto;
-import com.itaxi.server.post.domain.Joiner;
-import com.itaxi.server.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -59,7 +55,7 @@ public class KTXService {
     @Transactional
     public KTXLogDetail getKTXLogDetail(Long ktxId) {
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
-        if (!ktx.isPresent()) throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (!ktx.isPresent()) throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         return new KTXLogDetail(ktx.get());
     }
 
@@ -113,14 +109,14 @@ public class KTXService {
         if (ktx.isPresent()) {
             ktxInfo = ktx.get();
             if (compareMinute(LocalDateTime.now(), ktxInfo.getDeptTime()) == 1) {
-                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new KTXTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         if (ktxInfo.getStatus() == 2) {
-            throw new PostMemberFullException(HttpStatus.BAD_REQUEST);
+            throw new KTXMemberFullException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(ktxJoinDto.getUid());
@@ -159,10 +155,10 @@ public class KTXService {
         if (ktx.isPresent()) {
             ktxInfo = ktx.get();
             if (compareMinute(LocalDateTime.now(), ktxInfo.getDeptTime()) == 1) {
-                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new KTXTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(uid);
@@ -211,10 +207,10 @@ public class KTXService {
         if (ktx.isPresent()) {
             ktxInfo = ktx.get();
             if (compareMinute(LocalDateTime.now(), ktxInfo.getDeptTime()) == 1) {
-                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new KTXTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
         }
         // 멤버가 존재하는지 확인
         Optional<Member> member = memberRepository.findMemberByUid(uid);
