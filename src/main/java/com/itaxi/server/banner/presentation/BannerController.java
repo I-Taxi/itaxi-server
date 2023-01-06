@@ -25,7 +25,7 @@ public class BannerController {
     private final BannerService bannerService;
 
     @Transactional
-    @ApiOperation(value = ApiDoc.CREATE_NOTICE)
+    @ApiOperation(value = ApiDoc.BANNER_CREATE)
     @PostMapping
     public ResponseEntity<BannerCreateResponse> createBanner(@RequestBody BannerCreateRequest request) {
         BannerCreateResponse bannerCreateResponse = bannerService.createBanner(BannerCreateDto.from(request));
@@ -34,7 +34,7 @@ public class BannerController {
     }
 
     @Transactional
-    @ApiOperation(value = ApiDoc.CREATE_NOTICE)
+    @ApiOperation(value = ApiDoc.BANNER_UPDATE)
     @PutMapping("{bannerId}")
     public ResponseEntity<BannerUpdateResponse> updateBanner(@PathVariable Long bannerId, @RequestBody BannerUpdateRequest request){
 
@@ -42,14 +42,14 @@ public class BannerController {
         return ResponseEntity.ok(bannerUpdateResponse);
     }
 
-    @ApiOperation(value = ApiDoc.READ_NOTICE)
+    @ApiOperation(value = ApiDoc.BANNER_READ)
     @GetMapping("/{bannerId}")
     public ResponseEntity<BannerReadResponse> readBanner(@PathVariable Long bannerId){
         BannerReadResponse bannerReadResponse = bannerService.readBanner(bannerId);
         return ResponseEntity.ok(bannerReadResponse);
     }
 
-    @ApiOperation(value = ApiDoc.READ_ALL_NOTICES)
+    @ApiOperation(value = ApiDoc.BANNER_READ_ALL)
     @GetMapping
     public ResponseEntity<List> readAllBanner() {
         List<BannerReadAllResponse> result = bannerService.readAllBanners();
@@ -57,7 +57,7 @@ public class BannerController {
         return ResponseEntity.ok(result);
     }
 
-    @ApiOperation(value = ApiDoc.READ_ALL_NOTICES)
+    @ApiOperation(value = ApiDoc.BANNER_READ_RECENT_ALL)
     @GetMapping("/local-datetime")
     public ResponseEntity<List> readAllRecentBanner(@RequestParam@DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) final LocalDateTime time) {
         List<BannerReadAllRecentResponse> result = bannerService.readAllRecentBanners(time);
@@ -65,7 +65,7 @@ public class BannerController {
     }
 
     @Transactional
-    @ApiOperation(value = ApiDoc.DELETE_NOTICE)
+    @ApiOperation(value = ApiDoc.BANNER_DELETE)
     @DeleteMapping("/{bannerId}")
     public ResponseEntity<String> deleteBanner(@PathVariable Long bannerId){
         String result = bannerService.deleteBanner(bannerId);
