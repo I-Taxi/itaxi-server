@@ -9,9 +9,9 @@ public class BANNERResDto {
     private String name;
     private Long cnt;
 
-    public BANNERResDto(BANNERPlace ktxPlace) {
-        this.id = ktxPlace.getId();
-        this.name = ktxPlace.getName();
-        this.cnt = ktxPlace.getCnt();
+    public BANNERResDto(BANNERPlace bannerPlace) {
+        this.id = bannerPlace.getId();
+        this.name = bannerPlace.getName();
+        this.cnt = bannerPlace.getCnt();
     }
 }

@@ -27,6 +27,7 @@ public class BANNERPlaceController {
         return ResponseEntity.ok(bannerPlaceService.findAll());
     }
 
+
     @ApiOperation(value = ApiDoc.BANNER_PLACE_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
