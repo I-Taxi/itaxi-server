@@ -40,4 +40,5 @@ public class Message {
     public static final String KTX_BAD_CNT = "cnt가 음수입니다.";
     public static final String KTX_NAME_NULL = "name이 비어있습니다.";
     public static final String KTX_BAD_DATE = "채팅방 생성 가능 날짜는 현재로부터 3개월입니다.";
+    public static final String KTX_REQUEST_BODY_NULL = "올바르지 않은 형식으로 데이터가 전달됐습니다.";
 }

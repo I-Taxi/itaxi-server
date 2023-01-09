@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/ktx-place")
@@ -26,9 +28,9 @@ public class KTXPlaceController {
     @ApiOperation(value = ApiDoc.KTX_PLACE_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<KTXResDto> create(@RequestBody final AddKTXPlaceDto dto) {
+    public ResponseEntity<KTXResDto> create(@Valid @RequestBody final AddKTXPlaceDto dto) {
         // name 비었을 때
-        if (dto.getName() == null) throw new NameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getName().equals(null) || dto.getName().equals("") || dto.getName().equals(" ")) throw new NameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
         // cnt 마이너스로 올 때
         if (dto.getCnt() < 0) throw new BadCntException(HttpStatus.INTERNAL_SERVER_ERROR);
 

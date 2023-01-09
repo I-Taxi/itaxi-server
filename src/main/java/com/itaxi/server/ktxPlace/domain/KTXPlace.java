@@ -23,7 +23,7 @@ public class KTXPlace extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    //@NotBlank(message = "name이 비어있습니다")
     private String name;
 
     private Long cnt;

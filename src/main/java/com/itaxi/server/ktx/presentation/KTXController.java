@@ -2,6 +2,7 @@ package com.itaxi.server.ktx.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.exception.ktx.BadDateException;
+import com.itaxi.server.exception.ktx.KTXRequestBodyNullException;
 import com.itaxi.server.exception.ktx.SamePlaceException;
 import com.itaxi.server.exception.ktx.WrongCapacityException;
 import com.itaxi.server.ktx.application.KTXService;
@@ -49,9 +50,9 @@ public class KTXController {
     @ApiOperation(value = ApiDoc.KTX_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<KTXInfoResponse> create(@Valid @RequestBody final AddKTXDto dto) {
+    public ResponseEntity<KTXInfoResponse> create(@Valid @RequestBody(required = false) final AddKTXDto dto) {
         // RequestBody가 null일 때
-
+        if (dto == null) throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
         // 출발과 도착 장소가 같을 때
         if (dto.getDstId() == dto.getDepId()) throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
         // capacity 1~10 이 아닐 때
@@ -59,10 +60,8 @@ public class KTXController {
         // deptTime이 이상할 때
 
         // 날짜 3달 후까지로
-        Period period = getPeriod(dto.getDeptTime(), LocalDateTime.now());
-        if (period.getYears() > 1 || period.getMonths() > 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
-        System.out.println(period.getMonths());
-
+        Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
+        if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         KTXInfoResponse response = ktxService.createKTX(dto);
         ktxPlaceService.updateView(dto.getDepId());
