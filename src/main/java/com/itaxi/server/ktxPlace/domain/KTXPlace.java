@@ -2,10 +2,7 @@ package com.itaxi.server.ktxPlace.domain;
 
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.ktxPlace.application.dto.UpdateKTXPlaceDto;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
@@ -18,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 @Where(clause = "deleted=false")
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class KTXPlace extends BaseEntity {

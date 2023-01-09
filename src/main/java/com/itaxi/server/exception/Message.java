@@ -35,4 +35,9 @@ public class Message {
     public static final String KTX_MEMBER_FULL = "KTX 게시글의 인원이 이미 최대입니다.";
     public static final String KTX_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 KTX 게시글입니다.";
     public static final String KTX_NOT_FOUND = "존재하지 않는 KTX 게시글입니다.";
+    public static final String KTX_WRONG_CAPACITY = "잘못된 최대인원 값입니다. (1 이상 10 이하)";
+    public static final String KTX_SAME_PLACE = "출발 장소와 도착 장소가 같습니다.";
+    public static final String KTX_BAD_CNT = "cnt가 음수입니다.";
+    public static final String KTX_NAME_NULL = "name이 비어있습니다.";
+    public static final String KTX_BAD_DATE = "채팅방 생성 가능 날짜는 현재로부터 3개월입니다.";
 }

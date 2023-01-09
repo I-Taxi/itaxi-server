@@ -34,9 +34,6 @@ public class BaseEntity {
         this.deleted = dto.isDeleted();
     }
 
-    public void deleteKTXPlace(DeleteKTXPlaceDto dto) {
-        this.deleted = dto.isDeleted();
-    }
     public void deleteBANNERPlace(DeleteBANNERPlaceDto dto) {
         this.deleted = dto.isDeleted();
     }

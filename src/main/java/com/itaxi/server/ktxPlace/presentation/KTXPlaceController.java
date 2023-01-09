@@ -1,6 +1,8 @@
 package com.itaxi.server.ktxPlace.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
+import com.itaxi.server.exception.ktx.BadCntException;
+import com.itaxi.server.exception.ktx.NameNullException;
 import com.itaxi.server.ktxPlace.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import io.swagger.annotations.ApiOperation;
@@ -25,12 +27,17 @@ public class KTXPlaceController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<KTXResDto> create(@RequestBody final AddKTXPlaceDto dto) {
+        // name 비었을 때
+        if (dto.getName() == null) throw new NameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        // cnt 마이너스로 올 때
+        if (dto.getCnt() < 0) throw new BadCntException(HttpStatus.INTERNAL_SERVER_ERROR);
+
         return ResponseEntity.ok(new KTXResDto(ktxPlaceService.create(dto)));
     }
 
     @ApiOperation(value = ApiDoc.KTX_PLACE_UPDATE_COUNT)
     @RequestMapping(value = "/count/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Integer> updateView(@PathVariable final long id) {
+    public ResponseEntity<Long> updateView(@PathVariable final long id) {
         return ResponseEntity.ok(ktxPlaceService.updateView(id));
     }
 
@@ -38,13 +45,15 @@ public class KTXPlaceController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<KTXResDto> update(@PathVariable final long id, @RequestBody final UpdateKTXPlaceDto dto) {
+        // viewcnt 리턴값
         return ResponseEntity.ok(new KTXResDto(ktxPlaceService.updateKTXPlace(id, dto)));
     }
 
     @ApiOperation(value = ApiDoc.KTX_PLACE_DELETE)
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable final long id, @RequestBody final DeleteKTXPlaceDto dto) {
-        ktxPlaceService.deleteKTXPlace(id, dto);
+    public String delete(@PathVariable final long id) {
+        String result = ktxPlaceService.deleteKTXPlace(id);
+        return result;
     }
 }
