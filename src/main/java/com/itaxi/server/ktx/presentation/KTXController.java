@@ -1,6 +1,7 @@
 package com.itaxi.server.ktx.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
+import com.itaxi.server.exception.GlobalExceptionHandler;
 import com.itaxi.server.exception.ktx.BadDateException;
 import com.itaxi.server.exception.ktx.KTXRequestBodyNullException;
 import com.itaxi.server.exception.ktx.SamePlaceException;
@@ -57,8 +58,6 @@ public class KTXController {
         if (dto.getDstId() == dto.getDepId()) throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
         // capacity 1~10 이 아닐 때
         if (dto.getCapacity() > 10 || dto.getCapacity() < 1) throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
-        // deptTime이 이상할 때
-
         // 날짜 3달 후까지로
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
