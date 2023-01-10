@@ -4,6 +4,8 @@ import com.itaxi.server.bannerPlace.domain.BANNERPlace;
 import com.itaxi.server.ktxPlace.domain.KTXPlace;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
+
 
 @Getter
 public class AddBANNERPlaceDto {

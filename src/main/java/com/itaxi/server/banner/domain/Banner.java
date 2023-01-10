@@ -11,6 +11,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 
@@ -33,10 +36,12 @@ public class Banner extends BaseEntity {
     private String uid;
     @Column(nullable = false)
     private int weatherStatus;
+
     @Column(nullable = false)
     private Long departureId;
     @Column(nullable = false)
     private Long destinationId;
+
     @Column(nullable = false)
     private LocalDateTime reportAt;
     @Column(nullable = false)

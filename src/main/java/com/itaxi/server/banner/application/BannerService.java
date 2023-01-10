@@ -7,8 +7,9 @@ import com.itaxi.server.banner.domain.repository.BannerRepository;
 import com.itaxi.server.banner.presentation.reponse.*;
 import com.itaxi.server.bannerPlace.domain.BANNERPlace;
 import com.itaxi.server.bannerPlace.domain.repository.BANNERPlaceRepository;
-import com.itaxi.server.exception.banner.BannerBadWeatherStatusException;
-import com.itaxi.server.exception.banner.BannerNotFoundException;
+import com.itaxi.server.exception.banner.*;
+import com.itaxi.server.exception.bannerPlace.BannerPlaceCntMinusException;
+import com.itaxi.server.exception.bannerPlace.BannerPlaceNotNullException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
@@ -40,9 +41,19 @@ public class BannerService {
     private final BANNERPlaceRepository bannerplaceRepository;
     private final NoticeRepository noticeRepository;
 
-
+    String[] weather={"폭우","침수","폭설","공사"};
+    String[] notice_type={"일반","긴급","정전","점검"};
     @Transactional
     public BannerCreateResponse createBanner(BannerCreateDto bannerCreateDto){
+        int gapBetweenReportAndNow = 30;
+        LocalDateTime currentDate = LocalDateTime.now().minusMinutes(gapBetweenReportAndNow);
+
+        if(bannerCreateDto.getWeatherStatus()<0 || bannerCreateDto.getWeatherStatus()>weather.length-1) throw new BannerUidEmptyException();
+        if(bannerCreateDto.getUid()==null ||bannerCreateDto.getUid()==""|| bannerCreateDto.getUid().equals(" ")) throw new BannerPlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(bannerCreateDto.getBannerType()!=0) throw new BannerBadTypeException();
+
+        if(currentDate.isAfter(bannerCreateDto.getReportAt())) throw new BannerReportTimeException(HttpStatus.INTERNAL_SERVER_ERROR);
+
         Banner saveBanner = bannerRepository.save(new Banner(bannerCreateDto));
         Optional<Member> member = memberRepository.findMemberByUid(saveBanner.getUid());
         BannerCreateResponse bannerCreateResponse = null;
@@ -65,6 +76,9 @@ public class BannerService {
     public BannerUpdateResponse updateBanner(Long bannerId,BannerUpdateDto bannerUpdateDto){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
         BannerUpdateResponse result = null;
+
+        if(bannerUpdateDto.getWeatherStatus()<0 || bannerUpdateDto.getWeatherStatus()>weather.length-1) throw new BannerUidEmptyException();
+
         if(banner.isPresent()){
 
             Banner bannerInfo = banner.get();
@@ -125,8 +139,7 @@ public class BannerService {
     @Transactional
     public List<BannerReadAllRecentResponse> readAllRecentBanners(LocalDateTime time){
         List<BannerReadAllRecentResponse> result = new ArrayList<>();
-        String[] weather={"폭우","침수","폭설","공사"};
-        String[] notice_type={"일반","긴급","정전","점검"};
+
         String output = "";
         for(Banner banner : bannerRepository.findAll()){
             Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(banner.getDepartureId());

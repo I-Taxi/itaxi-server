@@ -44,4 +44,6 @@ public class GlobalExceptionHandler extends Throwable {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ExceptionResponse("데이터 포맷이 틀립니다."));
     }
+
+
 }

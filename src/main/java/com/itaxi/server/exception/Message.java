@@ -8,6 +8,7 @@ public class Message {
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
     public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
+    public static final String BANNER_PLACE_NOT_FOUND = "존재하지 않는 배너 장소입니다.";
 
     /* Member 관련 추가 Exception Message */
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";
@@ -28,7 +29,13 @@ public class Message {
     public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 post입니다.";
 
     public static final String BANNER_UID_EMPTY_EXCEPTION = "UID 값이 올바르지 않습니다.";
+    public static final String BANNER_BAD_TYPE_EXCEPTION = "배너 타입은 0 또는 1 이어야 합니다.";
     public static final String BANNER_BAD_WEATHER_STATUS_EXCEPTION = "존재하지 않는 날씨 상태입니다.";
+    public static final String BANNER_BAD_REPORT_TIME_EXCEPTION = "현재 시간보다 이전에 제보할 수 없습니다.";
+    public static final String BANNER_REQUEST_BODY_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
+    public static final String BANNER_PLACE_CNT_MINUS_EXCEPTION = "조회수는 0보다 작을 수 없습니다.";
+    public static final String BANNER_PLACE_NAME_NULL_EXCEPTION = "장소의 이름은 null값일 수 없습니다.";
+    public static final String BANNER_PLACE_REQUEST_BODY_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
 
     public static final String Joiner_NOT_FOUND = "존재하지 않는 Joiner입니다.";
     public static final String JOINER_NOT_OWNER = "Joiner가 해당 post의 owner가 아닙니다.";
