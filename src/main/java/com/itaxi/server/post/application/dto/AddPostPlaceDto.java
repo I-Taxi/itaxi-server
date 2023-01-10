@@ -14,7 +14,7 @@ public class AddPostPlaceDto {
     private int capacity;
     private int status;
     private Integer postType;
-    private int luggage;
+
 
     @Builder
     public AddPostPlaceDto(AddPostDto req, Place departure, Place destination) {
@@ -23,7 +23,6 @@ public class AddPostPlaceDto {
         this.postType = req.getPostType();
         this.deptTime = req.getDeptTime();
         this.capacity = req.getCapacity();
-        this.luggage = req.getLuggage();
         this.status = 1;
     }
 

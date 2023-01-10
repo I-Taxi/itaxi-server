@@ -9,7 +9,7 @@ public class PostGetJoinerInfo {
     private final Long memberId;
     private final String memberName;
     private final String memberPhone;
-    private final int luggage;
+
     private final boolean owner;
 
     public PostGetJoinerInfo(Joiner joiner) {
@@ -17,7 +17,7 @@ public class PostGetJoinerInfo {
         this.memberId = joiner.getMember().getId();
         this.memberName = joiner.getMember().getName();
         this.memberPhone = joiner.getMember().getPhone();
-        this.luggage = joiner.getLuggage();
+
         this.owner = joiner.isOwner();
     }
 }

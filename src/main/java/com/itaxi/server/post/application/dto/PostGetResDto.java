@@ -21,14 +21,11 @@ public class PostGetResDto {
     private int participantNum;
     private int status;
     private Integer postType;
-    private int largeLuggageNum = 0;
-    private int smallLuggageNum = 0;
-
     private List<PostGetJoinerInfo> joiners;
 
 
     @Builder
-    public PostGetResDto(Post post, List<Integer> luggage) {
+    public PostGetResDto(Post post) {
         this.id = post.getId();
         this.departure = post.getDeparture();
         this.destination = post.getDestination();
@@ -37,8 +34,6 @@ public class PostGetResDto {
         this.participantNum = post.getJoiners().size();
         this.status = post.getStatus();
         this.postType = post.getPostType();
-        this.smallLuggageNum = Collections.frequency(luggage, 1);
-        this.largeLuggageNum = Collections.frequency(luggage, 2);
         joiners = new ArrayList<PostGetJoinerInfo>();
         for(Joiner joiner : post.getJoiners()) {
             if (joiner.getStatus() == 1)
