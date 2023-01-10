@@ -23,6 +23,7 @@ public class ApiDoc {
     public static final String POST_HISTORY_DETAIL = "탑승내역 상세조회";
     public static final String POST_CREATE = "채팅방 생성";
     public static final String POST_READ = "날짜별 채팅방 조회";
+    public static final String POST_CHANGE_DEPT_TIME = "출발시각 변경";
 
     /* Place 관련 API 명세 */
     public static final String PLACE_CREATE = "장소 생성";

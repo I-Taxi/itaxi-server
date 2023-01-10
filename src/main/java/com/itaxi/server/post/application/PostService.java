@@ -1,5 +1,6 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -206,6 +208,61 @@ public class PostService {
         }
 
         return newOwner;
+    }
+
+    @Transactional
+    public String changePostTime(Long postId, PostTimeDto dto) {
+        Post postInfo = null;
+        Member memberInfo = null;
+
+        // post 존재하는지 체크
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isPresent()) {
+            postInfo = post.get();
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 멤버가 존재하는지 체크
+        Optional<Member> member = memberRepository.findMemberByUid(dto.getUid());
+        if (member.isPresent()) {
+            memberInfo = member.get();
+        } else {
+            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+        }
+
+        // deptTime이 현재 시간으로부터 3분 이하 차이이면 수정 X
+        long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
+        if (checkChangeMinutes < 3) {
+            throw new CannotChangeDeptTimeException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 시간이 이전 deptTime과 30분 차이 이하인지 체크
+        long minutes = ChronoUnit.MINUTES.between(postInfo.getDeptTime(), dto.getDeptTime());
+        if (minutes >= 30) {
+            throw new DeptTimeWrongException(HttpStatus.BAD_REQUEST);
+        }
+
+        // joiner에 존재하는지 체크
+        Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
+        if (joiner.isPresent()) {
+            Joiner joinerInfo = joiner.get();
+            // 멤버가 해당 post의 owner인지 체크
+            if (joinerInfo.isOwner()) {
+                // owner이면 시간 변경
+                postInfo.setDeptTime(dto.getDeptTime());
+                postRepository.save(postInfo);
+            } else {
+                throw new JoinerNotOwnerException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return "Success";
     }
 
     public static int compareMinute(LocalDateTime date1, LocalDateTime date2) {
