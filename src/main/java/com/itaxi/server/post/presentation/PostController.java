@@ -1,5 +1,6 @@
 package com.itaxi.server.post.presentation;
 
+import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.application.dto.AddPostDto;
 import com.itaxi.server.post.application.dto.PostGetResDto;
 import org.springframework.http.HttpStatus;
@@ -71,9 +72,9 @@ public class PostController {
     @Transactional
     @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
-    public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
-        String result = postService.exitPost(postId, request.getUid());
+    public ResponseEntity<Long> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
+        Member result = postService.exitPost(postId, request.getUid());
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(result.getId());
     }
 }

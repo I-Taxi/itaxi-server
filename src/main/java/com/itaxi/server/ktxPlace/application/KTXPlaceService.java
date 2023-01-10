@@ -40,15 +40,24 @@ public class KTXPlaceService {
     }
 
     @Transactional
-    public KTXPlace deleteKTXPlace(Long id, DeleteKTXPlaceDto dto) {
+    public String deleteKTXPlace(Long id) {
         final KTXPlace ktxPlace = ktxPlaceRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
-        ktxPlace.deleteKTXPlace(dto);
-        return ktxPlace;
+        ktxPlace.setDeleted(true);
+        ktxPlaceRepository.save(ktxPlace);
+        return "Success";
     }
 
     @Transactional
-    public int updateView(Long id) {
-        return ktxPlaceRepository.updateView(id);
+    public Long updateView(Long id) {
+        Long count = 0L;
+        KTXPlace ktxPlace = ktxPlaceRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
+
+        count = ktxPlace.getCnt() + 1;
+        ktxPlace.setCnt(count);
+
+        ktxPlaceRepository.save(ktxPlace);
+
+        return count;
     }
 
 }
