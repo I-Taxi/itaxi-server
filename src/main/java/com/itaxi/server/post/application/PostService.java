@@ -155,9 +155,11 @@ public class PostService {
     }
 
     @Transactional
-    public String exitPost(Long postId, String uid) {
+    public Member exitPost(Long postId, String uid) {
         Post postInfo = null;
         Member memberInfo = null;
+        Member newOwner = null;
+        Joiner joinerBeOwner = null;
 
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
@@ -194,15 +196,16 @@ public class PostService {
             postRepository.save(postInfo);
 
             if (joinerSize > 1 && joinerInfo.isOwner()) {
-                Joiner joinerBeOwner = postInfo.getJoiners().get(1);
+                joinerBeOwner = postInfo.getJoiners().get(1);
                 joinerBeOwner.setOwner(true);
                 joinerRepository.save(joinerBeOwner);
+                newOwner = joinerBeOwner.getMember();
             }
         } else {
             throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return "Success";
+        return newOwner;
     }
 
     public static int compareMinute(LocalDateTime date1, LocalDateTime date2) {

@@ -1,6 +1,11 @@
 package com.itaxi.server.ktx.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
+import com.itaxi.server.exception.GlobalExceptionHandler;
+import com.itaxi.server.exception.ktx.BadDateException;
+import com.itaxi.server.exception.ktx.KTXRequestBodyNullException;
+import com.itaxi.server.exception.ktx.SamePlaceException;
+import com.itaxi.server.exception.ktx.WrongCapacityException;
 import com.itaxi.server.ktx.application.KTXService;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
@@ -12,7 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 
 @RestController
@@ -43,7 +51,17 @@ public class KTXController {
     @ApiOperation(value = ApiDoc.KTX_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<KTXInfoResponse> create(@RequestBody final AddKTXDto dto) {
+    public ResponseEntity<KTXInfoResponse> create(@Valid @RequestBody(required = false) final AddKTXDto dto) {
+        // RequestBody가 null일 때
+        if (dto == null) throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        // 출발과 도착 장소가 같을 때
+        if (dto.getDstId() == dto.getDepId()) throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
+        // capacity 1~10 이 아닐 때
+        if (dto.getCapacity() > 10 || dto.getCapacity() < 1) throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
+        // 날짜 3달 후까지로
+        Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
+        if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+
         KTXInfoResponse response = ktxService.createKTX(dto);
         ktxPlaceService.updateView(dto.getDepId());
         ktxPlaceService.updateView(dto.getDstId());
@@ -71,5 +89,10 @@ public class KTXController {
     public ResponseEntity<String> stopKTX(@PathVariable Long ktxId, @RequestBody MemberUidDTO memberUidDTO) {
         String result = ktxService.stopKTX(ktxId, memberUidDTO.getUid());
         return ResponseEntity.ok(result);
+    }
+
+    // 두 날짜 사이의 차이 구하기
+    private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
+        return Period.between(a.toLocalDate(), b.toLocalDate());
     }
 }

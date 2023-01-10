@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.format.DateTimeParseException;
+
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends Throwable {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ITaxiException.class)
@@ -32,7 +34,7 @@ public class GlobalExceptionHandler {
         logger.error("Unknown Exception : " + e.getClass());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ExceptionResponse("unknown error"));
+                             .body(new ExceptionResponse("unknown error"));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
