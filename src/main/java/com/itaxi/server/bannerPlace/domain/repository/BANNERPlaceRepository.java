@@ -9,7 +9,4 @@ public interface BANNERPlaceRepository extends JpaRepository<BANNERPlace, Long> 
     @Query("SELECT p FROM BANNERPlace p WHERE p.deleted = false ORDER BY p.cnt DESC NULLS LAST")
     Iterable<BANNERPlace> findByDeleted();
 
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE BANNERPlace p SET p.cnt = p.cnt + 1 WHERE p.id = id")
-    int updateView(Long id);
 }
