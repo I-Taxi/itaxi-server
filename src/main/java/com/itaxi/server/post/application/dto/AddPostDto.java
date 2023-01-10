@@ -17,7 +17,5 @@ public class AddPostDto {
     @NotBlank
     private int capacity;
     private int status = 0;
-    @NotBlank
-    private int luggage;
     private Integer postType;
 }

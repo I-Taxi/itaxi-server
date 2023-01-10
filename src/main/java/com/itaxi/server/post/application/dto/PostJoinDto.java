@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostJoinDto {
     private String uid;
-    private int luggage;
     private boolean owner;
 
     public static PostJoinDto from(PostJoinRequest request, boolean owner) {
-        return new PostJoinDto(request.getUid(), request.getLuggage(), owner);
+        return new PostJoinDto(request.getUid(), owner);
     }
 }

@@ -76,7 +76,7 @@ public class PostService {
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
         ResDto result = new ResDto(create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), dto.getLuggage(), true);
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 
         return response;
@@ -102,7 +102,7 @@ public class PostService {
                                 )));
 
         List<PostGetResDto> resultList = posts.stream()
-                .map(m -> new PostGetResDto(m, m.getJoiners().stream().map(Joiner::getLuggage).collect(Collectors.toList())))
+                .map(m -> new PostGetResDto(m))
                 .collect(Collectors.toList());
 
         return resultList;
@@ -136,7 +136,7 @@ public class PostService {
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
-            JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.getLuggage(), postJoinDto.isOwner());
+            JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
             return postInfo.toPostInfoResponse();
