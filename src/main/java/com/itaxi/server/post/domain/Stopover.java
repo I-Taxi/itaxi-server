@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.application.dto.stopover.StopoverCreateDto;
+import com.itaxi.server.post.application.dto.StopoverCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

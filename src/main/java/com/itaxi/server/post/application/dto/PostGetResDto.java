@@ -1,7 +1,6 @@
 package com.itaxi.server.post.application.dto;
 
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.application.dto.stopover.PostGetStopoverInfo;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.post.domain.Stopover;
@@ -10,7 +9,6 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Getter

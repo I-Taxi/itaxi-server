@@ -7,10 +7,7 @@ import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
-import com.itaxi.server.post.application.dto.stopover.AddStopoverPostDto;
-import com.itaxi.server.post.application.dto.stopover.AddStopoverPostPlaceDto;
-import com.itaxi.server.post.application.dto.stopover.StopoverCreateDto;
-import com.itaxi.server.post.application.dto.stopover.StopoverResDto;
+import com.itaxi.server.post.application.dto.StopoverCreateDto;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
@@ -24,7 +21,6 @@ import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.application.dto.MemberJoinInfo;
 import com.itaxi.server.post.application.dto.PostLog;
 import com.itaxi.server.post.application.dto.PostLogDetail;
-import com.itaxi.server.post.presentation.response.StopoverPostInfoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -86,27 +82,6 @@ public class PostService {
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
         ResDto result = new ResDto(create(postPlaceDto));
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
-        PostInfoResponse response = joinPost(result.getId(), joinDto);
-
-        return response;
-    }
-
-    @Transactional
-    public Post createStopover(AddStopoverPostPlaceDto dto) {
-        return postRepository.save(dto.toEntity());
-    }
-
-    @Transactional
-    public PostInfoResponse createStopoverPost(@RequestBody AddStopoverPostDto dto) {
-        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null)
-            throw new PlaceParamException();
-
-        final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
-        final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
-
-        AddStopoverPostPlaceDto postPlaceDto = new AddStopoverPostPlaceDto(dto, departure, destination);
-        StopoverResDto result = new StopoverResDto(createStopover(postPlaceDto));
         // Post 저장을 한 후 Stopover 저장하기
         List<Long> stopoverList = dto.getStopoverIds();
         // 방금 저장한 post를 가지고 온다
@@ -123,6 +98,7 @@ public class PostService {
         // stopover를 post에 추가해준다
         List<Stopover> stopovers = stopoverRepository.findStopoversByPost(resPost);
         resPost.setStopovers(stopovers);
+
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 

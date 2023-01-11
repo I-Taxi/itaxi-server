@@ -7,12 +7,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 import com.itaxi.server.common.BaseEntity;
 
 import com.itaxi.server.post.application.dto.JoinerInfo;
-import com.itaxi.server.post.application.dto.stopover.StopoverInfo;
+import com.itaxi.server.post.application.dto.StopoverInfo;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;

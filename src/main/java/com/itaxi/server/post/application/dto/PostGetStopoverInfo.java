@@ -1,4 +1,4 @@
-package com.itaxi.server.post.application.dto.stopover;
+package com.itaxi.server.post.application.dto;
 
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Stopover;

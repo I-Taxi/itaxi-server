@@ -1,10 +1,9 @@
 package com.itaxi.server.post.presentation;
 
 import com.itaxi.server.exception.ktx.BadDateException;
+import com.itaxi.server.exception.post.TooManyStopoversException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.application.dto.*;
-import com.itaxi.server.post.application.dto.stopover.AddStopoverPostDto;
-import com.itaxi.server.post.presentation.response.StopoverPostInfoResponse;
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceService;
@@ -55,24 +54,13 @@ public class PostController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<PostInfoResponse> create(@RequestBody final AddPostDto dto) {
+        // 경유지 3개까지로 제한
+        if (dto.getStopoverIds().size() > 3) throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
         // 날짜 3달 후까지로
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         PostInfoResponse response = postService.createPost(dto);
-        placeService.updateView(dto.getDepId());
-        placeService.updateView(dto.getDstId());
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("stopover")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<PostInfoResponse> createWithStopover(@RequestBody final AddStopoverPostDto dto) {
-        Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
-        if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        PostInfoResponse response = postService.createStopoverPost(dto);
         // 경유지에 사용된 장소들의 viewcnt도 업데이트해준다.
         List<Long> stopoverIds = dto.getStopoverIds();
         for (Long id : stopoverIds) {
