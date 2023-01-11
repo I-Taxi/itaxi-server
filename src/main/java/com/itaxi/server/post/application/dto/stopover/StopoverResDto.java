@@ -13,7 +13,6 @@ public class StopoverResDto {
     private Long id;
     private Place departure;
     private Place destination;
-    private List<Place> stopover;
     private LocalDateTime deptTime;
     private int capacity;
     private int participantNum;

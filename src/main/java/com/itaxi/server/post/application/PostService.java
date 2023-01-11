@@ -109,10 +109,12 @@ public class PostService {
         StopoverResDto result = new StopoverResDto(createStopover(postPlaceDto));
         // Post 저장을 한 후 Stopover 저장하기
         List<Long> stopoverList = dto.getStopoverIds();
+        // 방금 저장한 post를 가지고 온다
         Optional<Post> post = postRepository.findById(result.getId());
         Post resPost = post.get();
         Place place = null;
         Stopover stopover = null;
+        // 각 stopover들을 생성하고 저장
         for (Long id : stopoverList) {
             place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
             stopover = new Stopover(new StopoverCreateDto(place, resPost));

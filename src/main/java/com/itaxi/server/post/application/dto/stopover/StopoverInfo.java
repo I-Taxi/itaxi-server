@@ -1,11 +1,10 @@
 package com.itaxi.server.post.application.dto.stopover;
 
-import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.post.domain.Stopover;
 import lombok.Getter;
 
 @Getter
-public class StopoverInfo extends BaseEntity {
+public class StopoverInfo {
     private final Long placeId;
     private final String placeName;
 

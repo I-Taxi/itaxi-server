@@ -1,10 +1,15 @@
 package com.itaxi.server.post.application.dto;
 
 import com.itaxi.server.place.domain.Place;
+import com.itaxi.server.post.application.dto.stopover.StopoverInfo;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.itaxi.server.post.domain.Stopover;
 import lombok.Getter;
 
 @Getter
@@ -12,6 +17,7 @@ public class PostLog implements Comparable<PostLog> {
     private final Long id;
     private final Place departure;
     private final Place destination;
+    private final List<StopoverInfo> stopovers;
     private final LocalDateTime deptTime;
     private final int capacity;
     private final int status;
@@ -34,6 +40,11 @@ public class PostLog implements Comparable<PostLog> {
                 tmp += 1;
         }
         this.participantNum = tmp;
+
+        stopovers = new ArrayList<>();
+        for (Stopover stopover : p.getStopovers()) {
+            stopovers.add(new StopoverInfo(stopover));
+        }
     }
 
     @Override
