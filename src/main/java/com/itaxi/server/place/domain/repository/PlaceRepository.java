@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     @Query("SELECT p FROM Place p WHERE  p.deleted = false order by p.cnt desc NULLS LAST")
@@ -15,4 +18,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     @Modifying(clearAutomatically = true)
     @Query("update Place p set p.cnt = p.cnt + 1 where p.id = :id")
     int updateView(Long id);
+
 }
