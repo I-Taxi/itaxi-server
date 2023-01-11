@@ -1,7 +1,7 @@
 package com.itaxi.server.post.presentation;
 
 import com.itaxi.server.exception.ktx.BadDateException;
-import com.itaxi.server.exception.post.DeptTimeWrongException;
+import com.itaxi.server.exception.post.TooManyStopoversException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.application.dto.*;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import com.itaxi.server.post.application.PostService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.itaxi.server.post.presentation.request.PostExitRequest;
@@ -55,11 +54,18 @@ public class PostController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<PostInfoResponse> create(@RequestBody final AddPostDto dto) {
+        // 경유지 3개까지로 제한
+        if (dto.getStopoverIds().size() > 3) throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
         // 날짜 3달 후까지로
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         PostInfoResponse response = postService.createPost(dto);
+        // 경유지에 사용된 장소들의 viewcnt도 업데이트해준다.
+        List<Long> stopoverIds = dto.getStopoverIds();
+        for (Long id : stopoverIds) {
+            placeService.updateView(id);
+        }
         placeService.updateView(dto.getDepId());
         placeService.updateView(dto.getDstId());
 

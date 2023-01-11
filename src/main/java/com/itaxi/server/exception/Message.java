@@ -29,6 +29,7 @@ public class Message {
     public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 post입니다.";
     public static final String DEPT_TIME_WRONG = "30분 이상 시간을 미룰 수 없습니다.";
     public static final String CANNOT_CHANGE_DEPT_TIME = "출발시각까지 3분 이하가 남았을 때는 시간을 바꿀 수 없습니다.";
+    public static final String POST_TOO_MANY_STOPOVERS = "경유지는 최대 3개까지 선택할 수 있습니다.";
 
     public static final String BANNER_UID_EMPTY_EXCEPTION = "UID 값이 올바르지 않습니다.";
     public static final String BANNER_BAD_TYPE_EXCEPTION = "배너 타입은 0 또는 1 이어야 합니다.";

@@ -3,12 +3,12 @@ package com.itaxi.server.post.application.dto;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
+import com.itaxi.server.post.domain.Stopover;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -22,6 +22,7 @@ public class PostGetResDto {
     private int status;
     private Integer postType;
     private List<PostGetJoinerInfo> joiners;
+    private List<PostGetStopoverInfo> stopovers;
 
 
     @Builder
@@ -38,6 +39,10 @@ public class PostGetResDto {
         for(Joiner joiner : post.getJoiners()) {
             if (joiner.getStatus() == 1)
                 joiners.add(new PostGetJoinerInfo(joiner));
+        }
+        stopovers = new ArrayList<PostGetStopoverInfo>();
+        for(Stopover stopover : post.getStopovers()) {
+            stopovers.add(new PostGetStopoverInfo(stopover));
         }
     }
 }
