@@ -7,26 +7,33 @@ import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
+import com.itaxi.server.post.application.dto.stopover.AddStopoverPostDto;
+import com.itaxi.server.post.application.dto.stopover.AddStopoverPostPlaceDto;
+import com.itaxi.server.post.application.dto.stopover.StopoverCreateDto;
+import com.itaxi.server.post.application.dto.stopover.StopoverResDto;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.post.domain.Joiner;
+import com.itaxi.server.post.domain.Stopover;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
+import com.itaxi.server.post.domain.repository.StopoverRepository;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.application.dto.MemberJoinInfo;
 import com.itaxi.server.post.application.dto.PostLog;
 import com.itaxi.server.post.application.dto.PostLogDetail;
+import com.itaxi.server.post.presentation.response.StopoverPostInfoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +45,7 @@ public class PostService {
     private final PlaceRepository placeRepository;
     private final MemberRepository memberRepository;
     private final JoinerRepository joinerRepository;
+    private final StopoverRepository stopoverRepository;
 
     @Transactional
     public List<PostLog> getPostLog(String uid) {
@@ -78,6 +86,41 @@ public class PostService {
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
         ResDto result = new ResDto(create(postPlaceDto));
+        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
+        PostInfoResponse response = joinPost(result.getId(), joinDto);
+
+        return response;
+    }
+
+    @Transactional
+    public Post createStopover(AddStopoverPostPlaceDto dto) {
+        return postRepository.save(dto.toEntity());
+    }
+
+    @Transactional
+    public PostInfoResponse createStopoverPost(@RequestBody AddStopoverPostDto dto) {
+        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null)
+            throw new PlaceParamException();
+
+        final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
+        final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
+
+        AddStopoverPostPlaceDto postPlaceDto = new AddStopoverPostPlaceDto(dto, departure, destination);
+        StopoverResDto result = new StopoverResDto(createStopover(postPlaceDto));
+        // Post 저장을 한 후 Stopover 저장하기
+        List<Long> stopoverList = dto.getStopoverIds();
+        Optional<Post> post = postRepository.findById(result.getId());
+        Post resPost = post.get();
+        Place place = null;
+        Stopover stopover = null;
+        for (Long id : stopoverList) {
+            place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
+            stopover = new Stopover(new StopoverCreateDto(place, resPost));
+            stopoverRepository.save(stopover);
+        }
+        // stopover를 post에 추가해준다
+        List<Stopover> stopovers = stopoverRepository.findStopoversByPost(resPost);
+        resPost.setStopovers(stopovers);
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 
