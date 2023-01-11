@@ -25,14 +25,17 @@ public class Place extends BaseEntity {
     @NotBlank
     private String name;
     private Long cnt;
+    private int placetype;
 
     @Builder
-    public Place(String name, Long cnt) {
+    public Place(String name, Long cnt,int placetype) {
         this.name = name;
         this.cnt = cnt;
+        this.placetype = placetype;
     }
 
     public void updatePlace(UpdatePlaceDto dto) {
         this.name = dto.getName();
+        this.placetype =dto.getPlacetype();
     }
 }
