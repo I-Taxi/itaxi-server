@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface KTXRepository extends JpaRepository<KTX, Long> {
+    List<KTX> findByDeleted(boolean deleted);
 
     /* depid + dstid + deptTime */
     List<KTX> findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(KTXPlace departure, KTXPlace destination, LocalDateTime deptTime1, LocalDateTime deptTime2);
