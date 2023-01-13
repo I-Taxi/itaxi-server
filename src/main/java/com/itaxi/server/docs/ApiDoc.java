@@ -27,8 +27,7 @@ public class ApiDoc {
 
     /* Place 관련 API 명세 */
     public static final String PLACE_CREATE = "장소 생성";
-    public static final String PLACE_READ_FOR_LOOK_UP = "검색용 장소 조회";
-    public static final String PLACE_READ_FOR_RECRUIT = "모집용 장소 조회";
+    public static final String PLACE_READ = "장소 조회";
     public static final String PLACE_UPDATE_COUNT = "장소 조회수 증가";
     public static final String PLACE_UPDATE = "장소 수정";
     public static final String PLACE_DELETE = "장소 삭제";
