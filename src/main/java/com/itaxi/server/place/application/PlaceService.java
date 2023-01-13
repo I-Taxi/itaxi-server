@@ -28,7 +28,7 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
 
     @Transactional
-    public List<PlaceFindResponse> findPlace(int findType) {
+    public List<PlaceFindResponse> ReadAll(int findType) {
         List<PlaceFindResponse> result = new ArrayList<>();
         List<Place> places = placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"));
         if(findType==0){

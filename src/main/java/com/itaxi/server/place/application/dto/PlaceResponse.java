@@ -1,4 +1,4 @@
-package com.itaxi.server.place.application;
+package com.itaxi.server.place.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

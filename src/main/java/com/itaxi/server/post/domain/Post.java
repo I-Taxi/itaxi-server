@@ -1,6 +1,6 @@
 package com.itaxi.server.post.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.itaxi.server.place.application.PlaceResponse;
+import com.itaxi.server.place.application.dto.PlaceResponse;
 import com.itaxi.server.place.domain.Place;
 
 import java.time.LocalDateTime;

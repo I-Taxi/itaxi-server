@@ -28,8 +28,8 @@ public class PlaceController {
 
     @ApiOperation(value = ApiDoc.PLACE_READ )
     @RequestMapping(value = "/{findType}",method = RequestMethod.GET)
-    public ResponseEntity<List> findPlace(@PathVariable int findType) {
-        return ResponseEntity.ok(placeService.findPlace(findType));
+    public ResponseEntity<List> ReadAll(@PathVariable int findType) {
+        return ResponseEntity.ok(placeService.ReadAll(findType));
     }
 
     @ApiOperation(value = ApiDoc.PLACE_CREATE)
