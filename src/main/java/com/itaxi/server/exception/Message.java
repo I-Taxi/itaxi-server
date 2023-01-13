@@ -6,9 +6,12 @@ public class Message {
     public static final String NOTICE_NOT_FOUND = "존재하지 않는 공지입니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
+
+
     public static final String PLACE_NOT_NULL_EXCEPTION = "장소의 이름은 NULL일 수 없습니다";
     public static final String PLACE_CNT_MINUS_EXCEPTION = "장소의 조회수는 0보다 작을 수 없습니다";
     public static final String PLACE_TYPE_MINUS_EXCEPTION = "장소의 타입은 0~4 사이의 값입니다";
+    public static final String PLACE_FIND_NOT_EXIST_EXCEPTION = "Find는 0번과 1번만 존재합니다.";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
 
     public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";

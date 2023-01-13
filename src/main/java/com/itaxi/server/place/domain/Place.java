@@ -33,18 +33,18 @@ public class Place extends BaseEntity {
     @OneToMany(mappedBy = "place")
     private List<FavorJoiner> favorJoiners= new ArrayList<>();
 
-    private int placetype;
+    private int placeType;
 
 
     @Builder
-    public Place(String name, Long cnt,int placetype) {
+    public Place(String name, Long cnt,int placeType) {
         this.name = name;
         this.cnt = cnt;
-        this.placetype = placetype;
+        this.placeType = placeType;
     }
 
     public void updatePlace(UpdatePlaceDto dto) {
         this.name = dto.getName();
-        this.placetype =dto.getPlacetype();
+        this.placeType =dto.getPlaceType();
     }
 }
