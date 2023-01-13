@@ -19,32 +19,14 @@ public class PlaceFindResponse {
     private String name;
     private Long cnt;
     private int placeType;
-    private List<FindPlaceDto> contain;
 
-    public PlaceFindResponse(Place p,List<Place> ps){
+    public PlaceFindResponse(Place p){
         this.Id = p.getId();
         this.name = p.getName();
         this.cnt = p.getCnt();
         this.placeType = p.getPlaceType();
-        this.contain = new ArrayList<>();
-        if(p.getPlaceType()==3){
-            for(Place place: ps){
-                FindPlaceDto dto = new FindPlaceDto(place);
-                if(dto.getPlaceType()==0){
-                    this.contain.add(dto);
-                }
-            }
-        }
-        if(p.getPlaceType()==4){
-            for(Place place: ps){
-                FindPlaceDto dto = new FindPlaceDto(place);
-                if(dto.getPlaceType()==1){
-                    this.contain.add(dto);
-                }
-            }
-
-        }
-
-
     }
+
+
 }
+

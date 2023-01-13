@@ -30,18 +30,18 @@ public class PlaceService {
     @Transactional
     public List<PlaceFindResponse> ReadAll(int findType) {
         List<PlaceFindResponse> result = new ArrayList<>();
-        List<Place> places = placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"));
+
         if(findType==0){
             for(Place place :placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"))){
                 if(place !=null &&place.getPlaceType()!=3 && place.getPlaceType()!=4){
-                    result.add(0, new PlaceFindResponse(place,places));
+                    result.add(0, new PlaceFindResponse(place));
                 }
             }
 
         }
         else if(findType==1){
             for(Place place :placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"))){
-                result.add(0, new PlaceFindResponse(place,places));
+                result.add(0, new PlaceFindResponse(place));
             }
         }
         else{
