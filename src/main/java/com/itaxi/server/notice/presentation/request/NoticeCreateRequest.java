@@ -10,4 +10,5 @@ import lombok.Setter;
 public class NoticeCreateRequest {
     private String title;
     private String content;
+    private String uid;
 }

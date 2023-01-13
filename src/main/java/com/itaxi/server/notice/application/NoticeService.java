@@ -1,6 +1,11 @@
 package com.itaxi.server.notice.application;
 
+import com.itaxi.server.exception.member.MemberNotAdminException;
+import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
+import com.itaxi.server.member.application.dto.MemberJoinInfo;
+import com.itaxi.server.member.domain.Member;
+import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.domain.repository.NoticeRepository;
@@ -20,10 +25,21 @@ import java.util.Optional;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createNotice(NoticeCreateDto noticeCreateDto) {
-        Notice savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
+    public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
+        // Todo: check admin
+        Optional<Member> member = memberRepository.findMemberByUid(uid);
+        Notice savedNotice = null;
+        if(!member.isPresent())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        Member memberInfo = member.get();
+       if (memberInfo.getName().equals("admin")) {
+            savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
+        } else {
+           throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+       }
 
         return savedNotice.getId();
     }
