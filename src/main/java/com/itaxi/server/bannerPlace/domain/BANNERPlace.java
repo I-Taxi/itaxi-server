@@ -1,8 +1,10 @@
 package com.itaxi.server.bannerPlace.domain;
 
+import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.bannerPlace.application.dto.UpdateBANNERPlaceDto;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.ktxPlace.application.dto.UpdateKTXPlaceDto;
+import com.itaxi.server.post.domain.Post;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
@@ -25,6 +27,8 @@ public class BANNERPlace  extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private Long cnt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Banner banner;
 
     @Builder
     public BANNERPlace(String name, Long cnt) {
