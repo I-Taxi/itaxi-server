@@ -7,6 +7,7 @@ import com.itaxi.server.exception.banner.BannerUidEmptyException;
 import com.itaxi.server.exception.notice.NoticeContentEmptyException;
 import com.itaxi.server.exception.notice.NoticeTitleEmptyException;
 import com.itaxi.server.member.domain.repository.MemberRepository;
+import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.post.domain.Joiner;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -52,7 +53,7 @@ public class Banner extends BaseEntity {
     private int bannerType;
 
     @OneToMany(mappedBy = "banner")
-    private List<BANNERPlace> bannerPlaces = new ArrayList<>();
+    private List<Place> places = new ArrayList<>();
 
 
     public Banner(BannerCreateDto bannerCreateDto){
