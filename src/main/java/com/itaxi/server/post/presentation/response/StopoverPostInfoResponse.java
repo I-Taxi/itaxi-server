@@ -13,14 +13,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostInfoResponse {
+public class StopoverPostInfoResponse {
     private Long id;
     private PlaceResponse departure;
     private PlaceResponse destination;
+    private List<StopoverInfo> stopovers;
     private LocalDateTime deptTime;
     private int capacity;
     private int status;
     private int postType;
     private List<JoinerInfo> joiners;
-    private List<StopoverInfo> stopovers;
 }

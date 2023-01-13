@@ -1,17 +1,21 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
+import com.itaxi.server.post.application.dto.StopoverCreateDto;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.post.domain.Joiner;
+import com.itaxi.server.post.domain.Stopover;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
+import com.itaxi.server.post.domain.repository.StopoverRepository;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.application.dto.MemberJoinInfo;
@@ -21,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,6 +41,7 @@ public class PostService {
     private final PlaceRepository placeRepository;
     private final MemberRepository memberRepository;
     private final JoinerRepository joinerRepository;
+    private final StopoverRepository stopoverRepository;
 
     @Transactional
     public List<PostLog> getPostLog(String uid) {
@@ -76,6 +82,23 @@ public class PostService {
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
         ResDto result = new ResDto(create(postPlaceDto));
+        // Post 저장을 한 후 Stopover 저장하기
+        List<Long> stopoverList = dto.getStopoverIds();
+        // 방금 저장한 post를 가지고 온다
+        Optional<Post> post = postRepository.findById(result.getId());
+        Post resPost = post.get();
+        Place place = null;
+        Stopover stopover = null;
+        // 각 stopover들을 생성하고 저장
+        for (Long id : stopoverList) {
+            place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
+            stopover = new Stopover(new StopoverCreateDto(place, resPost));
+            stopoverRepository.save(stopover);
+        }
+        // stopover를 post에 추가해준다
+        List<Stopover> stopovers = stopoverRepository.findStopoversByPost(resPost);
+        resPost.setStopovers(stopovers);
+
         PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 
@@ -206,6 +229,61 @@ public class PostService {
         }
 
         return newOwner;
+    }
+
+    @Transactional
+    public String changePostTime(Long postId, PostTimeDto dto) {
+        Post postInfo = null;
+        Member memberInfo = null;
+
+        // post 존재하는지 체크
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isPresent()) {
+            postInfo = post.get();
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 멤버가 존재하는지 체크
+        Optional<Member> member = memberRepository.findMemberByUid(dto.getUid());
+        if (member.isPresent()) {
+            memberInfo = member.get();
+        } else {
+            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+        }
+
+        // deptTime이 현재 시간으로부터 3분 이하 차이이면 수정 X
+        long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
+        if (checkChangeMinutes < 3) {
+            throw new CannotChangeDeptTimeException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 시간이 이전 deptTime과 30분 차이 이하인지 체크
+        long minutes = ChronoUnit.MINUTES.between(postInfo.getDeptTime(), dto.getDeptTime());
+        if (minutes >= 30) {
+            throw new DeptTimeWrongException(HttpStatus.BAD_REQUEST);
+        }
+
+        // joiner에 존재하는지 체크
+        Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
+        if (joiner.isPresent()) {
+            Joiner joinerInfo = joiner.get();
+            // 멤버가 해당 post의 owner인지 체크
+            if (joinerInfo.isOwner()) {
+                // owner이면 시간 변경
+                postInfo.setDeptTime(dto.getDeptTime());
+                postRepository.save(postInfo);
+            } else {
+                throw new JoinerNotOwnerException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return "Success";
     }
 
     public static int compareMinute(LocalDateTime date1, LocalDateTime date2) {

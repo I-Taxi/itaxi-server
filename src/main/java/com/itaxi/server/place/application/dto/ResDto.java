@@ -7,9 +7,11 @@ import lombok.Getter;
 public class ResDto {
     private String name;
     private Long cnt;
+    private int placetype;
 
     public ResDto(Place place) {
         this.name = place.getName();
         this.cnt = place.getCnt();
+        this.placetype = place.getPlacetype();
     }
 }

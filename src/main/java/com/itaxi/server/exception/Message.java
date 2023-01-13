@@ -6,7 +6,11 @@ public class Message {
     public static final String NOTICE_NOT_FOUND = "존재하지 않는 공지입니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
+    public static final String PLACE_NOT_NULL_EXCEPTION = "장소의 이름은 NULL일 수 없습니다";
+    public static final String PLACE_CNT_MINUS_EXCEPTION = "장소의 조회수는 0보다 작을 수 없습니다";
+    public static final String PLACE_TYPE_MINUS_EXCEPTION = "장소의 타입은 0~4 사이의 값입니다";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
+
     public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
     public static final String BANNER_PLACE_NOT_FOUND = "존재하지 않는 배너 장소입니다.";
 
@@ -27,6 +31,9 @@ public class Message {
     public static final String JOINER_DUPLICATE_MEMBER = "이미 해당 post에 존재하는 멤버입니다";
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
     public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 post입니다.";
+    public static final String DEPT_TIME_WRONG = "30분 이상 시간을 미룰 수 없습니다.";
+    public static final String CANNOT_CHANGE_DEPT_TIME = "출발시각까지 3분 이하가 남았을 때는 시간을 바꿀 수 없습니다.";
+    public static final String POST_TOO_MANY_STOPOVERS = "경유지는 최대 3개까지 선택할 수 있습니다.";
 
     public static final String BANNER_UID_EMPTY_EXCEPTION = "UID 값이 올바르지 않습니다.";
     public static final String BANNER_BAD_TYPE_EXCEPTION = "배너 타입은 0 또는 1 이어야 합니다.";
