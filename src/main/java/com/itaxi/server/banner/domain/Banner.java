@@ -1,11 +1,13 @@
 package com.itaxi.server.banner.domain;
 
 import com.itaxi.server.banner.application.dto.BannerCreateDto;
+import com.itaxi.server.bannerPlace.domain.BANNERPlace;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.exception.banner.BannerUidEmptyException;
 import com.itaxi.server.exception.notice.NoticeContentEmptyException;
 import com.itaxi.server.exception.notice.NoticeTitleEmptyException;
 import com.itaxi.server.member.domain.repository.MemberRepository;
+import com.itaxi.server.post.domain.Joiner;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
@@ -15,6 +17,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Where(clause = "deleted=false")
@@ -46,6 +50,9 @@ public class Banner extends BaseEntity {
     private LocalDateTime reportAt;
     @Column(nullable = false)
     private int bannerType;
+
+    @OneToMany(mappedBy = "banner")
+    private List<BANNERPlace> bannerPlaces = new ArrayList<>();
 
 
     public Banner(BannerCreateDto bannerCreateDto){

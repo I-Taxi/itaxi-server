@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import com.itaxi.server.common.BaseEntity;
+import com.itaxi.server.member.domain.FavorJoiner;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,6 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Where(clause = "deleted=false")
 @Entity
@@ -25,6 +29,8 @@ public class Place extends BaseEntity {
     @NotBlank
     private String name;
     private Long cnt;
+    @OneToMany(mappedBy = "place")
+    private List<FavorJoiner> favorJoiners= new ArrayList<>();
 
     @Builder
     public Place(String name, Long cnt) {

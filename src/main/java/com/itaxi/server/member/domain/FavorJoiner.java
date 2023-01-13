@@ -3,6 +3,7 @@ package com.itaxi.server.member.domain;
 
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.member.application.dto.FavorJoinerCreateDto;
+import com.itaxi.server.member.application.dto.FavorJoinerSaveDto;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.post.application.dto.JoinerCreateDto;
 import com.itaxi.server.post.domain.Post;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Where(clause = "deleted=false")
 @Entity
@@ -28,11 +30,12 @@ public class FavorJoiner extends BaseEntity {
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private Place place;
-    private boolean favorite;
 
-    public FavorJoiner(FavorJoinerCreateDto favorjoinerCreateDto) {
-        this.member = favorjoinerCreateDto.getMember();
-        this.place = favorjoinerCreateDto.getPlace();
-        this.favorite = favorjoinerCreateDto.isFavorite();
+
+
+
+    public FavorJoiner(FavorJoinerSaveDto favorJoinerSaveDto) {
+        this.member = favorJoinerSaveDto.getMember();
+        this.place = favorJoinerSaveDto.getPlace();
     }
 }
