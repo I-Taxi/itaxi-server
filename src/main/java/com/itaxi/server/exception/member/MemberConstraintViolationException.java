@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class MemberConstraintViolationException extends MemberException {
     public MemberConstraintViolationException(HttpStatus httpStatus) {
-        super(Message.MEMBER_DELETE_CONSTRAINT_VIOLATION, httpStatus);
+        super(Message.FAVOR_JOINER_DUPLICATED, httpStatus);
     }
 }

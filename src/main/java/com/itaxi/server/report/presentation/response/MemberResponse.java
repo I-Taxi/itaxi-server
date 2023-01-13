@@ -1,14 +1,13 @@
-package com.itaxi.server.place.application;
+package com.itaxi.server.report.presentation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class PlaceResponse {
+public class MemberResponse {
     private Long id;
     private String name;
-    private Long cnt;
 }

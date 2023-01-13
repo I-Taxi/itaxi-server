@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UpdatePlaceDto {
     private String name;
+    private int placeType;
 }

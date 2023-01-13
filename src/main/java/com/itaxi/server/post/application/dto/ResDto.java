@@ -17,8 +17,7 @@ public class ResDto {
     private int participantNum;
     private int status;
     private Integer postType;
-    private int largeLuggageNum = 0;
-    private int smallLuggageNum = 0;
+
 
     @Builder
     public ResDto(Post post) {

@@ -29,10 +29,7 @@ public class Joiner extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
-
     private int status;
-
-    private int luggage;
 
     private boolean owner;
 
@@ -40,7 +37,6 @@ public class Joiner extends BaseEntity {
         this.member = joinerCreateDto.getMember();
         this.post = joinerCreateDto.getPost();
         this.status = 1;
-        this.luggage = joinerCreateDto.getLuggage();
         this.owner = joinerCreateDto.isOwner();
     }
 }

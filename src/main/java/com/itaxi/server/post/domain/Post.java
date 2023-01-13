@@ -1,17 +1,17 @@
 package com.itaxi.server.post.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.itaxi.server.place.application.PlaceResponse;
+import com.itaxi.server.place.application.dto.PlaceResponse;
 import com.itaxi.server.place.domain.Place;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 import com.itaxi.server.common.BaseEntity;
 
 import com.itaxi.server.post.application.dto.JoinerInfo;
+import com.itaxi.server.post.application.dto.StopoverInfo;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -46,6 +46,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<Joiner> joiners = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Stopover> stopovers = new ArrayList<>();
+
     @Builder
     public Post(Place departure, Place destination, LocalDateTime deptTime, int capacity, int status, Integer postType) {
         this.departure = departure;
@@ -65,7 +68,12 @@ public class Post extends BaseEntity {
             joinerResponse.add(new JoinerInfo(joiner));
         }
 
-        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, postType, joinerResponse);
+        List<StopoverInfo> stopoverResponse = new ArrayList<>();
+        for(Stopover stopover : stopovers) {
+            stopoverResponse.add(new StopoverInfo(stopover));
+        }
+
+        return new PostInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, postType, joinerResponse, stopoverResponse);
     }
 }
 

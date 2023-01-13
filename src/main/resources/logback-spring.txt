@@ -5,20 +5,6 @@
     <property name="LOG_PATTERN"
               value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %magenta([traceId=%X{traceId}]) %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
 
-<!--    <springProfile name="!prod">-->
-<!--        <include resource="appender/console-appender.xml"/>-->
-
-<!--        <root level="INFO">-->
-<!--            <appender-ref ref="CONSOLE"/>-->
-<!--        </root>-->
-<!--    </springProfile>-->
-<!--    <springProfile name="prod">-->
-
-<!--        <include resource="appender/cloud-appender.xml"/>-->
-<!--        <root level="INFO">-->
-<!--            <appender-ref ref="CLOUDWATCH"/>-->
-<!--        </root>-->
-<!--    </springProfile>-->
         <include resource="appender/file-info-appender.xml"/>
         <include resource="appender/file-error-appender.xml"/>
 

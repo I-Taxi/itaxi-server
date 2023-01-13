@@ -13,11 +13,13 @@ public class AddPlaceDto {
     @NotBlank(message = "place name은 필수 값 입니다.")
     private String name;
     private Long cnt = 0L;
+    private int placeType;
 
     public Place toEntity() {
         return Place.builder()
                 .name(this.name)
                 .cnt(this.cnt)
+                .placeType(this.placeType)
                 .build();
     }
 }
