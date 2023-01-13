@@ -35,10 +35,10 @@ public class Notice extends BaseEntity {
 
     @Column(nullable = false)
     private int bannerType;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime endTime;
 
     private long viewCnt = 0;

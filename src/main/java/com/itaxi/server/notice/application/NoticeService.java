@@ -29,7 +29,6 @@ public class NoticeService {
 
     @Transactional
     public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
-        // Todo: check admin
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         Notice savedNotice = null;
         if(!member.isPresent())
