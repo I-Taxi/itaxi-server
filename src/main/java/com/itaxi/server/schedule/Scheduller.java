@@ -22,7 +22,7 @@ public class Scheduller {
     private final KTXRepository ktxRepository;
 
     //@Scheduled(fixedRate = 30000) // 테스트용 (30초로 설정)
-    @Scheduled(cron = "0 * * * *") // 매시 0분에 동작하도록 설정
+    @Scheduled(cron = "0 0 * * * *") // 매시 0분에 동작하도록 설정
     public void deletePostByTime() {
         // 현재 Post와 KTX중에서 deleted = 0인것들을 가져온다
         List<Post> postList = postRepository.findByDeleted(false);
