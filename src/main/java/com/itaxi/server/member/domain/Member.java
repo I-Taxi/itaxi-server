@@ -9,6 +9,7 @@ import com.itaxi.server.exception.member.MemberEmailNullException;
 import com.itaxi.server.exception.member.MemberNameNullException;
 import com.itaxi.server.exception.member.MemberPhoneNullException;
 import com.itaxi.server.exception.member.MemberUidNullException;
+import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.member.application.dto.MemberCreateRequestDTO;
 import com.itaxi.server.post.domain.Joiner;
@@ -55,11 +56,15 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<KTXJoiner> ktxJoiners = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<FavorJoiner> favorJoiners = new ArrayList<>();
+
     @OneToMany(mappedBy = "writer")
     private List<Report> reports = new ArrayList<>();
 
     @OneToMany(mappedBy = "reportedMember")
     private List<Report> reportedMembers = new ArrayList<>();
+
 
     public Member(MemberCreateRequestDTO memberCreateRequestDTO) {
         this.uid = memberCreateRequestDTO.getUid();

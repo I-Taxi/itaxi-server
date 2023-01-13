@@ -6,6 +6,7 @@ import com.itaxi.server.place.application.dto.AddPlaceDto;
 import com.itaxi.server.place.application.dto.ResDto;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import com.itaxi.server.place.domain.Place;
+import com.itaxi.server.place.presentation.reponse.PlaceFindResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,16 +22,11 @@ import java.util.List;
 public class PlaceController {
     private final PlaceService placeService;
 
-    @ApiOperation(value = ApiDoc.PLACE_READ_FOR_LOOK_UP)
-    @RequestMapping(value = "/lookup",method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Place>> findPlaceForLookUp() {
-        return ResponseEntity.ok(placeService.findPlaceForLookUp());
-    }
 
-    @ApiOperation(value = ApiDoc.PLACE_READ_FOR_RECRUIT )
-    @RequestMapping(value = "/recruit",method = RequestMethod.GET)
-    public ResponseEntity<List> findPlaceForRecruit() {
-        return ResponseEntity.ok(placeService.findPlaceForRecruit());
+    @ApiOperation(value = ApiDoc.PLACE_READ )
+    @RequestMapping(value = "/{findType}",method = RequestMethod.GET)
+    public ResponseEntity<List> ReadAll(@PathVariable int findType) {
+        return ResponseEntity.ok(placeService.ReadAll(findType));
     }
 
     @ApiOperation(value = ApiDoc.PLACE_CREATE)

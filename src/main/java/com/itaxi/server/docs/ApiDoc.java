@@ -27,8 +27,7 @@ public class ApiDoc {
 
     /* Place 관련 API 명세 */
     public static final String PLACE_CREATE = "장소 생성";
-    public static final String PLACE_READ_FOR_LOOK_UP = "검색용 장소 조회";
-    public static final String PLACE_READ_FOR_RECRUIT = "모집용 장소 조회";
+    public static final String PLACE_READ = "장소 조회";
     public static final String PLACE_UPDATE_COUNT = "장소 조회수 증가";
     public static final String PLACE_UPDATE = "장소 수정";
     public static final String PLACE_DELETE = "장소 삭제";
@@ -57,6 +56,7 @@ public class ApiDoc {
     public static final String BANNER_UPDATE = "BANNER 수정";
     public static final String BANNER_DELETE = "BANNER 삭제";
 
+    /* BANNER PLACE 관련 API 명세 */
     public static final String BANNER_PLACE_CREATE = "BANNER 장소 생성";
     public static final String BANNER_PLACE_READ = "BANNER 장소 조회";
     public static final String BANNER_PLACE_UPDATE_COUNT = "BANNER 장소 조회수 증가";
@@ -67,5 +67,10 @@ public class ApiDoc {
     public static final String REPORT_HISTORY = "리포트 조회";
     public static final String REPORT_UPDATE = "리포트 수정";
     public static final String REPORT_DELETE = "리포트 삭제";
+
+    /* FAVORITE JOINER 관련 API 명세 */
+    public static final String FAVORITE_JOINER_CREATE = "FAVORITE JOINER 생성";
+    public static final String FAVORITE_JOINER_READ_ALL_BY_MEMBER = "멤버별 FAVORITE JOINER 읽어오기";
+    public static final String FAVORITE_JOINER_DELETE = "FAVORITE JOINER 삭제";
 
 }

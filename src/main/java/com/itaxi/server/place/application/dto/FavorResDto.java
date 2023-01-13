@@ -4,14 +4,14 @@ import com.itaxi.server.place.domain.Place;
 import lombok.Getter;
 
 @Getter
-public class ResDto {
+public class FavorResDto {
     private String name;
     private Long cnt;
-    private int placeType;
+    private Long Id;
 
-    public ResDto(Place place) {
+    public FavorResDto(Place place) {
+        this.Id = place.getId();
         this.name = place.getName();
         this.cnt = place.getCnt();
-        this.placeType = place.getPlaceType();
     }
 }
