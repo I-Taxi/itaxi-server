@@ -27,8 +27,8 @@ public class BANNERPlace  extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private Long cnt;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Banner banner;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Banner banner;
 
     @Builder
     public BANNERPlace(String name, Long cnt) {

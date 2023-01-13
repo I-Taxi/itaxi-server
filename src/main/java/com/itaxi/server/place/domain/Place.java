@@ -3,6 +3,7 @@ package com.itaxi.server.place.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.member.domain.FavorJoiner;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
@@ -32,6 +33,9 @@ public class Place extends BaseEntity {
 
     @OneToMany(mappedBy = "place")
     private List<FavorJoiner> favorJoiners= new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Banner banner;
 
     private int placeType;
 

@@ -39,6 +39,7 @@ public class BannerService {
     private final MemberRepository memberRepository;
     private final BannerRepository bannerRepository;
     private final BANNERPlaceRepository bannerplaceRepository;
+    private final PlaceRepository placeRepository;
     private final NoticeRepository noticeRepository;
 
     String[] weather={"폭우","침수","폭설","공사"};
@@ -58,8 +59,8 @@ public class BannerService {
         Optional<Member> member = memberRepository.findMemberByUid(saveBanner.getUid());
         BannerCreateResponse bannerCreateResponse = null;
         if(member.isPresent()){
-            Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(saveBanner.getDepartureId());
-            Optional<BANNERPlace> placeDest = bannerplaceRepository.findById(saveBanner.getDestinationId());
+            Optional<Place> placeDepart = placeRepository.findById(saveBanner.getDepartureId());
+            Optional<Place> placeDest = placeRepository.findById(saveBanner.getDestinationId());
             if(placeDepart.isPresent() && placeDest.isPresent())
                 if(saveBanner.getWeatherStatus()>=0&& saveBanner.getWeatherStatus()<=3){
                     bannerCreateResponse = new BannerCreateResponse(saveBanner.getId(),member.get().getName(),saveBanner.getUid(), saveBanner.getWeatherStatus(), saveBanner.getDepartureId(),saveBanner.getDestinationId(),saveBanner.getReportAt(), saveBanner.getBannerType());
@@ -85,8 +86,8 @@ public class BannerService {
             bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
             bannerInfo.setDepartureId(bannerUpdateDto.getDepId());
             bannerInfo.setDestinationId(bannerUpdateDto.getDesId());
-            Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(bannerInfo.getDepartureId());
-            Optional<BANNERPlace> placeDest = bannerplaceRepository.findById(bannerInfo.getDestinationId());
+            Optional<Place> placeDepart = placeRepository.findById(bannerInfo.getDepartureId());
+            Optional<Place> placeDest = placeRepository.findById(bannerInfo.getDestinationId());
             if(placeDepart.isPresent() && placeDest.isPresent()) {
                 if(bannerInfo.getWeatherStatus()>=0&& bannerInfo.getWeatherStatus()<=3){
                         bannerRepository.save(bannerInfo);
@@ -142,8 +143,8 @@ public class BannerService {
 
         String output = "";
         for(Banner banner : bannerRepository.findAll()){
-            Optional<BANNERPlace> placeDepart = bannerplaceRepository.findById(banner.getDepartureId());
-            Optional<BANNERPlace> placeDest = bannerplaceRepository.findById(banner.getDestinationId());
+            Optional<Place> placeDepart = placeRepository.findById(banner.getDepartureId());
+            Optional<Place> placeDest = placeRepository.findById(banner.getDestinationId());
 
             output = "제보자: ";
             Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());
