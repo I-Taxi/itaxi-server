@@ -1,6 +1,5 @@
 package com.itaxi.server.banner.presentation;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.itaxi.server.banner.application.BannerService;
 import com.itaxi.server.banner.application.dto.BannerCreateDto;
 import com.itaxi.server.banner.application.dto.BannerUpdateDto;
@@ -9,7 +8,6 @@ import com.itaxi.server.banner.presentation.request.BannerCreateRequest;
 import com.itaxi.server.banner.presentation.request.BannerUpdateRequest;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.exception.banner.BannerRequestBodyException;
-import com.itaxi.server.exception.bannerPlace.BannerPlaceNotNullException;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

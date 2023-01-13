@@ -1,11 +1,8 @@
 package com.itaxi.server.place.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
-import com.itaxi.server.exception.bannerPlace.BannerPlaceCntMinusException;
-import com.itaxi.server.exception.bannerPlace.BannerPlaceNotNullException;
 import com.itaxi.server.place.application.PlaceService;
 import com.itaxi.server.place.application.dto.AddPlaceDto;
-import com.itaxi.server.place.application.dto.DeletePlaceDto;
 import com.itaxi.server.place.application.dto.ResDto;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import com.itaxi.server.place.domain.Place;

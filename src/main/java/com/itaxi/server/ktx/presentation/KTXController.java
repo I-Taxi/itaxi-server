@@ -1,7 +1,6 @@
 package com.itaxi.server.ktx.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
-import com.itaxi.server.exception.GlobalExceptionHandler;
 import com.itaxi.server.exception.ktx.BadDateException;
 import com.itaxi.server.exception.ktx.KTXRequestBodyNullException;
 import com.itaxi.server.exception.ktx.SamePlaceException;

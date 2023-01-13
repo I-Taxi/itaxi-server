@@ -63,4 +63,9 @@ public class ApiDoc {
     public static final String BANNER_PLACE_UPDATE = "BANNER 장소 수정";
     public static final String BANNER_PLACE_DELETE = "BANNER 장소 삭제";
 
+    public static final String REPORT_CREATE = "리포트 생성";
+    public static final String REPORT_HISTORY = "리포트 조회";
+    public static final String REPORT_UPDATE = "리포트 수정";
+    public static final String REPORT_DELETE = "리포트 삭제";
+
 }

@@ -58,6 +58,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "writer")
     private List<Report> reports = new ArrayList<>();
 
+    @OneToMany(mappedBy = "reportedMember")
+    private List<Report> reportedMembers = new ArrayList<>();
+
     public Member(MemberCreateRequestDTO memberCreateRequestDTO) {
         this.uid = memberCreateRequestDTO.getUid();
         this.email = memberCreateRequestDTO.getEmail();
