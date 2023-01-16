@@ -34,7 +34,7 @@ public class Notice extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private int bannerType;
+    private int type;
     @Column(nullable = false)
     private LocalDateTime startTime;
 
@@ -46,7 +46,7 @@ public class Notice extends BaseEntity {
     public Notice(NoticeCreateDto noticeCreateDto) {
         this.title = noticeCreateDto.getTitle();
         this.content = noticeCreateDto.getContent();
-        this.bannerType = noticeCreateDto.getBannerType();
+        this.type = noticeCreateDto.getBannerType();
         this.startTime = noticeCreateDto.getStartTime();
         this.endTime = noticeCreateDto.getEndTime();
         this.setDeleted(false);
