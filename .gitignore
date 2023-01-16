@@ -39,6 +39,7 @@ out/
 ## Config file
 /src/main/resources/*.yaml
 /src/main/resources/*.yml
+docker-compose.yml
 
 ### Linux ###
 *~
@@ -115,3 +116,4 @@ $RECYCLE.BIN/
 *.lnk
 
 log/
+module1.8/

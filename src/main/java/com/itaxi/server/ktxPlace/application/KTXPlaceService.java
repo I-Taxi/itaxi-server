@@ -1,5 +1,7 @@
 package com.itaxi.server.ktxPlace.application;
 
+import com.itaxi.server.cheaker.AdminChecker;
+import com.itaxi.server.exception.member.MemberNotAdminException;
 import com.itaxi.server.ktxPlace.application.dto.AddKTXPlaceDto;
 import com.itaxi.server.ktxPlace.application.dto.DeleteKTXPlaceDto;
 import com.itaxi.server.ktxPlace.application.dto.KTXPlaceResponse;
@@ -9,6 +11,7 @@ import com.itaxi.server.ktxPlace.domain.repository.KTXPlaceRepository;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,10 +22,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KTXPlaceService {
     private final KTXPlaceRepository ktxPlaceRepository;
+    private final AdminChecker adminChecker;
 
     @Transactional
     public KTXPlace create(AddKTXPlaceDto dto) {
-        return ktxPlaceRepository.save(dto.toEntity());
+        KTXPlace savedPlace = null;
+
+        if (adminChecker.isAdmin(dto.getUid())) {
+            savedPlace = ktxPlaceRepository.save(dto.toEntity());
+        } else {
+            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+        }
+
+        return savedPlace;
     }
 
     @Transactional
@@ -34,16 +46,29 @@ public class KTXPlaceService {
 
     @Transactional
     public KTXPlace updateKTXPlace(long id, UpdateKTXPlaceDto dto) {
+        dto.getUid();
+
         final KTXPlace ktxPlace = ktxPlaceRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
-        ktxPlace.updateKTXPlace(dto);
+        if (adminChecker.isAdmin(dto.getUid())) {
+            ktxPlace.updateKTXPlace(dto);
+        } else {
+            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+        }
+
         return ktxPlace;
     }
 
     @Transactional
-    public String deleteKTXPlace(Long id) {
+    public String deleteKTXPlace(Long id, String uid) {
         final KTXPlace ktxPlace = ktxPlaceRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
-        ktxPlace.setDeleted(true);
-        ktxPlaceRepository.save(ktxPlace);
+
+        if (adminChecker.isAdmin(uid)) {
+            ktxPlace.setDeleted(true);
+            ktxPlaceRepository.save(ktxPlace);
+        } else {
+            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+        }
+
         return "Success";
     }
 

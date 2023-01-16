@@ -25,7 +25,9 @@ public class Message {
     public static final String MEMBER_EMAIL_ISNULL = "Email 값이 올바르지 않습니다.";
     public static final String MEMBER_PHONE_ISNULL = "연락처 값이 올바르지 않습니다.";
     public static final String MEMBER_NAME_ISNULL = "사용자 이름 값이 올바르지 않습니다.";
+    public static final String MEMBER_NOT_ADMIN = "사용자에게 권한이 없습니다.";
     public static final String MEMBER_NOT_WRITER = "리포트의 작성자가 아닙니다.";
+    public static final String MEMBER_ADMIN_DUPLICATE = "잘못된 이름입니다.";
 
     public static final String MEMBER_DELETE_CONSTRAINT_VIOLATION = "현재 완료되지 않은 그룹이 있습니다. 모든 그룹을 완료하기 전에는 탈퇴할 수 없습니다.";
 

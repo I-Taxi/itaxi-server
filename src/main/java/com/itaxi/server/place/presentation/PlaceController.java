@@ -3,10 +3,12 @@ package com.itaxi.server.place.presentation;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceService;
 import com.itaxi.server.place.application.dto.AddPlaceDto;
+import com.itaxi.server.place.application.dto.DeletePlaceDto;
 import com.itaxi.server.place.application.dto.ResDto;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.presentation.reponse.PlaceFindResponse;
+import com.itaxi.server.place.presentation.request.PlaceDeleteRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,8 +52,8 @@ public class PlaceController {
     @ApiOperation(value = ApiDoc.PLACE_DELETE)
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    public String delete(@PathVariable final long id) {
-        return placeService.deletePlace(id);
+    public String delete(@PathVariable final long id, @RequestBody final PlaceDeleteRequest dto) {
+        return placeService.deletePlace(id, dto.getUid());
     }
 
 
