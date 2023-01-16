@@ -190,12 +190,12 @@ public class BannerService {
         for(Notice notice : noticeRepository.findAll()){
             output = "작성자: 관리자 ,";
             if(notice!=null){
-                if(notice.getBannerType()==0||notice.getBannerType()==1){
+                if(notice.getType()==0||notice.getType()==1){
                     output = output.concat((notice.getStartTime().format(DateTimeFormatter.ofPattern("a HH시 mm분"))));
                     output = output.concat("부터 ");
                     output = output.concat((notice.getEndTime().format(DateTimeFormatter.ofPattern("a HH시 mm분"))));
                     output = output.concat("까지 진행되는 ");
-                    output = output.concat(notice_type[notice.getBannerType()]);
+                    output = output.concat(notice_type[notice.getType()]);
                     output = output.concat("공지 생성, ");
                     output = output.concat( Long.toString(notice.getId()));
                     output = output.concat("번 글 확인");
@@ -204,7 +204,7 @@ public class BannerService {
                 }
                 else{
                     if(time.minusHours(1).isAfter(notice.getCreatedAt())){
-                        output = output.concat(notice_type[notice.getBannerType()]);
+                        output = output.concat(notice_type[notice.getType()]);
                         output = output.concat("공지 생성, ");
                         output = output.concat( Long.toString(notice.getId()));
                         output = output.concat("번 글 확인");
