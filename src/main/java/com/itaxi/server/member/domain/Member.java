@@ -50,6 +50,8 @@ public class Member extends BaseEntity {
 
     private String bankAddress;
 
+    private String bankOwner;
+
     @OneToMany(mappedBy = "member")
     private List<Joiner> joiners = new ArrayList<>();
 
@@ -73,6 +75,7 @@ public class Member extends BaseEntity {
         this.name = memberCreateRequestDTO.getName();
         this.bank = memberCreateRequestDTO.getBank();
         this.bankAddress = memberCreateRequestDTO.getBankAddress();
+        this.bankOwner = memberCreateRequestDTO.getBankOwner();
 
         /* data validation - uid */
         if(this.uid == null || this.uid.trim().isEmpty())

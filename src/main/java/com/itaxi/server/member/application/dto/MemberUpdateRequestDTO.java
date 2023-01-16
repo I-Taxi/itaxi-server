@@ -12,4 +12,5 @@ public class MemberUpdateRequestDTO {
     private String phone;
     private String bank;
     private String bankAddress;
+    private String bankOwner;
 }

@@ -14,4 +14,5 @@ public class MemberCreateRequestDTO {
     private String name;
     private String bank;
     private String bankAddress;
+    private String bankOwner;
 }

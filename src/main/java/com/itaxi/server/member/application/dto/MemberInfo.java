@@ -8,4 +8,5 @@ public interface MemberInfo {
     String getName();
     String getBank();
     String getBankAddress();
+    String getBankOwner();
 }
