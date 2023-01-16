@@ -52,7 +52,7 @@ public class NoticeController {
     @ApiOperation(value = ApiDoc.UPDATE_NOTICE)
     @PutMapping("/{noticeId}")
     public ResponseEntity<String> updateNotice(@PathVariable Long noticeId, @RequestBody NoticeUpdateRequest request) {
-        String result = noticeService.updateNotice(noticeId, NoticeUpdateDto.from(request));
+        String result = noticeService.updateNotice(noticeId, NoticeUpdateDto.from(request), request.getUid());
 
         return ResponseEntity.ok(result);
     }

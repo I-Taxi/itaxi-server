@@ -27,16 +27,26 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
-    public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
+    private boolean isAdmin(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        Notice savedNotice = null;
+
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+
         Member memberInfo = member.get();
-       if (memberInfo.getName().equals("admin")) {
+        if (memberInfo.getName().equals("admin"))
+            return true;
+
+        return false;
+    }
+
+    @Transactional
+    public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
+        Notice savedNotice = null;
+
+       if (isAdmin(uid)) {
             savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
-        } else {
+       } else {
            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
        }
 
@@ -71,15 +81,22 @@ public class NoticeService {
     }
 
     @Transactional
-    public String updateNotice(Long noticeId, NoticeUpdateDto noticeUpdateDto) {
+    public String updateNotice(Long noticeId, NoticeUpdateDto noticeUpdateDto, String uid) {
+        Notice noticeInfo = null;
+
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
-            Notice noticeInfo = notice.get();
+            noticeInfo = notice.get();
+        } else {
+            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (isAdmin(uid)) {
             noticeInfo.setTitle(noticeUpdateDto.getTitle());
             noticeInfo.setContent(noticeUpdateDto.getContent());
             noticeRepository.save(noticeInfo);
         } else {
-            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
         }
 
         return "Success";
