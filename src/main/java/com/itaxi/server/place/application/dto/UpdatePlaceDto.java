@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class UpdatePlaceDto {
     private String name;
     private int placeType;
+    private String uid;
 }

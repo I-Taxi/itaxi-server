@@ -15,4 +15,5 @@ public class NoticeUpdateRequest {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int bannerType;
+    private String uid;
 }

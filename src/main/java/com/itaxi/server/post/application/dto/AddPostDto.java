@@ -18,6 +18,5 @@ public class AddPostDto {
     private LocalDateTime deptTime;
     @NotBlank
     private int capacity;
-    private int status = 0;
     private Integer postType;
 }

@@ -14,6 +14,7 @@ public class AddPlaceDto {
     private String name;
     private Long cnt = 0L;
     private int placeType;
+    private String uid;
 
     public Place toEntity() {
         return Place.builder()

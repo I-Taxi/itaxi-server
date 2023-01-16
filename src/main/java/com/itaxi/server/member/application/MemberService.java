@@ -8,6 +8,7 @@ import com.itaxi.server.member.application.dto.MemberInfo;
 import com.itaxi.server.member.application.dto.MemberUpdateRequestDTO;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 
+import com.itaxi.server.notice.domain.Notice;
 import com.itaxi.server.post.application.PostService;
 import com.itaxi.server.post.application.dto.PostLog;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,12 @@ public class MemberService {
     @Transactional
     public String createMember(MemberCreateRequestDTO memberCreateRequestDTO) {
         try {
+            if (memberCreateRequestDTO.getName().equals("admin")) {
+                Optional<Member> member = memberRepository.findMemberByName(memberCreateRequestDTO.getName());
+                if (member.isPresent())
+                    throw new MemberAdminDuplicateException(HttpStatus.BAD_REQUEST);
+            }
+
             memberRepository.save(new Member(memberCreateRequestDTO));
             return "Success";
         }
@@ -42,6 +49,9 @@ public class MemberService {
                 throw new MemberPhoneNullException(HttpStatus.INTERNAL_SERVER_ERROR);
             else if(e instanceof MemberNameNullException)
                 throw new MemberNameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            else if(e instanceof MemberAdminDuplicateException) {
+                throw new MemberAdminDuplicateException(HttpStatus.BAD_REQUEST);
+            }
             else
                 throw new MemberCreateFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
