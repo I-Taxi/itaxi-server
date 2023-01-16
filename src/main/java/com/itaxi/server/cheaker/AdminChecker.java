@@ -3,11 +3,15 @@ package com.itaxi.server.cheaker;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
 public class AdminChecker {
     private final MemberRepository memberRepository;
