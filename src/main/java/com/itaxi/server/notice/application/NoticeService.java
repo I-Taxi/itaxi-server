@@ -23,8 +23,6 @@ import java.util.Optional;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
-
-    private final MemberRepository memberRepository;
     private final AdminChecker adminChecker;
 
 
