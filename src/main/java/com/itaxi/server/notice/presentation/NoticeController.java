@@ -5,6 +5,7 @@ import com.itaxi.server.notice.application.NoticeService;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.presentation.request.NoticeCreateRequest;
+import com.itaxi.server.notice.presentation.request.NoticeDeleteRequest;
 import com.itaxi.server.notice.presentation.request.NoticeUpdateRequest;
 import com.itaxi.server.notice.presentation.response.NoticeReadAllResponse;
 import com.itaxi.server.notice.presentation.response.NoticeReadResponse;
@@ -60,8 +61,8 @@ public class NoticeController {
     @Transactional
     @ApiOperation(value = ApiDoc.DELETE_NOTICE)
     @DeleteMapping("/{noticeId}")
-    public ResponseEntity<String> deleteNotice(@PathVariable Long noticeId) {
-        String result = noticeService.deleteNotice(noticeId);
+    public ResponseEntity<String> deleteNotice(@PathVariable Long noticeId, @RequestBody NoticeDeleteRequest request) {
+        String result = noticeService.deleteNotice(noticeId, request.getUid());
 
         return ResponseEntity.ok(result);
     }

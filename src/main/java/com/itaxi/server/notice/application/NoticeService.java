@@ -1,10 +1,8 @@
 package com.itaxi.server.notice.application;
 
+import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
-import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
-import com.itaxi.server.member.application.dto.MemberJoinInfo;
-import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
@@ -25,26 +23,16 @@ import java.util.Optional;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+
     private final MemberRepository memberRepository;
+    private final AdminChecker adminChecker;
 
-    private boolean isAdmin(String uid) {
-        Optional<Member> member = memberRepository.findMemberByUid(uid);
-
-        if(!member.isPresent())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        Member memberInfo = member.get();
-        if (memberInfo.getName().equals("admin"))
-            return true;
-
-        return false;
-    }
 
     @Transactional
     public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
         Notice savedNotice = null;
 
-       if (isAdmin(uid)) {
+       if (adminChecker.isAdmin(uid)) {
             savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
        } else {
            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
@@ -91,7 +79,7 @@ public class NoticeService {
             throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (isAdmin(uid)) {
+        if (adminChecker.isAdmin(uid)) {
             noticeInfo.setTitle(noticeUpdateDto.getTitle());
             noticeInfo.setContent(noticeUpdateDto.getContent());
             noticeRepository.save(noticeInfo);
@@ -103,14 +91,21 @@ public class NoticeService {
     }
 
     @Transactional
-    public String deleteNotice(Long noticeId) {
+    public String deleteNotice(Long noticeId, String uid) {
+        Notice noticeInfo = null;
+
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
-            Notice noticeInfo = notice.get();
+            noticeInfo = notice.get();
+        } else {
+            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (adminChecker.isAdmin(uid)) {
             noticeInfo.setDeleted(true);
             noticeRepository.save(noticeInfo);
         } else {
-            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
         }
 
         return "Success";
