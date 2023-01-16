@@ -7,6 +7,7 @@ import lombok.Getter;
 public class AddKTXPlaceDto {
     private String name;
     private Long cnt = 0L;
+    private String uid;
 
     public KTXPlace toEntity() {
         return KTXPlace.builder().name(this.name).cnt(this.cnt).build();

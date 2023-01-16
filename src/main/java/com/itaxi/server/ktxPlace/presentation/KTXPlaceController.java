@@ -5,6 +5,7 @@ import com.itaxi.server.exception.ktx.BadCntException;
 import com.itaxi.server.exception.ktx.NameNullException;
 import com.itaxi.server.ktxPlace.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
+import com.itaxi.server.ktxPlace.presentation.request.DeleteKTXPlaceRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,8 +55,8 @@ public class KTXPlaceController {
     @ApiOperation(value = ApiDoc.KTX_PLACE_DELETE)
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    public String delete(@PathVariable final long id) {
-        String result = ktxPlaceService.deleteKTXPlace(id);
+    public String delete(@PathVariable final long id, @RequestBody final DeleteKTXPlaceRequest dto) {
+        String result = ktxPlaceService.deleteKTXPlace(id, dto.getUid());
         return result;
     }
 }
