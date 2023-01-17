@@ -39,7 +39,7 @@ out/
 ## Config file
 /src/main/resources/*.yaml
 /src/main/resources/*.yml
-docker-compose.yml
+/*.yml
 
 ### Linux ###
 *~
