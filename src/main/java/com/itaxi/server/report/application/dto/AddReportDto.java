@@ -1,6 +1,5 @@
 package com.itaxi.server.report.application.dto;
 
-import com.itaxi.server.report.domain.Report;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

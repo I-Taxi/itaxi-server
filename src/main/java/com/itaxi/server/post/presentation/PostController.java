@@ -28,20 +28,20 @@ public class PostController {
 
     @ApiOperation(value = ApiDoc.POST_HISTORY)
     @PostMapping(value = "history")
-    public List<PostLog> getPostLog(@RequestBody MemberUidDTO memberUidDTO) {
-        return postService.getPostLog(memberUidDTO.getUid());
+    public ResponseEntity<List<PostLog>> getPostLog(@RequestBody MemberUidDTO memberUidDTO) {
+        return ResponseEntity.ok(postService.getPostLog(memberUidDTO.getUid()));
     }
 
     @ApiOperation(value = ApiDoc.POST_HISTORY_DETAIL)
     @GetMapping(value = "history/{postId}")
-    public PostLogDetail getPostLogDetail(@PathVariable long postId) {
-        return postService.getPostLogDetail(postId);
+    public ResponseEntity<PostLogDetail> getPostLogDetail(@PathVariable long postId) {
+        return ResponseEntity.ok(postService.getPostLogDetail(postId));
     }
 
     @ApiOperation(value = ApiDoc.POST_READ)
     @RequestMapping(method = RequestMethod.GET)
-    public List<PostGetResDto> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
-        return postService.getPost(depId, dstId, time, postType);
+    public ResponseEntity<List<PostGetResDto>> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
+        return ResponseEntity.ok(postService.getPost(depId, dstId, time, postType));
     }
 
     @ApiOperation(value = ApiDoc.POST_CREATE)
