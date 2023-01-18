@@ -27,12 +27,11 @@ import java.util.List;
 @RequestMapping("/api/ktx")
 public class KTXController {
     private final KTXService ktxService;
-    private final KTXPlaceService ktxPlaceService;
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY)
     @PostMapping(value = "history")
     public ResponseEntity<List<KTXLog>> getKTXLog(@RequestBody MemberUidDTO memberUidDTO) {
-        return ResponseEntity.ok(ktxService.getPostLog(memberUidDTO.getUid()));
+        return ResponseEntity.ok(ktxService.getKTXLog(memberUidDTO.getUid()));
     }
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY_DETAIL)
@@ -51,19 +50,7 @@ public class KTXController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<KTXInfoResponse> create(@Valid @RequestBody(required = false) final AddKTXDto dto) {
-        // RequestBody가 null일 때
-        if (dto == null) throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-        // 출발과 도착 장소가 같을 때
-        if (dto.getDstId() == dto.getDepId()) throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
-        // capacity 1~10 이 아닐 때
-        if (dto.getCapacity() > 10 || dto.getCapacity() < 1) throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
-        // 날짜 3달 후까지로
-        Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
-        if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
-
         KTXInfoResponse response = ktxService.createKTX(dto);
-        ktxPlaceService.updateView(dto.getDepId());
-        ktxPlaceService.updateView(dto.getDstId());
 
         return ResponseEntity.ok(response);
     }
@@ -82,16 +69,10 @@ public class KTXController {
         return ResponseEntity.ok(result);
     }
 
-    // ktx 채팅방 모집 중단
     @ApiOperation(value = ApiDoc.KTX_STOP)
     @PutMapping("/{ktxId}/stop")
     public ResponseEntity<String> stopKTX(@PathVariable Long ktxId, @RequestBody MemberUidDTO memberUidDTO) {
         String result = ktxService.stopKTX(ktxId, memberUidDTO.getUid());
         return ResponseEntity.ok(result);
-    }
-
-    // 두 날짜 사이의 차이 구하기
-    private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
-        return Period.between(a.toLocalDate(), b.toLocalDate());
     }
 }
