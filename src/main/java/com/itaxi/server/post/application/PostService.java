@@ -179,7 +179,7 @@ public class PostService {
             JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
-            return postInfo.toPostInfoResponse();
+            throw new JoinerDuplicateMemberException(HttpStatus.BAD_REQUEST);
         }
 
         List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);

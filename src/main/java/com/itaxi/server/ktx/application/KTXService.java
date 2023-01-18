@@ -3,6 +3,7 @@ package com.itaxi.server.ktx.application;
 import com.itaxi.server.exception.ktx.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
+import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.post.JoinerNotFoundException;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
@@ -152,7 +153,7 @@ public class KTXService {
             KTXJoinerCreateDto ktxJoinerCreateDto = new KTXJoinerCreateDto(memberInfo, ktxInfo, ktxJoinDto.isOwner());
             ktxJoinerRepository.save(new KTXJoiner(ktxJoinerCreateDto));
         } else {
-            return ktxInfo.toKTXInfoResponse();
+            throw new JoinerDuplicateMemberException(HttpStatus.BAD_REQUEST);
         }
 
         List<KTXJoiner> ktxJoiners = ktxJoinerRepository.findKtxJoinerByKtx(ktxInfo);
