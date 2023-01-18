@@ -39,15 +39,13 @@ public class KTXService {
     private final KTXJoinerRepository ktxJoinerRepository;
 
     @Transactional
-    public List<KTXLog> getPostLog(String uid) {
+    public List<KTXLog> getKTXLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (!member.isPresent()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberKTXJoinInfo joinInfo = new MemberKTXJoinInfo(member.get());
         List<KTXLog> ktxLogs = new ArrayList<>();
         PriorityQueue<KTXLog> kQueue = new PriorityQueue<>(Collections.reverseOrder());
-        // 출발시각으로 정렬
         for (KTX ktx : joinInfo.getKtxes()) kQueue.add(new KTXLog(ktx));
-        // 정렬된 결과를 List에 주입
         while (kQueue.size() > 0) ktxLogs.add(kQueue.poll());
         return ktxLogs;
     }
@@ -170,24 +168,24 @@ public class KTXService {
 
         Optional<KTXJoiner> ktxJoiner = ktxJoinerRepository.findKtxJoinerByKtxAndMember(ktxInfo, memberInfo);
         int joinerSize = ktxInfo.getJoiners().size();
-        if (ktxJoiner.isPresent()) { // 멤버가 이 포스트에 존재하면
+        if (ktxJoiner.isPresent()) {
             KTXJoiner joinerInfo = ktxJoiner.get();
-            joinerInfo.setStatus(0); // 포스트에서 나가고
-            joinerInfo.setDeleted(true); // joiner에서 지우기
+            joinerInfo.setStatus(0);
+            joinerInfo.setDeleted(true);
             ktxJoinerRepository.save(joinerInfo);
 
             System.out.println(joinerSize);
-            if (joinerSize == 1) { // 아무도 안 남았으면
-                ktxInfo.setStatus(0); // 모집 종료하고
-                ktxInfo.setDeleted(true); // 지우기
+            if (joinerSize == 1) {
+                ktxInfo.setStatus(0);
+                ktxInfo.setDeleted(true);
             } else if (joinerSize == ktxInfo.getCapacity()) {
-                ktxInfo.setStatus(1); // 아니면 아직 모집 중
+                ktxInfo.setStatus(1);
             }
             ktxRepository.save(ktxInfo);
 
-            if (joinerSize > 1 && joinerInfo.isOwner()) { // 아직 사람들 남았는데 주인이 나갔으면
-                KTXJoiner joinerBeOwner = ktxInfo.getJoiners().get(1); // 가장 처음으로? 들어온 멤버를
-                joinerBeOwner.setOwner(true); // 주인으로 만들고 저장
+            if (joinerSize > 1 && joinerInfo.isOwner()) {
+                KTXJoiner joinerBeOwner = ktxInfo.getJoiners().get(1);
+                joinerBeOwner.setOwner(true);
                 ktxJoinerRepository.save(joinerBeOwner);
             }
         } else {
@@ -199,7 +197,6 @@ public class KTXService {
 
     @Transactional
     public String stopKTX(Long ktxId, String uid) {
-        // ktx 포스트가 존재하는지 확인
         KTX ktxInfo = null;
         Member memberInfo = null;
 
@@ -212,21 +209,18 @@ public class KTXService {
         } else {
             throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
         }
-        // 멤버가 존재하는지 확인
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
-        // 멤버가 ktxJoiner에 존재하는지 확인
         boolean exists = false;
         boolean isOwner = false;
         List<KTXJoiner> ktxJoiners = ktxInfo.getJoiners();
         for (KTXJoiner ktxJoiner : ktxJoiners) {
             if (ktxJoiner.getMember().getId().equals(memberInfo.getId())) {
                 exists = true;
-                // 멤버가 ktxJoiner에 존재한다면 owner인지 확인
                 if (ktxJoiner.isOwner()) isOwner = true;
             }
         }
@@ -237,7 +231,7 @@ public class KTXService {
         if (!isOwner) {
             throw new JoinerNotOwnerException(HttpStatus.BAD_REQUEST);
         }
-        // 멤버가 owner이면 모집 중단
+
         ktxInfo.setStatus(2);
         ktxRepository.save(ktxInfo);
 

@@ -32,7 +32,7 @@ public class KTXController {
     @ApiOperation(value = ApiDoc.KTX_HISTORY)
     @PostMapping(value = "history")
     public ResponseEntity<List<KTXLog>> getKTXLog(@RequestBody MemberUidDTO memberUidDTO) {
-        return ResponseEntity.ok(ktxService.getPostLog(memberUidDTO.getUid()));
+        return ResponseEntity.ok(ktxService.getKTXLog(memberUidDTO.getUid()));
     }
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY_DETAIL)
@@ -82,7 +82,6 @@ public class KTXController {
         return ResponseEntity.ok(result);
     }
 
-    // ktx 채팅방 모집 중단
     @ApiOperation(value = ApiDoc.KTX_STOP)
     @PutMapping("/{ktxId}/stop")
     public ResponseEntity<String> stopKTX(@PathVariable Long ktxId, @RequestBody MemberUidDTO memberUidDTO) {
@@ -90,7 +89,6 @@ public class KTXController {
         return ResponseEntity.ok(result);
     }
 
-    // 두 날짜 사이의 차이 구하기
     private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
         return Period.between(a.toLocalDate(), b.toLocalDate());
     }
