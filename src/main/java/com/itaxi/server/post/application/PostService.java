@@ -4,6 +4,9 @@ import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
+import com.itaxi.server.ktx.domain.KTX;
+import com.itaxi.server.ktx.domain.repository.KTXRepository;
+import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
@@ -49,11 +52,14 @@ public class PostService {
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
+        MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
         PriorityQueue<PostLog> pQueue = new PriorityQueue<>(Collections.reverseOrder());
         // 출발시각(deptTime) 기준으로 정렬
         for(Post post : joinInfo.getPosts())
             pQueue.add(new PostLog(post));
+        for (KTX ktx : ktxJoinInfo.getKtxes())
+            pQueue.add(new PostLog(ktx));
         // 정렬된 결과를 List에 주입
         while(pQueue.size() > 0)
             postLogs.add(pQueue.poll());

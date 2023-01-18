@@ -27,6 +27,7 @@ import java.util.List;
 @RequestMapping("/api/ktx")
 public class KTXController {
     private final KTXService ktxService;
+    private final KTXPlaceService ktxPlaceService;
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY)
     @PostMapping(value = "history")
@@ -74,5 +75,9 @@ public class KTXController {
     public ResponseEntity<String> stopKTX(@PathVariable Long ktxId, @RequestBody MemberUidDTO memberUidDTO) {
         String result = ktxService.stopKTX(ktxId, memberUidDTO.getUid());
         return ResponseEntity.ok(result);
+    }
+
+    private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
+        return Period.between(a.toLocalDate(), b.toLocalDate());
     }
 }

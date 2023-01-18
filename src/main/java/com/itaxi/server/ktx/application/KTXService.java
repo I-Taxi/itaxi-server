@@ -58,11 +58,6 @@ public class KTXService {
     }
 
     @Transactional
-    public KTX create(AddKTXPlaceDto dto) {
-        return ktxRepository.save(dto.toEntity());
-    }
-
-    @Transactional
     public KTXInfoResponse createKTX(AddKTXDto dto) {
         if (dto == null) throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
         if (dto.getDstId() == dto.getDepId()) throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,7 +71,7 @@ public class KTXService {
         final KTXPlace departure = ktxPlaceRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final KTXPlace destination = ktxPlaceRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddKTXPlaceDto ktxPlaceDto = new AddKTXPlaceDto(dto, departure, destination);
-        KTXResDto result = new KTXResDto(create(ktxPlaceDto));
+        KTXResDto result = new KTXResDto(ktxRepository.save(ktxPlaceDto.toEntity()));
         KTXJoinDto joinDto = new KTXJoinDto(dto.getUid(), true);
         KTXInfoResponse response = joinKTX(result.getId(), joinDto);
         ktxPlaceService.updateView(dto.getDepId());
