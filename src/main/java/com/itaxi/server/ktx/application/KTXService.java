@@ -41,29 +41,45 @@ public class KTXService {
     @Transactional
     public List<KTXLog> getKTXLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if (!member.isPresent()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (!member.isPresent()) {
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         MemberKTXJoinInfo joinInfo = new MemberKTXJoinInfo(member.get());
         List<KTXLog> ktxLogs = new ArrayList<>();
         PriorityQueue<KTXLog> kQueue = new PriorityQueue<>(Collections.reverseOrder());
-        for (KTX ktx : joinInfo.getKtxes()) kQueue.add(new KTXLog(ktx));
-        while (kQueue.size() > 0) ktxLogs.add(kQueue.poll());
+        for (KTX ktx : joinInfo.getKtxes()) {
+            kQueue.add(new KTXLog(ktx));
+        }
+        while (kQueue.size() > 0) {
+            ktxLogs.add(kQueue.poll());
+        }
         return ktxLogs;
     }
 
     @Transactional
     public KTXLogDetail getKTXLogDetail(Long ktxId) {
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
-        if (!ktx.isPresent()) throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (!ktx.isPresent()) {
+            throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new KTXLogDetail(ktx.get());
     }
 
     @Transactional
     public KTXInfoResponse createKTX(AddKTXDto dto) {
-        if (dto == null) throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if (dto.getDstId() == dto.getDepId()) throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if (dto.getCapacity() > 10 || dto.getCapacity() < 1) throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto == null) {
+            throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (dto.getDstId() == dto.getDepId()) {
+            throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (dto.getCapacity() > 10 || dto.getCapacity() < 1) {
+            throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
-        if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (period.getYears() >= 1 || period.getMonths() >= 3) {
+            throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
         }

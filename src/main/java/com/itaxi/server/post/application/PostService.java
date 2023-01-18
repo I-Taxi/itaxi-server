@@ -51,36 +51,46 @@ public class PostService {
     @Transactional
     public List<PostLog> getPostLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(!member.isPresent())
+        if(!member.isPresent()) {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
         PriorityQueue<PostLog> pQueue = new PriorityQueue<>(Collections.reverseOrder());
-        for(Post post : joinInfo.getPosts())
+        for(Post post : joinInfo.getPosts()) {
             pQueue.add(new PostLog(post));
-        for (KTX ktx : ktxJoinInfo.getKtxes())
+        }
+        for (KTX ktx : ktxJoinInfo.getKtxes()) {
             pQueue.add(new PostLog(ktx));
-        while(pQueue.size() > 0)
+        }
+        while(pQueue.size() > 0) {
             postLogs.add(pQueue.poll());
+        }
         return postLogs;
     }
 
     @Transactional
     public PostLogDetail getPostLogDetail(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
-        if(!post.isPresent())
+        if(!post.isPresent()) {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new PostLogDetail(post.get());
     }
 
     @Transactional
     public PostInfoResponse createPost(AddPostDto dto) {
-        if (dto.getStopoverIds().size() > 3) throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getStopoverIds().size() > 3) {
+            throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
-        if (period.getYears() >= 1 || period.getMonths() >= 3) throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null)
+        if (period.getYears() >= 1 || period.getMonths() >= 3) {
+            throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
+        }
 
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
@@ -99,7 +109,7 @@ public class PostService {
         List<Stopover> stopovers = stopoverRepository.findStopoversByPost(resPost);
         resPost.setStopovers(stopovers);
 
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
+        PostJoinDto joinDto = new PostJoinDto(dto.getUid(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 
         List<Long> stopoverIds = dto.getStopoverIds();

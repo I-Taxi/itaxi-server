@@ -34,6 +34,7 @@ public class ReportService {
         Optional<Member> writer = memberRepository.findMemberByUid(dto.getWriterUid());
         Optional<Member> reportedMember = memberRepository.findMemberByUid(dto.getReportedUid());
         Report report = null;
+
         if (writer.isPresent() && reportedMember.isPresent()) {
             AddReportMemberDto reportMemberDto = new AddReportMemberDto(dto, writer.get(), reportedMember.get());
             Member member = reportedMember.get();
@@ -52,8 +53,9 @@ public class ReportService {
     @Transactional
     public List<ReportGetResDto> getReport(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(!member.isPresent())
+        if(!member.isPresent()) {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         Long id = member.get().getId();
         List<Report> posts = reportRepository.findAllByWriterId(id);
         List<ReportGetResDto> results = posts.stream().map(m -> new ReportGetResDto(m)).collect(Collectors.toList());
@@ -65,18 +67,21 @@ public class ReportService {
     public String updateReport(Long reportId, UpdateReportDto dto) {
         Report reportInfo = null;
         Member memberInfo = null;
+
         Optional<Report> report = reportRepository.findById(reportId);
         if (report.isPresent()) {
             reportInfo = report.get();
         } else {
             throw new ReportNotFoundException(HttpStatus.BAD_REQUEST);
         }
+
         Optional<Member> member = memberRepository.findMemberByUid(dto.getUid());
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+
         if (reportInfo.getWriter().getId() == memberInfo.getId()) {
             reportInfo.setContent(dto.getContent());
             reportInfo.setTitle(dto.getTitle());
@@ -92,18 +97,21 @@ public class ReportService {
     public String deleteReport(Long reportId, String uid) {
         Report reportInfo = null;
         Member memberInfo = null;
+
         Optional<Report> report = reportRepository.findById(reportId);
         if (report.isPresent()) {
             reportInfo = report.get();
         } else {
             throw new ReportNotFoundException(HttpStatus.BAD_REQUEST);
         }
+
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+
         if (reportInfo.getWriter().getId() == memberInfo.getId()) {
             reportInfo.setDeleted(true);
             reportRepository.save(reportInfo);
