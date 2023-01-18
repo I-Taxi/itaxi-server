@@ -1,10 +1,6 @@
 package com.itaxi.server.ktx.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
-import com.itaxi.server.exception.ktx.BadDateException;
-import com.itaxi.server.exception.ktx.KTXRequestBodyNullException;
-import com.itaxi.server.exception.ktx.SamePlaceException;
-import com.itaxi.server.exception.ktx.WrongCapacityException;
 import com.itaxi.server.ktx.application.KTXService;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
@@ -18,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.List;
 
 @RestController
@@ -75,9 +69,5 @@ public class KTXController {
     public ResponseEntity<String> stopKTX(@PathVariable Long ktxId, @RequestBody MemberUidDTO memberUidDTO) {
         String result = ktxService.stopKTX(ktxId, memberUidDTO.getUid());
         return ResponseEntity.ok(result);
-    }
-
-    private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
-        return Period.between(a.toLocalDate(), b.toLocalDate());
     }
 }

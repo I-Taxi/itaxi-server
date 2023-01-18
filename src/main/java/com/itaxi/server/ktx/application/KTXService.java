@@ -87,12 +87,16 @@ public class KTXService {
         final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
-        List<KTX> ktxes =
-                ((depId == null && dstId == null)? (ktxRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)):
-                        (depId == null ? (ktxRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime)):
-                                (dstId == null ? (ktxRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) :
-                                        (ktxRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
-                                )));
+        List<KTX> ktxes = null;
+        if (depId == null && dstId == null) {
+            ktxes = ktxRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime);
+        } else if (depId == null) {
+            ktxes = ktxRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime);
+        } else if (dstId == null) {
+            ktxes = ktxRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime);
+        } else {
+            ktxes = ktxRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime);
+        }
 
         List<KTXGetResDto> resultList = ktxes.stream()
                 .map(m -> new KTXGetResDto(m))

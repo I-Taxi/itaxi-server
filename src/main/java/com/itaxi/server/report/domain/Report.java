@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.member.domain.Member;
 
-import com.itaxi.server.report.presentation.response.MemberResponse;
-import com.itaxi.server.report.presentation.response.ReportResponse;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;

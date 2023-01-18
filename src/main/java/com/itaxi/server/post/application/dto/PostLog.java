@@ -3,7 +3,6 @@ package com.itaxi.server.post.application.dto;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.place.application.dto.PlaceResponse;
-import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
 

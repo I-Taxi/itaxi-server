@@ -1,6 +1,5 @@
 package com.itaxi.server.ktx.application.dto;
 
-import com.itaxi.server.ktxPlace.domain.KTXPlace;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.place.application.dto.PlaceResponse;

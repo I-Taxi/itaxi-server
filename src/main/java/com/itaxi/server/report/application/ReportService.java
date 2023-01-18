@@ -5,7 +5,6 @@ import com.itaxi.server.exception.report.MemberNotWriterException;
 import com.itaxi.server.exception.report.ReportNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
-import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.report.application.dto.AddReportDto;
 import com.itaxi.server.report.application.dto.AddReportMemberDto;
 import com.itaxi.server.report.application.dto.ReportGetResDto;
@@ -13,7 +12,6 @@ import com.itaxi.server.report.application.dto.UpdateReportDto;
 import com.itaxi.server.report.domain.Report;
 import com.itaxi.server.report.domain.repository.ReportRepository;
 
-import com.itaxi.server.report.presentation.response.MemberResponse;
 import com.itaxi.server.report.presentation.response.ReportResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
