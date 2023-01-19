@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FavorJoiner extends BaseEntity {
+public class FAVORJoiner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class FavorJoiner extends BaseEntity {
 
 
 
-    public FavorJoiner(FavorJoinerSaveDto favorJoinerSaveDto) {
+    public FAVORJoiner(FavorJoinerSaveDto favorJoinerSaveDto) {
         this.member = favorJoinerSaveDto.getMember();
         this.place = favorJoinerSaveDto.getPlace();
     }

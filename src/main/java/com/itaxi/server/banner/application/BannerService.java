@@ -79,8 +79,8 @@ public class BannerService {
 
         BannerCreateResponse bannerCreateResponse = new BannerCreateResponse(
                 saveBanner.getId(),member.get().getName(),saveBanner.getUid(),
-                saveBanner.getWeatherStatus(), saveBanner.getDepartureId().getId(),
-                saveBanner.getDestinationId().getId(),saveBanner.getReportAt(),
+                saveBanner.getWeatherStatus(), saveBanner.getDeparture().getId(),
+                saveBanner.getDestination().getId(),saveBanner.getReportAt(),
                 saveBanner.getBannerType());
 
         return bannerCreateResponse;
@@ -109,13 +109,13 @@ public class BannerService {
 
         Banner bannerInfo = banner.get();
         bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
-        bannerInfo.setDepartureId(placeDepart.get());
-        bannerInfo.setDestinationId(placeDest.get());
+        bannerInfo.setDeparture(placeDepart.get());
+        bannerInfo.setDestination(placeDest.get());
         bannerRepository.save(bannerInfo);
 
         BannerUpdateResponse result = new BannerUpdateResponse(
-                bannerInfo.getWeatherStatus(),bannerInfo.getDepartureId().getId(),
-                bannerInfo.getDestinationId().getId());
+                bannerInfo.getWeatherStatus(),bannerInfo.getDeparture().getId(),
+                bannerInfo.getDestination().getId());
 
 
         return result;
@@ -132,7 +132,7 @@ public class BannerService {
                 Banner bannerInfo = banner.get();
                 response = new BannerReadResponse(
                         bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(),
-                        bannerInfo.getDepartureId().getId(), bannerInfo.getDestinationId().getId(),
+                        bannerInfo.getDeparture().getId(), bannerInfo.getDestination().getId(),
                         bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
             }
             else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
@@ -151,8 +151,8 @@ public class BannerService {
             if(banner != null){
                 if(member.isPresent()){
                     result.add(0,new BannerReadAllResponse(banner.getId(), member.get().getName(),
-                            banner.getWeatherStatus(), banner.getDepartureId().getId(),
-                            banner.getDestinationId().getId(), banner.getReportAt()));
+                            banner.getWeatherStatus(), banner.getDeparture().getId(),
+                            banner.getDestination().getId(), banner.getReportAt()));
                 }
                 else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
             }
@@ -167,8 +167,8 @@ public class BannerService {
 
         String output = "";
         for(Banner banner : bannerRepository.findAll()){
-            Optional<Place> placeDepart = placeRepository.findById(banner.getDepartureId().getId());
-            Optional<Place> placeDest = placeRepository.findById(banner.getDestinationId().getId());
+            Optional<Place> placeDepart = placeRepository.findById(banner.getDeparture().getId());
+            Optional<Place> placeDest = placeRepository.findById(banner.getDestination().getId());
 
             output = "제보자: ";
             Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());
@@ -186,7 +186,7 @@ public class BannerService {
             else{continue;}
 
             if(placeDepart.isPresent() && placeDest.isPresent()){
-                if(banner.getDestinationId() == banner.getDepartureId()){
+                if(banner.getDestination() == banner.getDeparture()){
                     output = output.concat("특정 장소 ");
                     output = output.concat(placeDepart.get().getName());
                 }

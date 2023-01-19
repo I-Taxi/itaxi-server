@@ -32,9 +32,9 @@ public class Banner extends BaseEntity {
     @Column(nullable = false)
     private int weatherStatus;
     @ManyToOne(fetch = FetchType.EAGER)
-    private Place departureId;
+    private Place departure;
     @ManyToOne(fetch = FetchType.EAGER)
-    private Place destinationId;
+    private Place destination;
     @Column(nullable = false)
     private LocalDateTime reportAt;
     @Column(nullable = false)
@@ -44,8 +44,8 @@ public class Banner extends BaseEntity {
     public Banner(BannerCreateEntityDto bannerCreateEntityDto){
         this.uid = bannerCreateEntityDto.getUid();
         this.weatherStatus = bannerCreateEntityDto.getWeatherStatus();
-        this.departureId = bannerCreateEntityDto.getDepId();
-        this.destinationId = bannerCreateEntityDto.getDesId();
+        this.departure = bannerCreateEntityDto.getDepId();
+        this.destination = bannerCreateEntityDto.getDesId();
         this.reportAt = bannerCreateEntityDto.getReportAt();
         this.bannerType = bannerCreateEntityDto.getBannerType();
         this.setDeleted(false);
