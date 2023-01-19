@@ -1,12 +1,13 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.ktx.BadDateException;
 import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.ktx.domain.KTX;
-import com.itaxi.server.ktx.domain.repository.KTXRepository;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
+import com.itaxi.server.place.application.PlaceService;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import com.itaxi.server.post.application.dto.*;
@@ -28,11 +29,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,68 +46,78 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final JoinerRepository joinerRepository;
     private final StopoverRepository stopoverRepository;
+    private final PlaceService placeService;
 
     @Transactional
     public List<PostLog> getPostLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(!member.isPresent())
+        if(!member.isPresent()) {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
         PriorityQueue<PostLog> pQueue = new PriorityQueue<>(Collections.reverseOrder());
-        // 출발시각(deptTime) 기준으로 정렬
-        for(Post post : joinInfo.getPosts())
+        for(Post post : joinInfo.getPosts()) {
             pQueue.add(new PostLog(post));
-        for (KTX ktx : ktxJoinInfo.getKtxes())
+        }
+        for (KTX ktx : ktxJoinInfo.getKtxes()) {
             pQueue.add(new PostLog(ktx));
-        // 정렬된 결과를 List에 주입
-        while(pQueue.size() > 0)
+        }
+        while(pQueue.size() > 0) {
             postLogs.add(pQueue.poll());
+        }
         return postLogs;
     }
 
     @Transactional
     public PostLogDetail getPostLogDetail(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
-        if(!post.isPresent())
+        if(!post.isPresent()) {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new PostLogDetail(post.get());
     }
 
     @Transactional
-    public Post create(AddPostPlaceDto dto) {
-        return postRepository.save(dto.toEntity());
-    }
-
-    @Transactional
     public PostInfoResponse createPost(AddPostDto dto) {
-        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null)
+        if (dto.getStopoverIds().size() > 3) {
+            throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
+        if (period.getYears() >= 1 || period.getMonths() >= 3) {
+            throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
+        }
 
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
-        ResDto result = new ResDto(create(postPlaceDto));
-        // Post 저장을 한 후 Stopover 저장하기
+        ResDto result = new ResDto(postRepository.save(postPlaceDto.toEntity()));
         List<Long> stopoverList = dto.getStopoverIds();
-        // 방금 저장한 post를 가지고 온다
         Optional<Post> post = postRepository.findById(result.getId());
         Post resPost = post.get();
         Place place = null;
         Stopover stopover = null;
-        // 각 stopover들을 생성하고 저장
         for (Long id : stopoverList) {
             place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
             stopover = new Stopover(new StopoverCreateDto(place, resPost));
             stopoverRepository.save(stopover);
         }
-        // stopover를 post에 추가해준다
         List<Stopover> stopovers = stopoverRepository.findStopoversByPost(resPost);
         resPost.setStopovers(stopovers);
 
-        PostJoinDto joinDto= new PostJoinDto(dto.getUid(), true);
+        PostJoinDto joinDto = new PostJoinDto(dto.getUid(), true);
         PostInfoResponse response = joinPost(result.getId(), joinDto);
+
+        List<Long> stopoverIds = dto.getStopoverIds();
+        for (Long id : stopoverIds) {
+            placeService.updateView(id);
+        }
+        placeService.updateView(dto.getDepId());
+        placeService.updateView(dto.getDstId());
 
         return response;
     }
@@ -118,17 +129,29 @@ public class PostService {
         final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
-        List<Post> posts = (postType == null) ?
-                ((depId == null && dstId == null)? (postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime)):
-                        (depId == null ? (postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime)):
-                                (dstId == null ? (postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime)) :
-                                        (postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime))
-                                ))) :
-                (depId == null && dstId == null? (postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime)):
-                        (depId == null ? (postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime)):
-                                (dstId == null ? (postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime)) :
-                                        (postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime))
-                                )));
+        List<Post> posts = null;
+
+        if (postType == null) {
+            if (depId == null && dstId == null) {
+                posts = postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime);
+            } else if (depId == null) {
+                posts = postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime);
+            } else if (dstId == null) {
+                posts = postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime);
+            } else {
+                posts = postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime);
+            }
+        } else {
+            if (depId == null && dstId == null) {
+                posts = postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime);
+            } else if (depId == null) {
+                posts = postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime);
+            } else if (dstId == null) {
+                posts = postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime);
+            } else {
+                posts = postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime);
+            }
+        }
 
         List<PostGetResDto> resultList = posts.stream()
                 .map(m -> new PostGetResDto(m))
@@ -145,7 +168,7 @@ public class PostService {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
             postInfo = post.get();
-            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {
                 throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
@@ -168,7 +191,7 @@ public class PostService {
             JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
-            return postInfo.toPostInfoResponse();
+            throw new JoinerDuplicateMemberException(HttpStatus.BAD_REQUEST);
         }
 
         List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);
@@ -176,7 +199,7 @@ public class PostService {
 
         int joinerSize = postInfo.getJoiners().size();
         if (joinerSize >= postInfo.getCapacity()) {
-            postInfo.setStatus(2);                          // 2 : 모집 완료
+            postInfo.setStatus(2);
             postRepository.save(postInfo);
         }
 
@@ -193,7 +216,7 @@ public class PostService {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
             postInfo = post.get();
-            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {
                 throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
@@ -217,10 +240,10 @@ public class PostService {
 
             System.out.println(joinerSize);
             if (joinerSize == 1){
-                postInfo.setStatus(0);                              // 0 : 모집 종료
+                postInfo.setStatus(0);
                 postInfo.setDeleted(true);
             }  else if (joinerSize == postInfo.getCapacity()) {
-                postInfo.setStatus(1);                              // 1 : 모집 중
+                postInfo.setStatus(1);
             }
             postRepository.save(postInfo);
 
@@ -242,18 +265,16 @@ public class PostService {
         Post postInfo = null;
         Member memberInfo = null;
 
-        // post 존재하는지 체크
         Optional<Post> post = postRepository.findById(postId);
         if (post.isPresent()) {
             postInfo = post.get();
-            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {      // 1 : 시간 지남
+            if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {
                 throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
             }
         } else {
             throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
-        // 멤버가 존재하는지 체크
         Optional<Member> member = memberRepository.findMemberByUid(dto.getUid());
         if (member.isPresent()) {
             memberInfo = member.get();
@@ -261,25 +282,20 @@ public class PostService {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
-        // deptTime이 현재 시간으로부터 3분 이하 차이이면 수정 X
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {
             throw new CannotChangeDeptTimeException(HttpStatus.BAD_REQUEST);
         }
 
-        // 시간이 이전 deptTime과 30분 차이 이하인지 체크
         long minutes = ChronoUnit.MINUTES.between(postInfo.getDeptTime(), dto.getDeptTime());
         if (minutes >= 30) {
             throw new DeptTimeWrongException(HttpStatus.BAD_REQUEST);
         }
 
-        // joiner에 존재하는지 체크
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (joiner.isPresent()) {
             Joiner joinerInfo = joiner.get();
-            // 멤버가 해당 post의 owner인지 체크
             if (joinerInfo.isOwner()) {
-                // owner이면 시간 변경
                 postInfo.setDeptTime(dto.getDeptTime());
                 postRepository.save(postInfo);
             } else {
@@ -298,5 +314,9 @@ public class PostService {
         int compareResult = dayDate1.compareTo(dayDate2);
 
         return compareResult;
+    }
+
+    private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
+        return Period.between(a.toLocalDate(), b.toLocalDate());
     }
 }

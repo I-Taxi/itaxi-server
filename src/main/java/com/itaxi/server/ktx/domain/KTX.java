@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,10 @@ public class KTX extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private KTXPlace destination;
 
+    @NotNull
     private LocalDateTime deptTime;
 
+    @NotNull
     private int capacity;
 
     private int status;

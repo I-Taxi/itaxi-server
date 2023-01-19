@@ -1,6 +1,5 @@
 package com.itaxi.server.report.application.dto;
 
-import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.report.domain.Report;
 import com.itaxi.server.report.presentation.response.MemberResponse;
 import lombok.Builder;

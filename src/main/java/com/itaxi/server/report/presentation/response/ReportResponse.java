@@ -1,5 +1,6 @@
 package com.itaxi.server.report.presentation.response;
 
+import com.itaxi.server.report.domain.Report;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,13 @@ public class ReportResponse {
     private LocalDateTime date;
     private String title;
     private String content;
+
+    public ReportResponse(Report report) {
+        this.id = report.getId();
+        this.writer = new MemberResponse(report.getWriter().getId(), report.getWriter().getName());
+        this.reportedMember = new MemberResponse(report.getReportedMember().getId(), report.getReportedMember().getName());
+        this.date = report.getDate();
+        this.title = report.getTitle();
+        this.content = report.getContent();
+    }
 }
