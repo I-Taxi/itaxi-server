@@ -56,7 +56,7 @@ public class BannerController {
 
     @ApiOperation(value = ApiDoc.BANNER_READ_RECENT_ALL)
     @GetMapping("/recent")
-    public ResponseEntity<List> readAllRecentBanner(@RequestParam(required = false)@DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) final LocalDateTime time) {
+    public ResponseEntity<List> readAllRecentBanner(@RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) final LocalDateTime time) {
         if(time==null) throw new BannerRequestBodyException(HttpStatus.INTERNAL_SERVER_ERROR);
         List<BannerReadAllRecentResponse> result = bannerService.readAllRecentBanners(time);
         return ResponseEntity.ok(result);
@@ -65,8 +65,8 @@ public class BannerController {
     @Transactional
     @ApiOperation(value = ApiDoc.BANNER_DELETE)
     @DeleteMapping("/{bannerId}")
-    public ResponseEntity<String> deleteBanner(@PathVariable Long bannerId){
-        String result = bannerService.deleteBanner(bannerId);
+    public ResponseEntity<String> deleteBanner(@PathVariable Long bannerId, @RequestBody BannerDeleteRequest request){
+        String result = bannerService.deleteBanner(bannerId,BannerDeleteDto.from(request));
         return ResponseEntity.ok(result);
     }
 }

@@ -94,8 +94,6 @@ public class NoticeService {
 
             noticeInfo.setTitle(noticeUpdateDto.getTitle());
             noticeInfo.setContent(noticeUpdateDto.getContent());
-            noticeInfo.setStartTime(noticeUpdateDto.getStartTime());
-            noticeInfo.setEndTime(noticeUpdateDto.getEndTime());
             if((noticeInfo.getNoticeType()==2 || noticeInfo.getNoticeType()==3)  &&
                     (noticeInfo.getStartTime() == null || noticeInfo.getEndTime() == null ))
                 throw new NoticeElementNotMatchWithNoticeTypeException();

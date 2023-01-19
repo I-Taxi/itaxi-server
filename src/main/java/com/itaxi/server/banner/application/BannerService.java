@@ -2,6 +2,7 @@ package com.itaxi.server.banner.application;
 
 import com.itaxi.server.banner.application.dto.BannerCreateDto;
 import com.itaxi.server.banner.application.dto.BannerCreateEntityDto;
+import com.itaxi.server.banner.application.dto.BannerDeleteDto;
 import com.itaxi.server.banner.application.dto.BannerUpdateDto;
 import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.banner.domain.repository.BannerRepository;
@@ -101,6 +102,10 @@ public class BannerService {
 
         if(!(banner.isPresent())) throw
                 new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+        if (! banner.get().getUid().equals(bannerUpdateDto.getUid())) throw
+                new BannerNoAuthorityException();
 
         Banner bannerInfo = banner.get();
         bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
@@ -240,8 +245,10 @@ public class BannerService {
     }
 
     @Transactional
-    public String deleteBanner(Long bannerId){
+    public String deleteBanner(Long bannerId, BannerDeleteDto bannerDeleteDto){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
+        if(!(banner.get().getUid().equals(bannerDeleteDto.getUid()))) throw
+            new BannerNoAuthorityException();
         if(banner.isPresent()){
             Banner bannerInfo = banner.get();
             bannerInfo.setDeleted(true);

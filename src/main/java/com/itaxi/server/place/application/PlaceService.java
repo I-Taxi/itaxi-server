@@ -1,7 +1,9 @@
 package com.itaxi.server.place.application;
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
+import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.exception.place.*;
+import com.itaxi.server.notice.domain.Notice;
 import com.itaxi.server.place.application.dto.AddPlaceDto;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
@@ -100,8 +102,18 @@ public class PlaceService {
     }
 
     @Transactional
-    public int updateView(Long id) {
-        return placeRepository.updateView(id);
+    public Long updateView(Long id) {
+        Place placeInfo  = null;
+        Optional<Place> place = placeRepository.findById(id);
+        if (place.isPresent()) {
+            placeInfo = place.get();
+            placeInfo.setCnt(placeInfo.getCnt() + 1);
+            placeRepository.save(placeInfo);
+        } else {
+            throw new PlaceNotFoundException();
+        }
+
+        return placeInfo.getCnt();
     }
 }
 

@@ -2,6 +2,7 @@ package com.itaxi.server.favorite.presentation;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.favorite.application.FavorJoinerService;
 import com.itaxi.server.favorite.application.dto.FavorJoinerCreateDto;
+import com.itaxi.server.favorite.presentation.request.FavorDeleteRequest;
 import com.itaxi.server.favorite.presentation.request.FavorReadRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,9 @@ public class FavorJoinerController {
     }
 
     @ApiOperation(value = ApiDoc.FAVORITE_JOINER_DELETE)
-    @PatchMapping(value = "/{favorId}")
-    public ResponseEntity<String> deleteFavorite(@PathVariable Long favorId ) {
-        return ResponseEntity.ok(favorJoinerService.deleteFavorite(favorId));
+    @DeleteMapping(value = "/{favorId}")
+    public ResponseEntity<String> deleteFavorite(@PathVariable Long favorId, @RequestBody FavorDeleteRequest request) {
+        return ResponseEntity.ok(favorJoinerService.deleteFavorite(favorId,request));
     }
 
 

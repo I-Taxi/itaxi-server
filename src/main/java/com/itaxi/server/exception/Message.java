@@ -47,6 +47,7 @@ public class Message {
     public static final String BANNER_BAD_WEATHER_STATUS_EXCEPTION = "존재하지 않는 날씨 상태입니다.";
     public static final String BANNER_BAD_REPORT_TIME_EXCEPTION = "현재 시간보다 이전에 제보할 수 없습니다.";
     public static final String BANNER_REQUEST_BODY_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
+    public static final String BANNER_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
     public static final String BANNER_PLACE_CNT_MINUS_EXCEPTION = "조회수는 0보다 작을 수 없습니다.";
     public static final String BANNER_PLACE_NAME_NULL_EXCEPTION = "장소의 이름은 null값일 수 없습니다.";
     public static final String BANNER_PLACE_REQUEST_BODY_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
@@ -65,4 +66,5 @@ public class Message {
 
 
     public static final String FAVOR_JOINER_DUPLICATED = "이미 즐겨찾기로 등록된 장소입니다.";
+    public static final String FAVOR_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
 }
