@@ -5,6 +5,7 @@ import com.itaxi.server.ktx.application.KTXService;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import com.itaxi.server.member.application.dto.MemberUidDTO;
+import com.itaxi.server.member.domain.Member;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -60,8 +61,8 @@ public class KTXController {
     @ApiOperation(value = ApiDoc.EXIT_KTX)
     @PutMapping("/{ktxId}/join")
     public ResponseEntity<String> exitKTX(@PathVariable Long ktxId, @RequestBody KTXExitRequest request) {
-        String result = ktxService.exitKTX(ktxId, request.getUid());
-        return ResponseEntity.ok(result);
+        Member result = ktxService.exitKTX(ktxId, request.getUid());
+        return ResponseEntity.ok(result.getName());
     }
 
     @ApiOperation(value = ApiDoc.KTX_STOP)

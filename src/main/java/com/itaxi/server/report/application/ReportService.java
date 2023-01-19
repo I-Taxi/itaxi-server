@@ -65,10 +65,10 @@ public class ReportService {
 
     @Transactional
     public String updateReport(Long reportId, UpdateReportDto dto) {
+        Optional<Report> report = reportRepository.findById(reportId);
         Report reportInfo = null;
         Member memberInfo = null;
 
-        Optional<Report> report = reportRepository.findById(reportId);
         if (report.isPresent()) {
             reportInfo = report.get();
         } else {
@@ -95,10 +95,10 @@ public class ReportService {
 
     @Transactional
     public String deleteReport(Long reportId, String uid) {
+        Optional<Report> report = reportRepository.findById(reportId);
         Report reportInfo = null;
         Member memberInfo = null;
 
-        Optional<Report> report = reportRepository.findById(reportId);
         if (report.isPresent()) {
             reportInfo = report.get();
         } else {

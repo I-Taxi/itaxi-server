@@ -2,6 +2,7 @@ package com.itaxi.server.report.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itaxi.server.common.BaseEntity;
@@ -29,10 +30,13 @@ public class Report extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member reportedMember;
 
+    @NotNull
     private LocalDateTime date;
 
+    @NotNull
     private String content;
 
+    @NotNull
     private String title;
 
     @Builder

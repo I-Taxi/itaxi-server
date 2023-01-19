@@ -30,9 +30,7 @@ public class KTXPlaceController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<KTXResDto> create(@Valid @RequestBody final AddKTXPlaceDto dto) {
-        // name 비었을 때
         if (dto.getName().equals(null) || dto.getName().equals("") || dto.getName().equals(" ")) throw new NameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-        // cnt 마이너스로 올 때
         if (dto.getCnt() < 0) throw new BadCntException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return ResponseEntity.ok(new KTXResDto(ktxPlaceService.create(dto)));
@@ -48,15 +46,14 @@ public class KTXPlaceController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<KTXResDto> update(@PathVariable final long id, @RequestBody final UpdateKTXPlaceDto dto) {
-        // viewcnt 리턴값
         return ResponseEntity.ok(new KTXResDto(ktxPlaceService.updateKTXPlace(id, dto)));
     }
 
     @ApiOperation(value = ApiDoc.KTX_PLACE_DELETE)
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    public String delete(@PathVariable final long id, @RequestBody final DeleteKTXPlaceRequest dto) {
+    public ResponseEntity<String> delete(@PathVariable final long id, @RequestBody final DeleteKTXPlaceRequest dto) {
         String result = ktxPlaceService.deleteKTXPlace(id, dto.getUid());
-        return result;
+        return ResponseEntity.ok(result);
     }
 }

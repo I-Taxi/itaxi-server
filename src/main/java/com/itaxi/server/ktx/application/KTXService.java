@@ -169,9 +169,11 @@ public class KTXService {
     }
 
     @Transactional
-    public String exitKTX(Long ktxId, String uid) {
+    public Member exitKTX(Long ktxId, String uid) {
         KTX ktxInfo = null;
         Member memberInfo = null;
+        Member newOwner = null;
+        KTXJoiner joinerBeOwner = null;
 
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
         if (ktx.isPresent()) {
@@ -208,15 +210,16 @@ public class KTXService {
             ktxRepository.save(ktxInfo);
 
             if (joinerSize > 1 && joinerInfo.isOwner()) {
-                KTXJoiner joinerBeOwner = ktxInfo.getJoiners().get(1);
+                joinerBeOwner = ktxInfo.getJoiners().get(1);
                 joinerBeOwner.setOwner(true);
                 ktxJoinerRepository.save(joinerBeOwner);
+                newOwner = joinerBeOwner.getMember();
             }
         } else {
             throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return "Success";
+        return newOwner;
     }
 
     @Transactional
