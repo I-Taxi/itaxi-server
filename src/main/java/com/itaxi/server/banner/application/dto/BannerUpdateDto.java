@@ -1,6 +1,5 @@
 package com.itaxi.server.banner.application.dto;
 
-import com.itaxi.server.banner.presentation.request.BannerCreateRequest;
 import com.itaxi.server.banner.presentation.request.BannerUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

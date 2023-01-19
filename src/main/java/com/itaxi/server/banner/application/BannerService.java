@@ -1,32 +1,26 @@
 package com.itaxi.server.banner.application;
 
 import com.itaxi.server.banner.application.dto.BannerCreateDto;
+import com.itaxi.server.banner.application.dto.BannerCreateEntityDto;
 import com.itaxi.server.banner.application.dto.BannerUpdateDto;
 import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.banner.domain.repository.BannerRepository;
 import com.itaxi.server.banner.presentation.reponse.*;
-import com.itaxi.server.bannerPlace.domain.BANNERPlace;
-import com.itaxi.server.bannerPlace.domain.repository.BANNERPlaceRepository;
 import com.itaxi.server.exception.banner.*;
-import com.itaxi.server.exception.bannerPlace.BannerPlaceCntMinusException;
-import com.itaxi.server.exception.bannerPlace.BannerPlaceNotNullException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
-import com.itaxi.server.member.application.dto.MemberInfo;
+import com.itaxi.server.exception.place.PlaceNotNullException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.notice.domain.Notice;
 import com.itaxi.server.notice.domain.repository.NoticeRepository;
-import com.itaxi.server.notice.presentation.response.NoticeReadAllResponse;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -38,66 +32,86 @@ import java.util.Optional;
 public class BannerService {
     private final MemberRepository memberRepository;
     private final BannerRepository bannerRepository;
-    private final BANNERPlaceRepository bannerplaceRepository;
+
     private final PlaceRepository placeRepository;
     private final NoticeRepository noticeRepository;
 
     String[] weather={"폭우","침수","폭설","공사"};
-    String[] notice_type={"일반","긴급","정전","점검"};
+    public String[] notice_type={"일반","긴급","정전","점검"};
     @Transactional
     public BannerCreateResponse createBanner(BannerCreateDto bannerCreateDto){
         int gapBetweenReportAndNow = 30;
+
         LocalDateTime currentDate = LocalDateTime.now().minusMinutes(gapBetweenReportAndNow);
 
-        if(bannerCreateDto.getWeatherStatus()<0 || bannerCreateDto.getWeatherStatus()>weather.length-1) throw new BannerUidEmptyException();
-        if(bannerCreateDto.getUid()==null ||bannerCreateDto.getUid()==""|| bannerCreateDto.getUid().equals(" ")) throw new BannerPlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(bannerCreateDto.getBannerType()!=0) throw new BannerBadTypeException();
+        if(bannerCreateDto.getWeatherStatus()<0 || bannerCreateDto.getWeatherStatus()>weather.length-1) throw
+                new BannerUidEmptyException();
 
-        if(currentDate.isAfter(bannerCreateDto.getReportAt())) throw new BannerReportTimeException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(bannerCreateDto.getUid()==null ||bannerCreateDto.getUid()==""|| bannerCreateDto.getUid().equals(" ")) throw
+                new PlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        Banner saveBanner = bannerRepository.save(new Banner(bannerCreateDto));
-        Optional<Member> member = memberRepository.findMemberByUid(saveBanner.getUid());
-        BannerCreateResponse bannerCreateResponse = null;
-        if(member.isPresent()){
-            Optional<Place> placeDepart = placeRepository.findById(saveBanner.getDepartureId());
-            Optional<Place> placeDest = placeRepository.findById(saveBanner.getDestinationId());
-            if(placeDepart.isPresent() && placeDest.isPresent())
-                if(saveBanner.getWeatherStatus()>=0&& saveBanner.getWeatherStatus()<=3){
-                    bannerCreateResponse = new BannerCreateResponse(saveBanner.getId(),member.get().getName(),saveBanner.getUid(), saveBanner.getWeatherStatus(), saveBanner.getDepartureId(),saveBanner.getDestinationId(),saveBanner.getReportAt(), saveBanner.getBannerType());
-                }
-                else throw new BannerBadWeatherStatusException();
-            else throw new PlaceNotFoundException();
-        }
-        else throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(bannerCreateDto.getBannerType()!=0) throw
+                new BannerBadTypeException();
+
+        if(currentDate.isAfter(bannerCreateDto.getReportAt())) throw
+                new BannerReportTimeException(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        Optional<Place> placeDepart = placeRepository.findById(bannerCreateDto.getDepId());
+        Optional<Place> placeDest = placeRepository.findById(bannerCreateDto.getDesId());
+        Optional<Member> member = memberRepository.findMemberByUid(bannerCreateDto.getUid());
+
+        if(!(placeDepart.isPresent() && placeDest.isPresent())) throw
+                new PlaceNotFoundException();
+        if(!(member.isPresent())) throw
+                new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!(bannerCreateDto.getWeatherStatus()>=0&& bannerCreateDto.getWeatherStatus()<=3)) throw
+                new BannerBadWeatherStatusException();
+
+        BannerCreateEntityDto bannerCreateEntityDto =
+                new BannerCreateEntityDto(
+                    bannerCreateDto.getUid(),bannerCreateDto.getWeatherStatus(),
+                    placeDepart.get(),placeDest.get(),bannerCreateDto.getReportAt(),
+                    bannerCreateDto.getBannerType()
+                );
+
+        Banner saveBanner = bannerRepository.save(new Banner(bannerCreateEntityDto));
+
+        BannerCreateResponse bannerCreateResponse = new BannerCreateResponse(
+                saveBanner.getId(),member.get().getName(),saveBanner.getUid(),
+                saveBanner.getWeatherStatus(), saveBanner.getDepartureId().getId(),
+                saveBanner.getDestinationId().getId(),saveBanner.getReportAt(),
+                saveBanner.getBannerType());
 
         return bannerCreateResponse;
     }
 
     @Transactional
     public BannerUpdateResponse updateBanner(Long bannerId,BannerUpdateDto bannerUpdateDto){
+
+        Optional<Place> placeDepart = placeRepository.findById(bannerUpdateDto.getDepId());
+        Optional<Place> placeDest = placeRepository.findById(bannerUpdateDto.getDesId());
+
+        if(!(placeDepart.isPresent() && placeDest.isPresent())) throw
+                new PlaceNotFoundException();
+
+        if(bannerUpdateDto.getWeatherStatus()<0 || bannerUpdateDto.getWeatherStatus()>weather.length-1) throw
+                new BannerBadWeatherStatusException();
+
         Optional<Banner> banner = bannerRepository.findById(bannerId);
-        BannerUpdateResponse result = null;
 
-        if(bannerUpdateDto.getWeatherStatus()<0 || bannerUpdateDto.getWeatherStatus()>weather.length-1) throw new BannerUidEmptyException();
+        if(!(banner.isPresent())) throw
+                new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        if(banner.isPresent()){
+        Banner bannerInfo = banner.get();
+        bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
+        bannerInfo.setDepartureId(placeDepart.get());
+        bannerInfo.setDestinationId(placeDest.get());
+        bannerRepository.save(bannerInfo);
 
-            Banner bannerInfo = banner.get();
-            bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
-            bannerInfo.setDepartureId(bannerUpdateDto.getDepId());
-            bannerInfo.setDestinationId(bannerUpdateDto.getDesId());
-            Optional<Place> placeDepart = placeRepository.findById(bannerInfo.getDepartureId());
-            Optional<Place> placeDest = placeRepository.findById(bannerInfo.getDestinationId());
-            if(placeDepart.isPresent() && placeDest.isPresent()) {
-                if(bannerInfo.getWeatherStatus()>=0&& bannerInfo.getWeatherStatus()<=3){
-                        bannerRepository.save(bannerInfo);
-                }
-                else throw new BannerBadWeatherStatusException();
-            }
-            else throw new PlaceNotFoundException();
-            result = new BannerUpdateResponse(bannerInfo.getWeatherStatus(),bannerInfo.getDepartureId(),bannerInfo.getDestinationId());
-        }
-        else{throw new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
+        BannerUpdateResponse result = new BannerUpdateResponse(
+                bannerInfo.getWeatherStatus(),bannerInfo.getDepartureId().getId(),
+                bannerInfo.getDestinationId().getId());
+
 
         return result;
     }
@@ -111,7 +125,10 @@ public class BannerService {
         if(banner.isPresent()){
             if(member.isPresent()){
                 Banner bannerInfo = banner.get();
-                response = new BannerReadResponse(bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(), bannerInfo.getDepartureId(), bannerInfo.getDestinationId(), bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
+                response = new BannerReadResponse(
+                        bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(),
+                        bannerInfo.getDepartureId().getId(), bannerInfo.getDestinationId().getId(),
+                        bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
             }
             else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
         }
@@ -128,7 +145,9 @@ public class BannerService {
 
             if(banner != null){
                 if(member.isPresent()){
-                    result.add(0,new BannerReadAllResponse(banner.getId(), member.get().getName(), banner.getWeatherStatus(), banner.getDepartureId(), banner.getDestinationId(), banner.getReportAt()));
+                    result.add(0,new BannerReadAllResponse(banner.getId(), member.get().getName(),
+                            banner.getWeatherStatus(), banner.getDepartureId().getId(),
+                            banner.getDestinationId().getId(), banner.getReportAt()));
                 }
                 else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
             }
@@ -143,8 +162,8 @@ public class BannerService {
 
         String output = "";
         for(Banner banner : bannerRepository.findAll()){
-            Optional<Place> placeDepart = placeRepository.findById(banner.getDepartureId());
-            Optional<Place> placeDest = placeRepository.findById(banner.getDestinationId());
+            Optional<Place> placeDepart = placeRepository.findById(banner.getDepartureId().getId());
+            Optional<Place> placeDest = placeRepository.findById(banner.getDestinationId().getId());
 
             output = "제보자: ";
             Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());
@@ -190,12 +209,12 @@ public class BannerService {
         for(Notice notice : noticeRepository.findAll()){
             output = "작성자: 관리자 ,";
             if(notice!=null){
-                if(notice.getType()==0||notice.getType()==1){
+                if(notice.getNoticeType()==2||notice.getNoticeType()==3){
                     output = output.concat((notice.getStartTime().format(DateTimeFormatter.ofPattern("a HH시 mm분"))));
                     output = output.concat("부터 ");
                     output = output.concat((notice.getEndTime().format(DateTimeFormatter.ofPattern("a HH시 mm분"))));
                     output = output.concat("까지 진행되는 ");
-                    output = output.concat(notice_type[notice.getType()]);
+                    output = output.concat(notice_type[notice.getNoticeType()]);
                     output = output.concat("공지 생성, ");
                     output = output.concat( Long.toString(notice.getId()));
                     output = output.concat("번 글 확인");
@@ -204,7 +223,7 @@ public class BannerService {
                 }
                 else{
                     if(time.minusHours(1).isAfter(notice.getCreatedAt())){
-                        output = output.concat(notice_type[notice.getType()]);
+                        output = output.concat(notice_type[notice.getNoticeType()]);
                         output = output.concat("공지 생성, ");
                         output = output.concat( Long.toString(notice.getId()));
                         output = output.concat("번 글 확인");
@@ -213,10 +232,9 @@ public class BannerService {
                 }
 
             }
-            else throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            else throw new NoticeNotFoundException();
 
         }
-
 
         return result;
     }

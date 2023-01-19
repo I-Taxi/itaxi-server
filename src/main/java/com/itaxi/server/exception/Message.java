@@ -31,6 +31,10 @@ public class Message {
 
     public static final String NOTICE_TITLE_EMPTY_EXCEPTION = "공지사항의 제목이 없습니다";
     public static final String NOTICE_CONTENT_EMPTY_EXCEPTION = "공지사항의 내용이 없습니다";
+    public static final String NOTICE_DELETED = "이미 삭제된 게시글입니다.";
+    public static final String NOTICE_BAD_TYPE_EXCEPTION = "지원하지 않는 공지 형식입니다.";
+    public static final String NOTICE_NOTICE_ElEMENT_NOT_MATCH_WITH_NOTICE_TYPE_EXCEPTION = "해당 공지 형식은 시간의 입력이 필요합니다.";
+
     public static final String JOINER_DUPLICATE_MEMBER = "이미 해당 post에 존재하는 멤버입니다";
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
     public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 post입니다.";

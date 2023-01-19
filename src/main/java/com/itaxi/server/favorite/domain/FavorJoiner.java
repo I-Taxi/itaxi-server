@@ -1,12 +1,10 @@
-package com.itaxi.server.member.domain;
+package com.itaxi.server.favorite.domain;
 
 
 import com.itaxi.server.common.BaseEntity;
-import com.itaxi.server.member.application.dto.FavorJoinerCreateDto;
-import com.itaxi.server.member.application.dto.FavorJoinerSaveDto;
+import com.itaxi.server.favorite.application.dto.FavorJoinerSaveDto;
+import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.application.dto.JoinerCreateDto;
-import com.itaxi.server.post.domain.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,6 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Where(clause = "deleted=false")
 @Entity

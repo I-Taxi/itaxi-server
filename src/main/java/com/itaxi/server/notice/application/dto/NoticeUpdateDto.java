@@ -15,9 +15,8 @@ public class NoticeUpdateDto {
     private String content;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private int bannerType;
 
     public static NoticeUpdateDto from(NoticeUpdateRequest request) {
-        return new NoticeUpdateDto(request.getTitle(), request.getContent(),request.getStartTime(),request.getEndTime(), request.getBannerType());
+        return new NoticeUpdateDto(request.getTitle(), request.getContent(),request.getStartTime(),request.getEndTime());
     }
 }

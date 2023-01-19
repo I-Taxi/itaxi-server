@@ -1,9 +1,11 @@
 package com.itaxi.server.notice.application;
 
+
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
+import com.itaxi.server.exception.notice.NoticeBadTypeException;
+import com.itaxi.server.exception.notice.NoticeElementNotMatchWithNoticeTypeException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
-import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
 import com.itaxi.server.notice.domain.repository.NoticeRepository;
@@ -19,18 +21,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @RequiredArgsConstructor
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final AdminChecker adminChecker;
 
-
     @Transactional
     public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
+
         Notice savedNotice = null;
 
-       if (adminChecker.isAdmin(uid)) {
+        if ((noticeCreateDto.getNoticeType()<0) || (noticeCreateDto.getNoticeType()>3))
+            throw new NoticeBadTypeException();
+
+        if((noticeCreateDto.getNoticeType() == 2 || noticeCreateDto.getNoticeType() ==3 )&&
+                (noticeCreateDto.getStartTime() == null || noticeCreateDto.getEndTime() ==null))
+            throw new NoticeElementNotMatchWithNoticeTypeException();
+
+
+        if (adminChecker.isAdmin(uid)) {
             savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
        } else {
            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
@@ -48,7 +59,7 @@ public class NoticeService {
             Notice noticeInfo = notice.get();
             response = new NoticeReadResponse(noticeInfo.getTitle(), noticeInfo.getContent(), noticeInfo.getViewCnt(), noticeInfo.getCreatedAt());
         } else {
-            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new NoticeNotFoundException();
         }
 
         return response;
@@ -70,16 +81,25 @@ public class NoticeService {
     public String updateNotice(Long noticeId, NoticeUpdateDto noticeUpdateDto, String uid) {
         Notice noticeInfo = null;
 
+
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
             noticeInfo = notice.get();
+
         } else {
-            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new NoticeNotFoundException();
         }
 
         if (adminChecker.isAdmin(uid)) {
+
             noticeInfo.setTitle(noticeUpdateDto.getTitle());
             noticeInfo.setContent(noticeUpdateDto.getContent());
+            noticeInfo.setStartTime(noticeUpdateDto.getStartTime());
+            noticeInfo.setEndTime(noticeUpdateDto.getEndTime());
+            if((noticeInfo.getNoticeType()==2 || noticeInfo.getNoticeType()==3)  &&
+                    (noticeInfo.getStartTime() == null || noticeInfo.getEndTime() == null ))
+                throw new NoticeElementNotMatchWithNoticeTypeException();
+
             noticeRepository.save(noticeInfo);
         } else {
             throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
@@ -96,7 +116,7 @@ public class NoticeService {
         if (notice.isPresent()) {
             noticeInfo = notice.get();
         } else {
-            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new NoticeNotFoundException();
         }
 
         if (adminChecker.isAdmin(uid)) {
@@ -118,7 +138,7 @@ public class NoticeService {
             noticeInfo.setViewCnt(noticeInfo.getViewCnt() + 1);
             noticeRepository.save(noticeInfo);
         } else {
-            throw new NoticeNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new NoticeNotFoundException();
         }
 
         return noticeInfo.getViewCnt();

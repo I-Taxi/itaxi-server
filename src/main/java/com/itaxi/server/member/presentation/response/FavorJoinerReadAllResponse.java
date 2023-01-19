@@ -1,15 +1,11 @@
 package com.itaxi.server.member.presentation.response;
 
-import com.itaxi.server.member.domain.FavorJoiner;
 import com.itaxi.server.place.application.dto.FavorResDto;
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.application.dto.PostLog;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

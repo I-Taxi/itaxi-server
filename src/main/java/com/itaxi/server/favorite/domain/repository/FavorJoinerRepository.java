@@ -1,10 +1,8 @@
-package com.itaxi.server.member.domain.repository;
+package com.itaxi.server.favorite.domain.repository;
 
-import com.itaxi.server.member.domain.FavorJoiner;
+import com.itaxi.server.favorite.domain.FavorJoiner;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.domain.Joiner;
-import com.itaxi.server.post.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -28,6 +28,7 @@ public class NoticeController {
     @ApiOperation(value = ApiDoc.CREATE_NOTICE)
     @PostMapping
     public ResponseEntity<Long> createNotice(@RequestBody NoticeCreateRequest request) {
+
         Long id = noticeService.createNotice(NoticeCreateDto.from(request), request.getUid());
 
         return ResponseEntity.ok(id);

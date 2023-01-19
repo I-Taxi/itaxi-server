@@ -1,25 +1,15 @@
 package com.itaxi.server.banner.domain;
 
-import com.itaxi.server.banner.application.dto.BannerCreateDto;
-import com.itaxi.server.bannerPlace.domain.BANNERPlace;
+import com.itaxi.server.banner.application.dto.BannerCreateEntityDto;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.exception.banner.BannerUidEmptyException;
-import com.itaxi.server.exception.notice.NoticeContentEmptyException;
-import com.itaxi.server.exception.notice.NoticeTitleEmptyException;
-import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.post.domain.Joiner;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Where;
-
+import org.hibernate.annotations.*;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @Where(clause = "deleted=false")
@@ -41,28 +31,23 @@ public class Banner extends BaseEntity {
     private String uid;
     @Column(nullable = false)
     private int weatherStatus;
-
-    @Column(nullable = false)
-    private Long departureId;
-    @Column(nullable = false)
-    private Long destinationId;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Place departureId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Place destinationId;
     @Column(nullable = false)
     private LocalDateTime reportAt;
     @Column(nullable = false)
     private int bannerType;
 
-    @OneToMany(mappedBy = "banner")
-    private List<Place> places = new ArrayList<>();
 
-
-    public Banner(BannerCreateDto bannerCreateDto){
-        this.uid = bannerCreateDto.getUid();
-        this.weatherStatus = bannerCreateDto.getWeatherStatus();
-        this.departureId = bannerCreateDto.getDepId();
-        this.destinationId = bannerCreateDto.getDesId();
-        this.reportAt = bannerCreateDto.getReportAt();
-        this.bannerType = bannerCreateDto.getBannerType();
+    public Banner(BannerCreateEntityDto bannerCreateEntityDto){
+        this.uid = bannerCreateEntityDto.getUid();
+        this.weatherStatus = bannerCreateEntityDto.getWeatherStatus();
+        this.departureId = bannerCreateEntityDto.getDepId();
+        this.destinationId = bannerCreateEntityDto.getDesId();
+        this.reportAt = bannerCreateEntityDto.getReportAt();
+        this.bannerType = bannerCreateEntityDto.getBannerType();
         this.setDeleted(false);
         checkUid(uid);
     }
