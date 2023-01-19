@@ -1,15 +1,15 @@
-package com.itaxi.server.member.application;
+package com.itaxi.server.favorite.application;
 
 
 import com.itaxi.server.exception.member.FavorDuplicatedException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
-import com.itaxi.server.member.application.dto.FavorJoinerCreateDto;
-import com.itaxi.server.member.application.dto.FavorJoinerInfo;
-import com.itaxi.server.member.application.dto.FavorJoinerSaveDto;
-import com.itaxi.server.member.domain.FavorJoiner;
+import com.itaxi.server.favorite.application.dto.FavorJoinerCreateDto;
+import com.itaxi.server.favorite.application.dto.FavorJoinerInfo;
+import com.itaxi.server.favorite.application.dto.FavorJoinerSaveDto;
+import com.itaxi.server.favorite.domain.FavorJoiner;
 import com.itaxi.server.member.domain.Member;
-import com.itaxi.server.member.domain.repository.FavorJoinerRepository;
+import com.itaxi.server.favorite.domain.repository.FavorJoinerRepository;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.member.presentation.response.FavorJoinerReadAllResponse;
 import com.itaxi.server.place.domain.Place;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors;
+
 import java.util.*;
 
 @Service

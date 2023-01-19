@@ -3,9 +3,6 @@ package com.itaxi.server.common;
 import java.time.LocalDateTime;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-
-import com.itaxi.server.bannerPlace.application.dto.DeleteBANNERPlaceDto;
-import com.itaxi.server.ktxPlace.application.dto.DeleteKTXPlaceDto;
 import com.itaxi.server.place.application.dto.DeletePlaceDto;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -34,8 +31,6 @@ public class BaseEntity {
         this.deleted = dto.isDeleted();
     }
 
-    public void deleteBANNERPlace(DeleteBANNERPlaceDto dto) {
-        this.deleted = dto.isDeleted();
-    }
+
 }
 

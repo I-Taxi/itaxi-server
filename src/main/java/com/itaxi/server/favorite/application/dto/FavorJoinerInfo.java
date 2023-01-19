@@ -1,8 +1,7 @@
-package com.itaxi.server.member.application.dto;
+package com.itaxi.server.favorite.application.dto;
 
-import com.itaxi.server.member.domain.FavorJoiner;
+import com.itaxi.server.favorite.domain.FavorJoiner;
 import com.itaxi.server.member.domain.Member;
-import com.itaxi.server.place.application.dto.ResDto;
 import com.itaxi.server.place.domain.Place;
 import lombok.Getter;
 
