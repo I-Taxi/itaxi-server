@@ -31,9 +31,6 @@ public class Report extends BaseEntity {
     private Member reportedMember;
 
     @NotNull
-    private LocalDateTime date;
-
-    @NotNull
     private String content;
 
     @NotNull
@@ -43,7 +40,6 @@ public class Report extends BaseEntity {
     public Report(Member writer, Member reportedMember, LocalDateTime date, String content, String title) {
         this.writer = writer;
         this.reportedMember = reportedMember;
-        this.date = date;
         this.content = content;
         this.title = title;
     }

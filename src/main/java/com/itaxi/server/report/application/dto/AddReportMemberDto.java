@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class AddReportMemberDto {
     private Member writer;
     private Member reportedMember;
-    private LocalDateTime date;
     private String content;
     private String title;
 
@@ -19,7 +18,6 @@ public class AddReportMemberDto {
     public AddReportMemberDto(AddReportDto dto, Member writer, Member reportedMember) {
         this.writer = writer;
         this.reportedMember = reportedMember;
-        this.date = dto.getDateTime();
         this.content = dto.getContent();
         this.title = dto.getTitle();
     }
@@ -28,7 +26,6 @@ public class AddReportMemberDto {
         return Report.builder()
                 .writer(this.writer)
                 .reportedMember(this.reportedMember)
-                .date(this.date)
                 .content(this.content)
                 .title(this.title)
                 .build();

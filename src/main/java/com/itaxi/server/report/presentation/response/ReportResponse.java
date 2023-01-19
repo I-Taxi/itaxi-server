@@ -14,7 +14,6 @@ public class ReportResponse {
     private Long id;
     private MemberResponse writer;
     private MemberResponse reportedMember;
-    private LocalDateTime date;
     private String title;
     private String content;
 
@@ -22,7 +21,6 @@ public class ReportResponse {
         this.id = report.getId();
         this.writer = new MemberResponse(report.getWriter().getId(), report.getWriter().getName());
         this.reportedMember = new MemberResponse(report.getReportedMember().getId(), report.getReportedMember().getName());
-        this.date = report.getDate();
         this.title = report.getTitle();
         this.content = report.getContent();
     }
