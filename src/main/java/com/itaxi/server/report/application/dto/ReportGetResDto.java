@@ -12,7 +12,6 @@ public class ReportGetResDto {
     private Long id;
     private MemberResponse writer;
     private MemberResponse reportedMember;
-    private LocalDateTime dateTime;
     private String content;
     private String title;
 
@@ -21,7 +20,6 @@ public class ReportGetResDto {
         this.id = report.getId();
         this.writer = new MemberResponse(report.getWriter().getId(), report.getWriter().getName());
         this.reportedMember = new MemberResponse(report.getReportedMember().getId(), report.getReportedMember().getName());
-        this.dateTime = report.getDate();
         this.content = report.getContent();
         this.title = report.getTitle();
     }

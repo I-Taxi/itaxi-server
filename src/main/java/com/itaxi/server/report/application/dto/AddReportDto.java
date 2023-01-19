@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class AddReportDto {
     private String writerUid;
     private String reportedUid;
-    private LocalDateTime dateTime;
     private String title;
     private String content;
 }
