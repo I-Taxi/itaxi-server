@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import com.itaxi.server.common.BaseEntity;
-import com.itaxi.server.favorite.domain.FavorJoiner;
+import com.itaxi.server.favorite.domain.FAVORJoiner;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -29,7 +29,7 @@ public class Place extends BaseEntity {
     private String name;
     private Long cnt;
     @OneToMany(mappedBy = "place")
-    private List<FavorJoiner> favorJoiners= new ArrayList<>();
+    private List<FAVORJoiner> FAVORJoiners = new ArrayList<>();
     private int placeType;
 
 

@@ -8,7 +8,7 @@ import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.favorite.application.dto.FavorJoinerCreateDto;
 import com.itaxi.server.favorite.application.dto.FavorJoinerInfo;
 import com.itaxi.server.favorite.application.dto.FavorJoinerSaveDto;
-import com.itaxi.server.favorite.domain.FavorJoiner;
+import com.itaxi.server.favorite.domain.FAVORJoiner;
 import com.itaxi.server.favorite.presentation.request.FavorDeleteRequest;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.favorite.domain.repository.FavorJoinerRepository;
@@ -51,7 +51,7 @@ public class FavorJoinerService {
         }
         if(confirm==true) throw new FavorDuplicatedException();
         FavorJoinerSaveDto saveDto = new FavorJoinerSaveDto(member.get(),place.get());
-        FavorJoiner favorJoiner = favorJoinerRepository.save(new FavorJoiner(saveDto));
+        FAVORJoiner favorJoiner = favorJoinerRepository.save(new FAVORJoiner(saveDto));
 
         return "Success";
     }
@@ -77,12 +77,12 @@ public class FavorJoinerService {
 
     @Transactional
     public String deleteFavorite(Long Id, FavorDeleteRequest request) {
-        Optional<FavorJoiner> favorJoiner = favorJoinerRepository.findById(Id);
+        Optional<FAVORJoiner> favorJoiner = favorJoinerRepository.findById(Id);
         if(!(favorJoiner.get().getMember().getUid().equals(request.getUid()))) throw
             new FavorNoAuthorityException();
 
         if(favorJoiner.isPresent()){
-            FavorJoiner favorInfo = favorJoiner.get();
+            FAVORJoiner favorInfo = favorJoiner.get();
             favorInfo.setDeleted(true);
             favorJoinerRepository.save(favorInfo);
         }
