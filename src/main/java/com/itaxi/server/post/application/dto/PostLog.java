@@ -1,7 +1,8 @@
 package com.itaxi.server.post.application.dto;
 
+import com.itaxi.server.ktx.domain.KTX;
+import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.place.application.dto.PlaceResponse;
-import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
 
@@ -45,6 +46,21 @@ public class PostLog implements Comparable<PostLog> {
         for (Stopover stopover : p.getStopovers()) {
             stopovers.add(new StopoverInfo(stopover));
         }
+    }
+    public PostLog(KTX ktx) {
+        this.id = ktx.getId();
+        this.departure = new PlaceResponse(ktx.getDeparture().getId(), ktx.getDeparture().getName(), ktx.getDeparture().getCnt());
+        this.destination = new PlaceResponse(ktx.getDestination().getId(), ktx.getDestination().getName(), ktx.getDestination().getCnt());
+        this.deptTime = ktx.getDeptTime();
+        this.capacity = ktx.getCapacity();
+        this.status = ktx.getStatus();
+        this.postType = null;
+        this.stopovers = null;
+        int tmp = 0;
+        for (KTXJoiner ktxJoiner : ktx.getJoiners()) {
+            if (ktxJoiner.getStatus() == 1) tmp += 1;
+        }
+        this.participantNum = tmp;
     }
 
     @Override

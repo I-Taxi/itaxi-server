@@ -1,5 +1,6 @@
 package com.itaxi.server.ktx.application.dto;
 
+import com.itaxi.server.ktxPlace.application.dto.KTXPlaceResponse;
 import com.itaxi.server.ktxPlace.domain.KTXPlace;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
@@ -13,8 +14,8 @@ import java.util.List;
 @Getter
 public class KTXGetResDto {
     private Long id;
-    private KTXPlace departure;
-    private KTXPlace destination;
+    private KTXPlaceResponse departure;
+    private KTXPlaceResponse destination;
     private LocalDateTime deptTime;
     private int capacity;
     private int participantNum;
@@ -24,8 +25,8 @@ public class KTXGetResDto {
 
     @Builder public KTXGetResDto(KTX ktx) {
         this.id = ktx.getId();
-        this.departure = ktx.getDeparture();
-        this.destination = ktx.getDestination();
+        this.departure = new KTXPlaceResponse(ktx.getDeparture().getId(), ktx.getDeparture().getName(), ktx.getDeparture().getCnt());
+        this.destination = new KTXPlaceResponse(ktx.getDestination().getId(), ktx.getDestination().getName(), ktx.getDestination().getCnt());
         this.deptTime = ktx.getDeptTime();
         this.capacity = ktx.getCapacity();
         this.participantNum = ktx.getJoiners().size();

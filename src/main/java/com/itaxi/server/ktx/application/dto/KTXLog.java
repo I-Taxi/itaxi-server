@@ -1,8 +1,8 @@
 package com.itaxi.server.ktx.application.dto;
 
-import com.itaxi.server.ktxPlace.domain.KTXPlace;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
+import com.itaxi.server.place.application.dto.PlaceResponse;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 public class KTXLog implements Comparable<KTXLog> {
     private Long id;
-    private KTXPlace departure;
-    private KTXPlace destination;
+    private PlaceResponse departure;
+    private PlaceResponse destination;
     private LocalDateTime deptTime;
     private int capacity;
     private int participantNum;
@@ -19,8 +19,8 @@ public class KTXLog implements Comparable<KTXLog> {
 
     public KTXLog(KTX ktx) {
         this.id = ktx.getId();
-        this.departure = ktx.getDeparture();
-        this.destination = ktx.getDestination();
+        this.departure = new PlaceResponse(ktx.getDeparture().getId(), ktx.getDeparture().getName(), ktx.getDeparture().getCnt());
+        this.destination = new PlaceResponse(ktx.getDestination().getId(), ktx.getDestination().getName(), ktx.getDestination().getCnt());
         this.deptTime = ktx.getDeptTime();
         this.capacity = ktx.getCapacity();
         this.status = ktx.getStatus();

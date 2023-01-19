@@ -1,6 +1,5 @@
 package com.itaxi.server.post.domain;
 
-
 import javax.persistence.*;
 
 import com.itaxi.server.common.BaseEntity;

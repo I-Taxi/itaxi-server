@@ -34,8 +34,8 @@ public class ReportController {
 
     @ApiOperation(value = ApiDoc.REPORT_HISTORY)
     @PostMapping(value = "history")
-    public List<ReportGetResDto> getReportDto(@RequestBody MemberUidDTO memberUidDTO) {
-        return reportService.getReport(memberUidDTO.getUid());
+    public ResponseEntity<List<ReportGetResDto>> getReportDto(@RequestBody MemberUidDTO memberUidDTO) {
+        return ResponseEntity.ok(reportService.getReport(memberUidDTO.getUid()));
     }
 
     @ApiOperation(value = ApiDoc.REPORT_UPDATE)

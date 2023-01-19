@@ -3,7 +3,6 @@ package com.itaxi.server.ktxPlace.application;
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
 import com.itaxi.server.ktxPlace.application.dto.AddKTXPlaceDto;
-import com.itaxi.server.ktxPlace.application.dto.DeleteKTXPlaceDto;
 import com.itaxi.server.ktxPlace.application.dto.KTXPlaceResponse;
 import com.itaxi.server.ktxPlace.application.dto.UpdateKTXPlaceDto;
 import com.itaxi.server.ktxPlace.domain.KTXPlace;
@@ -46,8 +45,6 @@ public class KTXPlaceService {
 
     @Transactional
     public KTXPlace updateKTXPlace(long id, UpdateKTXPlaceDto dto) {
-        dto.getUid();
-
         final KTXPlace ktxPlace = ktxPlaceRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
         if (adminChecker.isAdmin(dto.getUid())) {
             ktxPlace.updateKTXPlace(dto);
