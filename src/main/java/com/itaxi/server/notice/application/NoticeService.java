@@ -1,6 +1,6 @@
 package com.itaxi.server.notice.application;
 
-import com.itaxi.server.banner.application.BannerService;
+
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
 import com.itaxi.server.exception.notice.NoticeBadTypeException;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,19 +27,18 @@ import java.util.Optional;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final AdminChecker adminChecker;
-    private final BannerService bannerService;
-
 
     @Transactional
     public Long createNotice(NoticeCreateDto noticeCreateDto, String uid) {
+
         Notice savedNotice = null;
 
-        if ((noticeCreateDto.getNoticeType()<0) || (noticeCreateDto.getNoticeType()>bannerService.notice_type.length-1))
+        if ((noticeCreateDto.getNoticeType()<0) || (noticeCreateDto.getNoticeType()>3))
             throw new NoticeBadTypeException();
 
-//        noticeCreateDto.getStartTime();
-
-//            throw new NoticeElementNotMatchWithNoticeTypeException();
+        if((noticeCreateDto.getNoticeType() == 2 || noticeCreateDto.getNoticeType() ==3 )&&
+                (noticeCreateDto.getStartTime() == null || noticeCreateDto.getEndTime() ==null))
+            throw new NoticeElementNotMatchWithNoticeTypeException();
 
 
         if (adminChecker.isAdmin(uid)) {
@@ -99,7 +97,7 @@ public class NoticeService {
             noticeInfo.setStartTime(noticeUpdateDto.getStartTime());
             noticeInfo.setEndTime(noticeUpdateDto.getEndTime());
             if((noticeInfo.getNoticeType()==2 || noticeInfo.getNoticeType()==3)  &&
-                    noticeInfo.getStartTime().equals(null)||noticeInfo.getEndTime().equals(null))
+                    (noticeInfo.getStartTime() == null || noticeInfo.getEndTime() == null ))
                 throw new NoticeElementNotMatchWithNoticeTypeException();
 
             noticeRepository.save(noticeInfo);

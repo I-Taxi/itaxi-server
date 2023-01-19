@@ -55,7 +55,7 @@ public class BannerController {
     }
 
     @ApiOperation(value = ApiDoc.BANNER_READ_RECENT_ALL)
-    @GetMapping("/")
+    @GetMapping("/recent")
     public ResponseEntity<List> readAllRecentBanner(@RequestParam(required = false)@DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) final LocalDateTime time) {
         if(time==null) throw new BannerRequestBodyException(HttpStatus.INTERNAL_SERVER_ERROR);
         List<BannerReadAllRecentResponse> result = bannerService.readAllRecentBanners(time);

@@ -7,10 +7,10 @@ import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.banner.domain.repository.BannerRepository;
 import com.itaxi.server.banner.presentation.reponse.*;
 import com.itaxi.server.exception.banner.*;
-import com.itaxi.server.exception.bannerPlace.BannerPlaceNotNullException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
+import com.itaxi.server.exception.place.PlaceNotNullException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.notice.domain.Notice;
@@ -48,7 +48,7 @@ public class BannerService {
                 new BannerUidEmptyException();
 
         if(bannerCreateDto.getUid()==null ||bannerCreateDto.getUid()==""|| bannerCreateDto.getUid().equals(" ")) throw
-                new BannerPlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+                new PlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         if(bannerCreateDto.getBannerType()!=0) throw
                 new BannerBadTypeException();

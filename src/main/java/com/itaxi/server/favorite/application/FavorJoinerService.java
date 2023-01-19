@@ -1,7 +1,7 @@
 package com.itaxi.server.favorite.application;
 
 
-import com.itaxi.server.exception.member.FavorDuplicatedException;
+import com.itaxi.server.exception.favorite.FavorDuplicatedException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.favorite.application.dto.FavorJoinerCreateDto;
@@ -31,7 +31,7 @@ public class FavorJoinerService {
 
 
     @Transactional
-    public String create(FavorJoinerCreateDto dto) {
+    public String createFavorite(FavorJoinerCreateDto dto) {
 
         boolean confirm = false;
         Optional<Member> member =  memberRepository.findMemberByUid(dto.getMemberUid());
@@ -74,7 +74,7 @@ public class FavorJoinerService {
     }
 
     @Transactional
-    public String delete(Long Id) {
+    public String deleteFavorite(Long Id) {
         Optional<FavorJoiner> favorJoiner = favorJoinerRepository.findById(Id);
         if(favorJoiner.isPresent()){
             FavorJoiner favorInfo = favorJoiner.get();

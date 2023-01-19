@@ -18,9 +18,8 @@ public class FavorJoinerController {
 
     @ApiOperation(value = ApiDoc.FAVORITE_JOINER_CREATE)
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody FavorJoinerCreateDto favorJoinerCreateDto) {
-        favorJoinerService.create(favorJoinerCreateDto);
-        return ResponseEntity.ok("Success");
+    public ResponseEntity<String> createFavorite(@RequestBody FavorJoinerCreateDto favorJoinerCreateDto) {
+        return ResponseEntity.ok(favorJoinerService.createFavorite(favorJoinerCreateDto));
     }
 
     @ApiOperation(value = ApiDoc.FAVORITE_JOINER_READ_ALL_BY_MEMBER)
@@ -30,11 +29,10 @@ public class FavorJoinerController {
 
     }
 
-
     @ApiOperation(value = ApiDoc.FAVORITE_JOINER_DELETE)
     @PatchMapping(value = "/{favorId}")
-    public String delete(@PathVariable Long favorId ) {
-        return favorJoinerService.delete(favorId);
+    public ResponseEntity<String> deleteFavorite(@PathVariable Long favorId ) {
+        return ResponseEntity.ok(favorJoinerService.deleteFavorite(favorId));
     }
 
 

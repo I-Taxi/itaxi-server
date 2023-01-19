@@ -56,13 +56,6 @@ public class ApiDoc {
     public static final String BANNER_UPDATE = "BANNER 수정";
     public static final String BANNER_DELETE = "BANNER 삭제";
 
-    /* BANNER PLACE 관련 API 명세 */
-    public static final String BANNER_PLACE_CREATE = "BANNER 장소 생성";
-    public static final String BANNER_PLACE_READ = "BANNER 장소 조회";
-    public static final String BANNER_PLACE_UPDATE_COUNT = "BANNER 장소 조회수 증가";
-    public static final String BANNER_PLACE_UPDATE = "BANNER 장소 수정";
-    public static final String BANNER_PLACE_DELETE = "BANNER 장소 삭제";
-
     public static final String REPORT_CREATE = "리포트 생성";
     public static final String REPORT_HISTORY = "리포트 조회";
     public static final String REPORT_UPDATE = "리포트 수정";

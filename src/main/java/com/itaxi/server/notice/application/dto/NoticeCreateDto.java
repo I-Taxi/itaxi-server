@@ -1,6 +1,7 @@
 package com.itaxi.server.notice.application.dto;
 
 
+
 import com.itaxi.server.notice.presentation.request.NoticeCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

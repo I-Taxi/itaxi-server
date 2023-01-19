@@ -1,8 +1,6 @@
 package com.itaxi.server.notice.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
-import com.itaxi.server.exception.notice.NoticeBadTypeException;
-import com.itaxi.server.exception.notice.NoticeElementNotMatchWithNoticeTypeException;
 import com.itaxi.server.notice.application.NoticeService;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
@@ -31,9 +29,6 @@ public class NoticeController {
     @PostMapping
     public ResponseEntity<Long> createNotice(@RequestBody NoticeCreateRequest request) {
 
-
-        if (request.getStartTime()==null || request.getEndTime()==null)
-            throw new NoticeElementNotMatchWithNoticeTypeException();
         Long id = noticeService.createNotice(NoticeCreateDto.from(request), request.getUid());
 
         return ResponseEntity.ok(id);

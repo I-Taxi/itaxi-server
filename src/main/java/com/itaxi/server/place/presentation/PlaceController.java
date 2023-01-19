@@ -34,26 +34,29 @@ public class PlaceController {
     @ApiOperation(value = ApiDoc.PLACE_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResDto create(@RequestBody final AddPlaceDto dto) {return new ResDto(placeService.create(dto));}
+    public ResponseEntity<ResDto> create(@RequestBody final AddPlaceDto dto) {
+        ResDto resDto = new ResDto(placeService.create(dto));
+        return ResponseEntity.ok(resDto);
+    }
 
     @ApiOperation(value = ApiDoc.PLACE_UPDATE_COUNT)
     @RequestMapping(value = "/count/{id}", method = RequestMethod.PUT)
-    public int updateView(@PathVariable final long id, Model model) {
-        //Res dto = placeService.findById(id);
-        return placeService.updateView(id);
+    public ResponseEntity<Integer> updateView(@PathVariable final long id, Model model) {
+        return ResponseEntity.ok(placeService.updateView(id));
     }
     @ApiOperation(value = ApiDoc.PLACE_UPDATE)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    public ResDto update(@PathVariable final long id, @RequestBody final UpdatePlaceDto dto) {
-        return new ResDto(placeService.updatePlace(id, dto));
+    public ResponseEntity<ResDto> update(@PathVariable final long id, @RequestBody final UpdatePlaceDto dto) {
+        ResDto resDto = new ResDto(placeService.updatePlace(id, dto));
+        return ResponseEntity.ok(resDto);
     }
 
     @ApiOperation(value = ApiDoc.PLACE_DELETE)
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    public String delete(@PathVariable final long id, @RequestBody final PlaceDeleteRequest dto) {
-        return placeService.deletePlace(id, dto.getUid());
+    public ResponseEntity<String> delete(@PathVariable final long id, @RequestBody final PlaceDeleteRequest dto) {
+        return ResponseEntity.ok(placeService.deletePlace(id, dto.getUid()));
     }
 
 
