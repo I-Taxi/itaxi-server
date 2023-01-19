@@ -11,4 +11,5 @@ public class BannerUpdateRequest {
     private int weatherStatus;
     private Long depId;
     private Long desId;
+    private String uid;
 }

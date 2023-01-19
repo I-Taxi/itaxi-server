@@ -2,12 +2,14 @@ package com.itaxi.server.favorite.application;
 
 
 import com.itaxi.server.exception.favorite.FavorDuplicatedException;
+import com.itaxi.server.exception.favorite.FavorNoAuthorityException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.favorite.application.dto.FavorJoinerCreateDto;
 import com.itaxi.server.favorite.application.dto.FavorJoinerInfo;
 import com.itaxi.server.favorite.application.dto.FavorJoinerSaveDto;
 import com.itaxi.server.favorite.domain.FavorJoiner;
+import com.itaxi.server.favorite.presentation.request.FavorDeleteRequest;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.favorite.domain.repository.FavorJoinerRepository;
 import com.itaxi.server.member.domain.repository.MemberRepository;
@@ -34,7 +36,7 @@ public class FavorJoinerService {
     public String createFavorite(FavorJoinerCreateDto dto) {
 
         boolean confirm = false;
-        Optional<Member> member =  memberRepository.findMemberByUid(dto.getMemberUid());
+        Optional<Member> member =  memberRepository.findMemberByUid(dto.getUid());
         Optional<Place> place = placeRepository.findById(dto.getPlaceId());
 
         if(!place.isPresent()) throw new PlaceNotFoundException();
@@ -47,7 +49,7 @@ public class FavorJoinerService {
                 break;
             }
         }
-        if(confirm==true) throw new FavorDuplicatedException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(confirm==true) throw new FavorDuplicatedException();
         FavorJoinerSaveDto saveDto = new FavorJoinerSaveDto(member.get(),place.get());
         FavorJoiner favorJoiner = favorJoinerRepository.save(new FavorJoiner(saveDto));
 
@@ -74,8 +76,11 @@ public class FavorJoinerService {
     }
 
     @Transactional
-    public String deleteFavorite(Long Id) {
+    public String deleteFavorite(Long Id, FavorDeleteRequest request) {
         Optional<FavorJoiner> favorJoiner = favorJoinerRepository.findById(Id);
+        if(!(favorJoiner.get().getMember().getUid().equals(request.getUid()))) throw
+            new FavorNoAuthorityException();
+
         if(favorJoiner.isPresent()){
             FavorJoiner favorInfo = favorJoiner.get();
             favorInfo.setDeleted(true);

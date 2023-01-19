@@ -41,7 +41,7 @@ public class PlaceController {
 
     @ApiOperation(value = ApiDoc.PLACE_UPDATE_COUNT)
     @RequestMapping(value = "/count/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Integer> updateView(@PathVariable final long id, Model model) {
+    public ResponseEntity<Long> updateView(@PathVariable final long id, Model model) {
         return ResponseEntity.ok(placeService.updateView(id));
     }
     @ApiOperation(value = ApiDoc.PLACE_UPDATE)

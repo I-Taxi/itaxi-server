@@ -12,8 +12,5 @@ import java.time.LocalDateTime;
 public class NoticeUpdateRequest {
     private String title;
     private String content;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private int bannerType;
     private String uid;
 }

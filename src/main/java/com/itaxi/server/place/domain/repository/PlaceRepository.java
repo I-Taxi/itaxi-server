@@ -15,8 +15,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     @Query("SELECT p FROM Place p WHERE  p.deleted = false order by p.cnt desc NULLS LAST")
     Iterable<Place> findByDeleted();
 
-    @Modifying(clearAutomatically = true)
-    @Query("update Place p set p.cnt = p.cnt + 1 where p.id = :id")
-    int updateView(Long id);
 
 }

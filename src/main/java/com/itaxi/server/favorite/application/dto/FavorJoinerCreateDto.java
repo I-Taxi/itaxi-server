@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FavorJoinerCreateDto {
-    private String memberUid;
+    private String uid;
     private Long placeId;
 }

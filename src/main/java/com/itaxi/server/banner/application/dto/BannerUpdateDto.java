@@ -12,7 +12,9 @@ public class BannerUpdateDto {
     private int weatherStatus;
     private Long depId;
     private Long desId;
+
+    private String uid;
     public static BannerUpdateDto from(BannerUpdateRequest request) {
-        return new BannerUpdateDto( request.getWeatherStatus(),request.getDepId(),request.getDesId());
+        return new BannerUpdateDto( request.getWeatherStatus(),request.getDepId(),request.getDesId(), request.getUid());
     }
 }

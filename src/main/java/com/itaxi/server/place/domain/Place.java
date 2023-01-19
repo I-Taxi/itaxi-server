@@ -6,10 +6,7 @@ import javax.validation.constraints.NotBlank;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.favorite.domain.FavorJoiner;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
@@ -19,6 +16,7 @@ import java.util.List;
 @Where(clause = "deleted=false")
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class Place extends BaseEntity {

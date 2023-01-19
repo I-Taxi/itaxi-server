@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 public class NoticeUpdateDto {
     private String title;
     private String content;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+
 
     public static NoticeUpdateDto from(NoticeUpdateRequest request) {
-        return new NoticeUpdateDto(request.getTitle(), request.getContent(),request.getStartTime(),request.getEndTime());
+        return new NoticeUpdateDto(request.getTitle(), request.getContent());
     }
 }
