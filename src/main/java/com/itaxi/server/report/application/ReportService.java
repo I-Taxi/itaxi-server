@@ -1,5 +1,6 @@
 package com.itaxi.server.report.application;
 
+import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.report.MemberNotWriterException;
 import com.itaxi.server.exception.report.ReportNotFoundException;
@@ -28,11 +29,12 @@ import java.util.stream.Collectors;
 public class ReportService {
     private final ReportRepository reportRepository;
     private final MemberRepository memberRepository;
+    private final AdminChecker adminChecker;
 
     @Transactional
-    public ReportResponse createReport(AddReportDto dto) {
-        Optional<Member> writer = memberRepository.findMemberByUid(dto.getWriterUid());
-        Optional<Member> reportedMember = memberRepository.findMemberByUid(dto.getReportedUid());
+    public String createReport(AddReportDto dto) {
+        Optional<Member> writer = memberRepository.findMemberByUid(dto.getUid());
+        Optional<Member> reportedMember = memberRepository.findMemberById(dto.getReportedMemberId());
         Report report = null;
 
         if (writer.isPresent() && reportedMember.isPresent()) {
@@ -45,20 +47,31 @@ public class ReportService {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        ReportResponse response = new ReportResponse(report);
-
-        return response;
+        return "Success";
     }
 
     @Transactional
     public List<ReportGetResDto> getReport(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(!member.isPresent()) {
+
+        if(!member.isPresent() && !adminChecker.isAdmin(uid)) {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        Long id = member.get().getId();
-        List<Report> posts = reportRepository.findAllByWriterId(id);
-        List<ReportGetResDto> results = posts.stream().map(m -> new ReportGetResDto(m)).collect(Collectors.toList());
+
+        List<ReportGetResDto> results = null;
+
+        if(adminChecker.isAdmin(uid)){
+            List<Report> posts = reportRepository.findAll();
+            results = posts.stream().map(m -> new ReportGetResDto(m)).collect(Collectors.toList());
+        }
+        else{
+            Long id = member.get().getId();
+            List<Report> posts = reportRepository.findAllByWriterId(id);
+            results = posts.stream().map(m -> new ReportGetResDto(m)).collect(Collectors.toList());
+
+        }
+
+
 
         return results;
     }
