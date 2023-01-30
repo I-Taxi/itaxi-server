@@ -3,6 +3,7 @@ package com.itaxi.server.ktx.presentation;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.ktx.application.KTXService;
 import com.itaxi.server.ktx.application.dto.*;
+import com.itaxi.server.ktx.presentation.request.KTXGetDetailRequest;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import com.itaxi.server.member.application.dto.MemberUidDTO;
 import com.itaxi.server.member.domain.Member;
@@ -31,9 +32,9 @@ public class KTXController {
     }
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY_DETAIL)
-    @GetMapping(value = "history/{ktxId}")
-    public ResponseEntity<KTXLogDetail> getKTXLogDetail(@PathVariable long ktxId) {
-        return ResponseEntity.ok(ktxService.getKTXLogDetail(ktxId));
+    @PostMapping(value = "history/{ktxId}")
+    public ResponseEntity<KTXLogDetail> getKTXLogDetail(@PathVariable long ktxId, @RequestBody KTXGetDetailRequest request) {
+        return ResponseEntity.ok(ktxService.getKTXLogDetail(ktxId,request.getUid()));
     }
 
     @ApiOperation(value = ApiDoc.KTX_READ)

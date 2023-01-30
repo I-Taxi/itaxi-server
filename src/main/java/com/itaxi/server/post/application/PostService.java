@@ -20,6 +20,7 @@ import com.itaxi.server.post.domain.Stopover;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.domain.repository.StopoverRepository;
+import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.application.dto.MemberJoinInfo;
@@ -71,11 +72,23 @@ public class PostService {
     }
 
     @Transactional
-    public PostLogDetail getPostLogDetail(Long postId) {
+    public PostLogDetail getPostLogDetail(Long postId, PostGetLogDetailRequest request) {
         Optional<Post> post = postRepository.findById(postId);
+
+        boolean check = false;
+        for(int i =  0; i<post.get().getJoiners().size(); i++){
+            if(post.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
+                check = true;
+            }
+        }
+
         if(!post.isPresent()) {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if(check == false ){
+            throw new PostNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+        }
+
         return new PostLogDetail(post.get());
     }
 

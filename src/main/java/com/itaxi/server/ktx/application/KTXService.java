@@ -58,11 +58,24 @@ public class KTXService {
     }
 
     @Transactional
-    public KTXLogDetail getKTXLogDetail(Long ktxId) {
+    public KTXLogDetail getKTXLogDetail(Long ktxId,String uid) {
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
+
+        boolean check = false;
+        for(int i =  0; i<ktx.get().getJoiners().size(); i++){
+            if(ktx.get().getJoiners().get(i).getMember().getUid().equals(uid)){
+                check = true;
+            }
+        }
+
         if (!ktx.isPresent()) {
             throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        if(check == false){
+            throw new KTXNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+        }
+
         return new KTXLogDetail(ktx.get());
     }
 
