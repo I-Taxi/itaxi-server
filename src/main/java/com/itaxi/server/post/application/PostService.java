@@ -74,6 +74,7 @@ public class PostService {
     @Transactional
     public PostLogDetail getPostLogDetail(Long postId, PostGetLogDetailRequest request) {
         Optional<Post> post = postRepository.findById(postId);
+
         boolean check = false;
         for(int i =  0; i<post.get().getJoiners().size(); i++){
             if(post.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
