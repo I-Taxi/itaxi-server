@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AddReportDto {
+
     private String uid;
     private Long reportedMemberId;
     private LocalDateTime dateTime;
