@@ -21,7 +21,6 @@ public class PostGetResDto {
     private int participantNum;
     private int status;
     private Integer postType;
-    private List<PostGetJoinerInfo> joiners;
     private List<PostGetStopoverInfo> stopovers;
 
 
@@ -35,11 +34,7 @@ public class PostGetResDto {
         this.participantNum = post.getJoiners().size();
         this.status = post.getStatus();
         this.postType = post.getPostType();
-        joiners = new ArrayList<PostGetJoinerInfo>();
-        for(Joiner joiner : post.getJoiners()) {
-            if (joiner.getStatus() == 1)
-                joiners.add(new PostGetJoinerInfo(joiner));
-        }
+
         stopovers = new ArrayList<PostGetStopoverInfo>();
         for(Stopover stopover : post.getStopovers()) {
             stopovers.add(new PostGetStopoverInfo(stopover));
