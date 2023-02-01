@@ -84,10 +84,6 @@ public class MemberService {
         Member memberInfo = member.get();
         if(memberUpdateRequestDTO.getPhone() != null)
             memberInfo.setPhone(memberUpdateRequestDTO.getPhone());
-        if(memberUpdateRequestDTO.getBank() != null)
-            memberInfo.setBank(memberUpdateRequestDTO.getBank());
-        if(memberUpdateRequestDTO.getBankAddress() != null)
-            memberInfo.setBankAddress(memberUpdateRequestDTO.getBankAddress());
 
         try {
             memberRepository.save(memberInfo);

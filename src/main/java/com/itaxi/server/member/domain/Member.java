@@ -45,13 +45,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    private String bank;
-
     private int penalty;
 
-    private String bankAddress;
-
-    private String bankOwner;
 
     @OneToMany(mappedBy = "member")
     private List<Joiner> joiners = new ArrayList<>();
@@ -77,9 +72,6 @@ public class Member extends BaseEntity {
         this.email = memberCreateRequestDTO.getEmail();
         this.phone = memberCreateRequestDTO.getPhone();
         this.name = memberCreateRequestDTO.getName();
-        this.bank = memberCreateRequestDTO.getBank();
-        this.bankAddress = memberCreateRequestDTO.getBankAddress();
-        this.bankOwner = memberCreateRequestDTO.getBankOwner();
 
         /* data validation - uid */
         if(this.uid == null || this.uid.trim().isEmpty())

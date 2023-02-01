@@ -33,7 +33,6 @@ import java.util.Optional;
 public class BannerService {
     private final MemberRepository memberRepository;
     private final BannerRepository bannerRepository;
-
     private final PlaceRepository placeRepository;
     private final NoticeRepository noticeRepository;
 
