@@ -70,7 +70,7 @@ public class BannerService {
 
         BannerCreateEntityDto bannerCreateEntityDto =
                 new BannerCreateEntityDto(
-                    bannerCreateDto.getUid(),bannerCreateDto.getWeatherStatus(),
+                    member.get(),bannerCreateDto.getWeatherStatus(),
                     placeDepart.get(),placeDest.get(),bannerCreateDto.getReportAt(),
                     bannerCreateDto.getBannerType()
                 );
@@ -78,7 +78,7 @@ public class BannerService {
         Banner saveBanner = bannerRepository.save(new Banner(bannerCreateEntityDto));
 
         BannerCreateResponse bannerCreateResponse = new BannerCreateResponse(
-                saveBanner.getId(),member.get().getName(),saveBanner.getUid(),
+                saveBanner.getId(),member.get().getName(),saveBanner.getMember().getUid(),
                 saveBanner.getWeatherStatus(), saveBanner.getDeparture().getId(),
                 saveBanner.getDestination().getId(),saveBanner.getReportAt(),
                 saveBanner.getBannerType());
@@ -104,7 +104,7 @@ public class BannerService {
                 new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
 
-        if (! banner.get().getUid().equals(bannerUpdateDto.getUid())) throw
+        if (! banner.get().getMember().getUid().equals(bannerUpdateDto.getUid())) throw
                 new BannerNoAuthorityException();
 
         Banner bannerInfo = banner.get();
@@ -124,7 +124,7 @@ public class BannerService {
     @Transactional
     public BannerReadResponse readBanner(Long bannerId){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
-        Optional<Member> member = memberRepository.findMemberByUid(banner.get().getUid());
+        Optional<Member> member = memberRepository.findMemberByUid(banner.get().getMember().getUid());
         BannerReadResponse response = null;
 
         if(banner.isPresent()){
@@ -146,7 +146,7 @@ public class BannerService {
     public List<BannerReadAllResponse> readAllBanners(){
         List<BannerReadAllResponse> result = new ArrayList<>();
         for(Banner banner : bannerRepository.findAll()){
-            Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());
+            Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
 
             if(banner != null){
                 if(member.isPresent()){
@@ -171,7 +171,7 @@ public class BannerService {
             Optional<Place> placeDest = placeRepository.findById(banner.getDestination().getId());
 
             output = "제보자: ";
-            Optional<Member> member = memberRepository.findMemberByUid(banner.getUid());
+            Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
 
             if(member.isPresent()){
               output = output.concat(member.get().getName());
@@ -247,7 +247,7 @@ public class BannerService {
     @Transactional
     public String deleteBanner(Long bannerId, BannerDeleteDto bannerDeleteDto){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
-        if(!(banner.get().getUid().equals(bannerDeleteDto.getUid()))) throw
+        if(!(banner.get().getMember().getUid().equals(bannerDeleteDto.getUid()))) throw
             new BannerNoAuthorityException();
         if(banner.isPresent()){
             Banner bannerInfo = banner.get();
