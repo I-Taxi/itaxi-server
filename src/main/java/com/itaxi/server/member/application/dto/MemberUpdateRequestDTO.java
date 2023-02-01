@@ -10,7 +10,5 @@ import lombok.Setter;
 public class MemberUpdateRequestDTO {
     private String uid;
     private String phone;
-    private String bank;
-    private String bankAddress;
-    private String bankOwner;
+
 }
