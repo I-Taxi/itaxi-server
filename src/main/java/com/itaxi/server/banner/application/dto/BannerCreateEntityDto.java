@@ -1,5 +1,6 @@
 package com.itaxi.server.banner.application.dto;
 
+import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.place.domain.Place;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +11,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BannerCreateEntityDto {
-    private String uid;
+    private Member member;
     private int weatherStatus;
     private Place depId;
     private Place desId;
     private LocalDateTime reportAt;
     private int bannerType;
+
 }

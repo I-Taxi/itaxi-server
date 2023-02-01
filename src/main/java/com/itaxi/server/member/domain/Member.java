@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.exception.member.MemberEmailNullException;
 import com.itaxi.server.exception.member.MemberNameNullException;
@@ -66,6 +67,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "reportedMember")
     private List<Report> reportedMembers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Banner> banners = new ArrayList<>();
 
 
     public Member(MemberCreateRequestDTO memberCreateRequestDTO) {
