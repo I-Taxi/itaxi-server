@@ -55,6 +55,8 @@ public class PostService {
         if(!member.isPresent()) {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
@@ -198,6 +200,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
@@ -242,6 +246,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         int joinerSize = postInfo.getJoiners().size();
@@ -294,6 +300,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {

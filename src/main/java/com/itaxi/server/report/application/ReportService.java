@@ -13,7 +13,6 @@ import com.itaxi.server.report.application.dto.UpdateReportDto;
 import com.itaxi.server.report.domain.Report;
 import com.itaxi.server.report.domain.repository.ReportRepository;
 
-import com.itaxi.server.report.presentation.response.ReportResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +37,11 @@ public class ReportService {
         Report report = null;
 
         if (writer.isPresent() && reportedMember.isPresent()) {
+            if(writer.get().isDeleted())
+                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            if(reportedMember.get().isDeleted())
+                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+
             AddReportMemberDto reportMemberDto = new AddReportMemberDto(dto, writer.get(), reportedMember.get());
             Member member = reportedMember.get();
             member.setPenalty(member.getPenalty() + 1);
@@ -55,6 +59,9 @@ public class ReportService {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
 
         if(!member.isPresent() && !adminChecker.isAdmin(uid)) {
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if(member.get().isDeleted()){
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -94,6 +101,9 @@ public class ReportService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+        if(member.get().isDeleted()){
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         if (reportInfo.getWriter().getId() == memberInfo.getId()) {
             reportInfo.setContent(dto.getContent());
@@ -123,6 +133,9 @@ public class ReportService {
             memberInfo = member.get();
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+        }
+        if(member.get().isDeleted()){
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if (reportInfo.getWriter().getId() == memberInfo.getId()) {

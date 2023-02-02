@@ -22,7 +22,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 import org.springframework.http.HttpStatus;
 
-@Where(clause = "deleted=false")
+
 @Entity
 @Getter
 @Setter
