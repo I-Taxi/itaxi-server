@@ -61,6 +61,8 @@ public class BannerService {
         Optional<Place> placeDepart = placeRepository.findById(bannerCreateDto.getDepId());
         Optional<Place> placeDest = placeRepository.findById(bannerCreateDto.getDesId());
         Optional<Member> member = memberRepository.findMemberByUid(bannerCreateDto.getUid());
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         if(!(placeDepart.isPresent() && placeDest.isPresent())) throw
                 new PlaceNotFoundException();
@@ -126,6 +128,8 @@ public class BannerService {
     public BannerReadResponse readBanner(Long bannerId){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
         Optional<Member> member = memberRepository.findMemberByUid(banner.get().getMember().getUid());
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         BannerReadResponse response = null;
 
         if(banner.isPresent()){
@@ -153,6 +157,8 @@ public class BannerService {
         List<BannerReadAllResponse> result = new ArrayList<>();
         for(Banner banner : bannerRepository.findAll()){
             Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
+            if(member.get().isDeleted())
+                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
             if(banner != null){
                 if(member.isPresent()){
@@ -178,6 +184,8 @@ public class BannerService {
 
             output = "제보자: ";
             Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
+            if(member.get().isDeleted())
+                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
             if(member.isPresent()){
               output = output.concat(member.get().getName());
