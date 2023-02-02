@@ -7,6 +7,7 @@ import com.itaxi.server.banner.application.dto.BannerUpdateDto;
 import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.banner.domain.repository.BannerRepository;
 import com.itaxi.server.banner.presentation.reponse.*;
+import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.banner.*;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
@@ -35,6 +36,7 @@ public class BannerService {
     private final BannerRepository bannerRepository;
     private final PlaceRepository placeRepository;
     private final NoticeRepository noticeRepository;
+    private final AdminChecker adminChecker;
 
     String[] weather={"폭우","침수","폭설","공사"};
     public String[] notice_type={"일반","긴급","정전","점검"};
@@ -104,7 +106,7 @@ public class BannerService {
 
 
         if (! banner.get().getMember().getUid().equals(bannerUpdateDto.getUid())) throw
-                new BannerNoAuthorityException();
+                new BannerNoAuthorityException(HttpStatus.BAD_REQUEST);
 
         Banner bannerInfo = banner.get();
         bannerInfo.setWeatherStatus(bannerUpdateDto.getWeatherStatus());
@@ -142,7 +144,12 @@ public class BannerService {
     }
 
     @Transactional
-    public List<BannerReadAllResponse> readAllBanners(){
+    public List<BannerReadAllResponse> readAllBanners(String uid){
+
+        if(!adminChecker.isAdmin(uid)) {
+            throw new BannerNoAuthorityException(HttpStatus.BAD_REQUEST);
+        }
+
         List<BannerReadAllResponse> result = new ArrayList<>();
         for(Banner banner : bannerRepository.findAll()){
             Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
@@ -247,7 +254,7 @@ public class BannerService {
     public String deleteBanner(Long bannerId, BannerDeleteDto bannerDeleteDto){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
         if(!(banner.get().getMember().getUid().equals(bannerDeleteDto.getUid()))) throw
-            new BannerNoAuthorityException();
+            new BannerNoAuthorityException(HttpStatus.BAD_REQUEST);
         if(banner.isPresent()){
             Banner bannerInfo = banner.get();
             bannerInfo.setDeleted(true);
