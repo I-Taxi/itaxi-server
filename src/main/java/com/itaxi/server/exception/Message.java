@@ -68,5 +68,7 @@ public class Message {
 
     public static final String FAVOR_JOINER_DUPLICATED = "이미 즐겨찾기로 등록된 장소입니다.";
     public static final String FAVOR_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
+
+    public static final String HISTORY_NO_TYPE_EXCEPTION = "로그 타입은 0 또는 1만이 존재합니다.";
 }
 
