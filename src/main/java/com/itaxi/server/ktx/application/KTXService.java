@@ -238,6 +238,9 @@ public class KTXService {
                 ktxJoinerRepository.save(joinerBeOwner);
                 newOwner = joinerBeOwner.getMember();
             }
+            else{
+                newOwner = joinerInfo.getMember();
+            }
         } else {
             throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
