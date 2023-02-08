@@ -99,6 +99,9 @@ public class KTXService {
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
         }
+        if (dto.getSale() > 35 || dto.getSale() < 15) {
+            throw new KTXSaleRangeException(HttpStatus.BAD_REQUEST);
+        }
 
         final KTXPlace departure = ktxPlaceRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final KTXPlace destination = ktxPlaceRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);

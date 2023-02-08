@@ -1,6 +1,5 @@
 package com.itaxi.server.history.application.dto;
 
-import com.itaxi.server.ktx.application.dto.KTXJoinerInfo;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.post.domain.Joiner;

@@ -23,6 +23,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
     private final LocalDateTime deptTime;
     private final int capacity;
     private final int status;
+    private final int sale;
     private final Integer postType;
     private final int participantNum;
 
@@ -33,6 +34,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
         this.deptTime = p.getDeptTime();
         this.capacity = p.getCapacity();
         this.status = p.getStatus();
+        this.sale = -1;
         this.postType = p.getPostType();
 
         int tmp = 0;
@@ -54,6 +56,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
         this.deptTime = ktx.getDeptTime();
         this.capacity = ktx.getCapacity();
         this.status = ktx.getStatus();
+        this.sale = ktx.getSale();
         this.postType = 3;
         this.stopovers = null;
         int tmp = 0;
