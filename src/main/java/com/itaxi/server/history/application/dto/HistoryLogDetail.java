@@ -4,10 +4,11 @@ import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
 public class HistoryLogDetail extends HistoryLog{
     private final List<HistoryInfo> joiners;
 

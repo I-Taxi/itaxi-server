@@ -2,7 +2,9 @@ package com.itaxi.server.history.application.dto;
 
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.post.domain.Joiner;
+import lombok.Getter;
 
+@Getter
 public class HistoryInfo {
     private final Long memberId;
     private final String memberName;
