@@ -32,13 +32,13 @@ public class Scheduller {
         // Post와 KTX를 담고 있는 List들을 iterate하며 현재 시간과 비교하여 시간이 지난 채팅방들을 삭제한다.
         for (Post post : postList) {
             if (time.isAfter(post.getDeptTime())) {
-                post.setDeleted(true);
+                post.setStatus(0);
                 postRepository.save(post);
             }
         }
         for (KTX ktx : ktxList) {
             if (time.isAfter(ktx.getDeptTime())) {
-                ktx.setDeleted(true);
+                ktx.setStatus(0);
                 ktxRepository.save(ktx);
             }
         }
