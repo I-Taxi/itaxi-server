@@ -1,8 +1,10 @@
 package com.itaxi.server.history.application.dto;
 
+import com.itaxi.server.ktx.application.dto.KTXJoinerInfo;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.place.application.dto.PlaceResponse;
+import com.itaxi.server.post.application.dto.JoinerInfo;
 import com.itaxi.server.post.application.dto.StopoverInfo;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
@@ -25,6 +27,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
     private final int status;
     private final int sale;
     private final Integer postType;
+    private  String owner;
     private final int participantNum;
 
     public HistoryLog(Post p) {
@@ -44,6 +47,15 @@ public class HistoryLog implements Comparable<HistoryLog>{
         }
         this.participantNum = tmp;
 
+
+        for(Joiner joiner : p.getJoiners()){
+            JoinerInfo joinerInfo = new JoinerInfo(joiner);
+            if(joiner.isOwner()){
+                this.owner = joinerInfo.getMemberName();
+                break;
+            }
+        }
+
         stopovers = new ArrayList<>();
         for (Stopover stopover : p.getStopovers()) {
             stopovers.add(new StopoverInfo(stopover));
@@ -58,6 +70,13 @@ public class HistoryLog implements Comparable<HistoryLog>{
         this.status = ktx.getStatus();
         this.sale = ktx.getSale();
         this.postType = 3;
+        for(KTXJoiner ktxJoiner : ktx.getJoiners()){
+            KTXJoinerInfo ktxJoinerInfo = new KTXJoinerInfo(ktxJoiner);
+            if(ktxJoinerInfo.isOwner()){
+                this.owner = ktxJoinerInfo.getMemberName();
+                break;
+            }
+        }
         this.stopovers = null;
         int tmp = 0;
         for (KTXJoiner ktxJoiner : ktx.getJoiners()) {
