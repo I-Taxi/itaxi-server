@@ -77,7 +77,6 @@ public class HistoryService {
             if(check == false ){
                 throw new PostNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
             }
-
             return new HistoryLogDetail(post.get());
         }
         else if(type ==1){
@@ -103,6 +102,7 @@ public class HistoryService {
         else{
             throw new HistoryNoTypeException();
         }
+
 
     }
 }
