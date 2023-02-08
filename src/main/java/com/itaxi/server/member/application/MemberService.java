@@ -36,6 +36,18 @@ public class MemberService {
                 if (member.isPresent())
                     throw new MemberAdminDuplicateException(HttpStatus.BAD_REQUEST);
             }
+            List<Member> memberList = memberRepository.findAll();
+
+            for(int i = 0; i<memberList.size(); i++){
+                if(memberList.get(i).getUid().equals(memberCreateRequestDTO.getUid()) && memberList.get(i).isDeleted()){
+                    Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
+                    if(reMember.isPresent()){
+                        reMember.get().setDeleted(false);
+                        memberRepository.save(reMember.get());
+                        return "Success";
+                    }
+                }
+            }
 
             memberRepository.save(new Member(memberCreateRequestDTO));
             return "Success";
@@ -60,14 +72,25 @@ public class MemberService {
     /* READ */
     @Transactional
     public MemberInfo getMember(String uid) {
+        Optional<Member> checkMember = memberRepository.findMemberByUid(uid);
+        if(!checkMember.isPresent()){
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if(checkMember.get().isDeleted()){
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
-        if(member.isPresent())
-            return member.get();
-        throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        return member.get();
+
     }
 
     @Transactional
     public LoginResponse login(String uid) {
+        Optional<Member> checkMember = memberRepository.findMemberByUid(uid);
+        if(checkMember.get().isDeleted()){
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         Optional<LoginResponse> response = memberRepository.findMemberForLoginByUid(uid);
         if(response.isPresent())
             return response.get();
@@ -80,14 +103,12 @@ public class MemberService {
         Optional<Member> member = memberRepository.findMemberByUid(memberUpdateRequestDTO.getUid());
         if(!member.isPresent())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         Member memberInfo = member.get();
         if(memberUpdateRequestDTO.getPhone() != null)
             memberInfo.setPhone(memberUpdateRequestDTO.getPhone());
-        if(memberUpdateRequestDTO.getBank() != null)
-            memberInfo.setBank(memberUpdateRequestDTO.getBank());
-        if(memberUpdateRequestDTO.getBankAddress() != null)
-            memberInfo.setBankAddress(memberUpdateRequestDTO.getBankAddress());
 
         try {
             memberRepository.save(memberInfo);
@@ -103,6 +124,8 @@ public class MemberService {
     public String deleteMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(member.get().isDeleted())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         Member memberInfo = member.get();
         boolean isAvailable = true; // 삭제가능 여부

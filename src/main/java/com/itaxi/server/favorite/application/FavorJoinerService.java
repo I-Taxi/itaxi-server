@@ -41,6 +41,7 @@ public class FavorJoinerService {
 
         if(!place.isPresent()) throw new PlaceNotFoundException();
         if(!member.isPresent()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(member.get().isDeleted()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         FavorJoinerInfo check = new FavorJoinerInfo(member.get());
 
         for(Place p : check.getPlaces()){
@@ -60,6 +61,7 @@ public class FavorJoinerService {
     public List readAllFavorByMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(member.get().isDeleted()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         FavorJoinerInfo favorJoinerInfo = new FavorJoinerInfo(member.get());
         List<FavorJoinerReadAllResponse> result = new ArrayList<>();
         PriorityQueue<FavorJoinerReadAllResponse> pQueue = new PriorityQueue<>(Collections.reverseOrder());

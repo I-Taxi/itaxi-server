@@ -26,8 +26,8 @@ public class ReportController {
     @ApiOperation(value = ApiDoc.REPORT_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ReportResponse> createReport(@RequestBody final AddReportDto dto) {
-        ReportResponse response = reportService.createReport(dto);
+    public ResponseEntity<String> createReport(@RequestBody final AddReportDto dto) {
+        String response = reportService.createReport(dto);
 
         return ResponseEntity.ok(response);
     }

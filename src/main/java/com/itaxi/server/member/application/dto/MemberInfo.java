@@ -6,7 +6,5 @@ public interface MemberInfo {
     String getEmail();
     String getPhone();
     String getName();
-    String getBank();
-    String getBankAddress();
-    String getBankOwner();
+
 }

@@ -2,6 +2,7 @@ package com.itaxi.server.post.application;
 
 import com.itaxi.server.exception.ktx.BadDateException;
 import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
+import com.itaxi.server.exception.ktx.SamePlaceException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
@@ -20,6 +21,7 @@ import com.itaxi.server.post.domain.Stopover;
 import com.itaxi.server.post.domain.repository.JoinerRepository;
 import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.domain.repository.StopoverRepository;
+import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import com.itaxi.server.post.presentation.response.PostInfoResponse;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.member.application.dto.MemberJoinInfo;
@@ -54,6 +56,8 @@ public class PostService {
         if(!member.isPresent()) {
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
@@ -71,11 +75,23 @@ public class PostService {
     }
 
     @Transactional
-    public PostLogDetail getPostLogDetail(Long postId) {
+    public PostLogDetail getPostLogDetail(Long postId, PostGetLogDetailRequest request) {
         Optional<Post> post = postRepository.findById(postId);
+
+        boolean check = false;
+        for(int i =  0; i<post.get().getJoiners().size(); i++){
+            if(post.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
+                check = true;
+            }
+        }
+
         if(!post.isPresent()) {
             throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if(check == false ){
+            throw new PostNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+        }
+
         return new PostLogDetail(post.get());
     }
 
@@ -83,6 +99,9 @@ public class PostService {
     public PostInfoResponse createPost(AddPostDto dto) {
         if (dto.getStopoverIds().size() > 3) {
             throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (dto.getDstId() == dto.getDepId()) {
+            throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
@@ -185,6 +204,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
@@ -229,30 +250,37 @@ public class PostService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
-
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         int joinerSize = postInfo.getJoiners().size();
+        boolean checkOwner = false;
         if (joiner.isPresent()) {
             Joiner joinerInfo = joiner.get();
+            if(joinerInfo.isOwner()) checkOwner = true;
             joinerInfo.setStatus(0);
             joinerInfo.setDeleted(true);
             joinerRepository.save(joinerInfo);
-
             System.out.println(joinerSize);
+
             if (joinerSize == 1){
                 postInfo.setStatus(0);
                 postInfo.setDeleted(true);
-            }  else if (joinerSize == postInfo.getCapacity()) {
+            }  else if (1 < joinerSize && joinerSize <= postInfo.getCapacity()) {
                 postInfo.setStatus(1);
             }
             postRepository.save(postInfo);
-
-            if (joinerSize > 1 && joinerInfo.isOwner()) {
+            if (joinerSize > 1 && checkOwner) {
                 joinerBeOwner = postInfo.getJoiners().get(1);
                 joinerBeOwner.setOwner(true);
                 joinerRepository.save(joinerBeOwner);
                 newOwner = joinerBeOwner.getMember();
             }
+            else{
+                newOwner = joinerInfo.getMember();
+            }
+
+
         } else {
             throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -281,6 +309,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {

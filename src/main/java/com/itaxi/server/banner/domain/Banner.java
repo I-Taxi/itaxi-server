@@ -3,6 +3,7 @@ package com.itaxi.server.banner.domain;
 import com.itaxi.server.banner.application.dto.BannerCreateEntityDto;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.exception.banner.BannerUidEmptyException;
+import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.place.domain.Place;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -28,9 +29,9 @@ public class Banner extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String uid;
-    @Column(nullable = false)
     private int weatherStatus;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Member member;
     @ManyToOne(fetch = FetchType.EAGER)
     private Place departure;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -42,19 +43,13 @@ public class Banner extends BaseEntity {
 
 
     public Banner(BannerCreateEntityDto bannerCreateEntityDto){
-        this.uid = bannerCreateEntityDto.getUid();
+        this.member = bannerCreateEntityDto.getMember();
         this.weatherStatus = bannerCreateEntityDto.getWeatherStatus();
         this.departure = bannerCreateEntityDto.getDepId();
         this.destination = bannerCreateEntityDto.getDesId();
         this.reportAt = bannerCreateEntityDto.getReportAt();
         this.bannerType = bannerCreateEntityDto.getBannerType();
         this.setDeleted(false);
-        checkUid(uid);
-    }
 
-    private void checkUid(String uid) {
-        if ((uid == null || uid.trim().isEmpty())) {
-            throw new BannerUidEmptyException();
-        }
     }
 }

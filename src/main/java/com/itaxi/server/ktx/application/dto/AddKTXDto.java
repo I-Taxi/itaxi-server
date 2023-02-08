@@ -20,4 +20,6 @@ public class AddKTXDto {
     private LocalDateTime deptTime;
     @NotNull
     private int capacity;
+    @NotNull
+    private int sale;
 }

@@ -14,6 +14,7 @@ public class AddKTXPlaceDto {
     private LocalDateTime deptTime;
     private int capacity;
     private int status;
+    private int sale;
 
     @Builder
     public AddKTXPlaceDto(AddKTXDto req, KTXPlace departure, KTXPlace destination) {
@@ -22,6 +23,7 @@ public class AddKTXPlaceDto {
         this.deptTime = req.getDeptTime();
         this.capacity = req.getCapacity();
         this.status = 1;
+        this.sale = req.getSale();
     }
 
     public KTX toEntity() {
@@ -31,6 +33,7 @@ public class AddKTXPlaceDto {
                 .deptTime(this.deptTime)
                 .capacity(this.capacity)
                 .status(this.status)
+                .sale(this.sale)
                 .build();
     }
 }

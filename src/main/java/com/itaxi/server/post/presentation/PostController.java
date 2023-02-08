@@ -2,6 +2,7 @@ package com.itaxi.server.post.presentation;
 
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.application.dto.*;
+import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import org.springframework.http.HttpStatus;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.post.application.PostService;
@@ -33,9 +34,9 @@ public class PostController {
     }
 
     @ApiOperation(value = ApiDoc.POST_HISTORY_DETAIL)
-    @GetMapping(value = "history/{postId}")
-    public ResponseEntity<PostLogDetail> getPostLogDetail(@PathVariable long postId) {
-        return ResponseEntity.ok(postService.getPostLogDetail(postId));
+    @PostMapping(value = "history/{postId}")
+    public ResponseEntity<PostLogDetail> getPostLogDetail(@PathVariable long postId, @RequestBody PostGetLogDetailRequest request) {
+        return ResponseEntity.ok(postService.getPostLogDetail(postId,request));
     }
 
     @ApiOperation(value = ApiDoc.POST_READ)

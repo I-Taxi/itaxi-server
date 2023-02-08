@@ -47,9 +47,9 @@ public class BannerController {
     }
 
     @ApiOperation(value = ApiDoc.BANNER_READ_ALL)
-    @GetMapping
-    public ResponseEntity<List> readAllBanner() {
-        List<BannerReadAllResponse> result = bannerService.readAllBanners();
+    @PostMapping("/all")
+    public ResponseEntity<List> readAllBanner(@RequestBody BannerReadAllRequest request) {
+        List<BannerReadAllResponse> result = bannerService.readAllBanners(request.getUid());
 
         return ResponseEntity.ok(result);
     }

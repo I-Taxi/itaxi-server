@@ -7,6 +7,7 @@ public class Message {
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
 
+
     public static final String PLACE_NOT_NULL_EXCEPTION = "장소의 이름은 NULL일 수 없습니다";
     public static final String PLACE_CNT_MINUS_EXCEPTION = "장소의 조회수는 0보다 작을 수 없습니다";
     public static final String PLACE_TYPE_MINUS_EXCEPTION = "장소의 타입은 0~4 사이의 값입니다";
@@ -40,6 +41,7 @@ public class Message {
     public static final String DEPT_TIME_WRONG = "30분 이상 시간을 미룰 수 없습니다.";
     public static final String CANNOT_CHANGE_DEPT_TIME = "출발시각까지 3분 이하가 남았을 때는 시간을 바꿀 수 없습니다.";
     public static final String POST_TOO_MANY_STOPOVERS = "경유지는 최대 3개까지 선택할 수 있습니다.";
+    public static final String POST_NO_AUTHORITY_TO_GET = "해당 채팅방에 참가되어 있지 않아 접근 권한이 존재하지 않습니다.";
 
     public static final String BANNER_UID_EMPTY_EXCEPTION = "UID 값이 올바르지 않습니다.";
     public static final String BANNER_BAD_TYPE_EXCEPTION = "배너 타입은 0 또는 1 이어야 합니다.";
@@ -61,9 +63,13 @@ public class Message {
     public static final String KTX_NAME_NULL = "이름이 비어있습니다.";
     public static final String KTX_BAD_DATE = "채팅방 생성 가능 날짜는 현재로부터 3개월입니다.";
     public static final String KTX_REQUEST_BODY_NULL = "올바르지 않은 형식으로 데이터가 전달됐습니다.";
+    public static final String KTX_NO_AUTHORITY_TO_GET = "해당 채팅방에 참가되어 있지 않아 접근 권한이 존재하지 않습니다.";
+    public static final String KTX_SALE_RANGE_EXCEPTION = "할인률은 15~35% 사이로 해야 합니다.";
 
 
     public static final String FAVOR_JOINER_DUPLICATED = "이미 즐겨찾기로 등록된 장소입니다.";
     public static final String FAVOR_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
+
+    public static final String HISTORY_NO_TYPE_EXCEPTION = "타입은 0 또는 1만이 존재합니다.";
 }
 

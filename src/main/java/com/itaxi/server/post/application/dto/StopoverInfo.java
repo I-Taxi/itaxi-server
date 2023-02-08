@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class StopoverInfo {
-    private final Long placeId;
-    private final String placeName;
+    private final Long id;
+    private final String name;
 
     public StopoverInfo(Stopover stopover) {
-        this.placeId = stopover.getPlace().getId();
-        this.placeName = stopover.getPlace().getName();
+        this.id = stopover.getPlace().getId();
+        this.name = stopover.getPlace().getName();
     }
 }

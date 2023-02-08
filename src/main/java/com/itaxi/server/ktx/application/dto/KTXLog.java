@@ -16,6 +16,7 @@ public class KTXLog implements Comparable<KTXLog> {
     private int capacity;
     private int participantNum;
     private int status;
+    private int sale;
 
     public KTXLog(KTX ktx) {
         this.id = ktx.getId();
@@ -24,6 +25,7 @@ public class KTXLog implements Comparable<KTXLog> {
         this.deptTime = ktx.getDeptTime();
         this.capacity = ktx.getCapacity();
         this.status = ktx.getStatus();
+        this.sale = ktx.getSale();
         int tmp = 0;
         for (KTXJoiner ktxJoiner : ktx.getJoiners()) {
             if (ktxJoiner.getStatus() == 1) tmp += 1;
