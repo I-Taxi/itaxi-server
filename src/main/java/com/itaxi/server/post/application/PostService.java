@@ -252,30 +252,35 @@ public class PostService {
         }
         if(member.get().isDeleted())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         int joinerSize = postInfo.getJoiners().size();
+        boolean checkOwner = false;
         if (joiner.isPresent()) {
             Joiner joinerInfo = joiner.get();
+            if(joinerInfo.isOwner()) checkOwner = true;
             joinerInfo.setStatus(0);
             joinerInfo.setDeleted(true);
             joinerRepository.save(joinerInfo);
-
             System.out.println(joinerSize);
+
             if (joinerSize == 1){
                 postInfo.setStatus(0);
                 postInfo.setDeleted(true);
-            }  else if (joinerSize == postInfo.getCapacity()) {
+            }  else if (1 < joinerSize && joinerSize <= postInfo.getCapacity()) {
                 postInfo.setStatus(1);
             }
             postRepository.save(postInfo);
-
-            if (joinerSize > 1 && joinerInfo.isOwner()) {
+            if (joinerSize > 1 && checkOwner) {
                 joinerBeOwner = postInfo.getJoiners().get(1);
                 joinerBeOwner.setOwner(true);
                 joinerRepository.save(joinerBeOwner);
                 newOwner = joinerBeOwner.getMember();
             }
+            else{
+                newOwner = joinerInfo.getMember();
+            }
+
+
         } else {
             throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
