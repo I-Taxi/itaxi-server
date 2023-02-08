@@ -18,5 +18,6 @@ public class KTXInfoResponse {
     private LocalDateTime deptTime;
     private int capacity;
     private int status;
+    private int sale;
     private List<KTXJoinerInfo> joiners;
 }

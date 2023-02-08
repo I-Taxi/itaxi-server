@@ -20,7 +20,7 @@ public class KTXGetResDto {
     private int capacity;
     private int participantNum;
     private int status;
-
+    private int sale;
 
 
     @Builder public KTXGetResDto(KTX ktx) {
@@ -31,6 +31,7 @@ public class KTXGetResDto {
         this.capacity = ktx.getCapacity();
         this.participantNum = ktx.getJoiners().size();
         this.status = ktx.getStatus();
+        this.sale = ktx.getSale();
         }
     }
 

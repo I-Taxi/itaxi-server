@@ -2,6 +2,7 @@ package com.itaxi.server.post.application;
 
 import com.itaxi.server.exception.ktx.BadDateException;
 import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
+import com.itaxi.server.exception.ktx.SamePlaceException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
@@ -98,6 +99,9 @@ public class PostService {
     public PostInfoResponse createPost(AddPostDto dto) {
         if (dto.getStopoverIds().size() > 3) {
             throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (dto.getDstId() == dto.getDepId()) {
+            throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
