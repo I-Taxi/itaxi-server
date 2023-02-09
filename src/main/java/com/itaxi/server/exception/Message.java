@@ -14,7 +14,7 @@ public class Message {
     public static final String PLACE_FIND_NOT_EXIST_EXCEPTION = "Find는 0번과 1번만 존재합니다.";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
 
-    public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
+    public static final String BANNER_NOT_FOUND = "배너가 존재하지 않습니다.";
     public static final String BANNER_PLACE_NOT_FOUND = "존재하지 않는 배너 장소입니다.";
 
 

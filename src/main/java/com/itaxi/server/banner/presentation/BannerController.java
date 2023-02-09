@@ -64,7 +64,7 @@ public class BannerController {
 
     @Transactional
     @ApiOperation(value = ApiDoc.BANNER_DELETE)
-    @DeleteMapping("/{bannerId}")
+    @PutMapping("/delete/{bannerId}/")
     public ResponseEntity<String> deleteBanner(@PathVariable Long bannerId, @RequestBody BannerDeleteRequest request){
         String result = bannerService.deleteBanner(bannerId,BannerDeleteDto.from(request));
         return ResponseEntity.ok(result);
