@@ -148,7 +148,7 @@ public class MemberService {
             }
         }
         else {
-            throw new MemberConstraintViolationException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberConstraintViolationException(HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class MemberDeleteFailedException extends MemberException {
     public MemberDeleteFailedException(HttpStatus httpStatus) {
-        super(Message.MEMBER_DELETE_FAILED, httpStatus);
+        super(Message.MEMBER_CONSTRAINT_VIOLATION_EXCEPTION, httpStatus);
     }
 }

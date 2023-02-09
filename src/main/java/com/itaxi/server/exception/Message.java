@@ -21,6 +21,7 @@ public class Message {
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";
     public static final String MEMBER_UPDATE_FAILED = "알 수 없는 오류로 인하여 회원정보 수정에 실패하였습니다.";
     public static final String MEMBER_DELETE_FAILED = "알 수 없는 오류로 인하여 회원정보 삭제에 실패하였습니다.";
+    public static final String MEMBER_CONSTRAINT_VIOLATION_EXCEPTION = "현재 참가하고 있는 방이 존재하기 때문에 회원탈퇴는 불가능합니다.";
     public static final String MEMBER_UID_ISNULL = "UID 값이 올바르지 않습니다.";
     public static final String MEMBER_EMAIL_ISNULL = "Email 값이 올바르지 않습니다.";
     public static final String MEMBER_PHONE_ISNULL = "연락처 값이 올바르지 않습니다.";
