@@ -39,10 +39,12 @@ public class MemberService {
             List<Member> memberList = memberRepository.findAll();
 
             for(int i = 0; i<memberList.size(); i++){
-                if(memberList.get(i).getUid().equals(memberCreateRequestDTO.getUid()) && memberList.get(i).isDeleted()){
+                if(memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()){
                     Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
                     if(reMember.isPresent()){
                         reMember.get().setDeleted(false);
+                        reMember.get().setUid(memberCreateRequestDTO.getUid());
+                        reMember.get().setPhone(memberCreateRequestDTO.getPhone());
                         memberRepository.save(reMember.get());
                         return "Success";
                     }
