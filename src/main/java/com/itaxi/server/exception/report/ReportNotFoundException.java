@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 
 public class ReportNotFoundException extends ReportException {
     public ReportNotFoundException() {
-        super(Message.REPORT_NOT_FOUND, HttpStatus.BAD_REQUEST);
+        super(Message.REPORT_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }

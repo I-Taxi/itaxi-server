@@ -46,7 +46,7 @@ public class NoticeService {
         if (adminChecker.isAdmin(uid)) {
             savedNotice = noticeRepository.save(new Notice(noticeCreateDto));
        } else {
-           throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+           throw new MemberNotAdminException();
        }
 
         return savedNotice.getId();
@@ -102,7 +102,7 @@ public class NoticeService {
 
             noticeRepository.save(noticeInfo);
         } else {
-            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+            throw new MemberNotAdminException();
         }
 
         return "Success";
@@ -123,7 +123,7 @@ public class NoticeService {
             noticeInfo.setDeleted(true);
             noticeRepository.save(noticeInfo);
         } else {
-            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+            throw new MemberNotAdminException();
         }
 
         return "Success";

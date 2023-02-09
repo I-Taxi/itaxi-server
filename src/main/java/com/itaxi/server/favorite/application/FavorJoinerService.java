@@ -1,7 +1,7 @@
 package com.itaxi.server.favorite.application;
 
 
-import com.itaxi.server.exception.favorite.FavorDuplicatedException;
+import com.itaxi.server.exception.favorite.FavorDuplicateException;
 import com.itaxi.server.exception.favorite.FavorNoAuthorityException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
@@ -17,7 +17,6 @@ import com.itaxi.server.member.presentation.response.FavorJoinerReadAllResponse;
 import com.itaxi.server.place.domain.Place;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +39,8 @@ public class FavorJoinerService {
         Optional<Place> place = placeRepository.findById(dto.getPlaceId());
 
         if(!place.isPresent()) throw new PlaceNotFoundException();
-        if(!member.isPresent()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(member.get().isDeleted()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!member.isPresent()) throw new MemberNotFoundException();
+        if(member.get().isDeleted()) throw new MemberNotFoundException();
         FavorJoinerInfo check = new FavorJoinerInfo(member.get());
 
         for(Place p : check.getPlaces()){
@@ -50,7 +49,7 @@ public class FavorJoinerService {
                 break;
             }
         }
-        if(confirm==true) throw new FavorDuplicatedException();
+        if(confirm == true) throw new FavorDuplicateException();
         FavorJoinerSaveDto saveDto = new FavorJoinerSaveDto(member.get(),place.get());
         FAVORJoiner favorJoiner = favorJoinerRepository.save(new FAVORJoiner(saveDto));
 
@@ -60,8 +59,8 @@ public class FavorJoinerService {
     @Transactional
     public List readAllFavorByMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(!member.isPresent()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(member.get().isDeleted()) throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!member.isPresent()) throw new MemberNotFoundException();
+        if(member.get().isDeleted()) throw new MemberNotFoundException();
         FavorJoinerInfo favorJoinerInfo = new FavorJoinerInfo(member.get());
         List<FavorJoinerReadAllResponse> result = new ArrayList<>();
         PriorityQueue<FavorJoinerReadAllResponse> pQueue = new PriorityQueue<>(Collections.reverseOrder());

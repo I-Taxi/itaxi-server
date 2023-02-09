@@ -1,10 +1,10 @@
 package com.itaxi.server.history.application;
 
-import com.itaxi.server.exception.history.HistoryNoTypeException;
-import com.itaxi.server.exception.ktx.KTXNoAuthorityToGetException;
+import com.itaxi.server.exception.history.HistoryBadTypeException;
+import com.itaxi.server.exception.ktx.KTXNoAuthorityException;
 import com.itaxi.server.exception.ktx.KTXNotFoundException;
 import com.itaxi.server.exception.member.MemberNotFoundException;
-import com.itaxi.server.exception.post.PostNoAuthorityToGetException;
+import com.itaxi.server.exception.post.PostNoAuthorityException;
 import com.itaxi.server.exception.post.PostNotFoundException;
 import com.itaxi.server.history.application.dto.HistoryLog;
 import com.itaxi.server.history.application.dto.HistoryLogDetail;
@@ -18,7 +18,6 @@ import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.post.domain.repository.PostRepository;
 import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +35,10 @@ public class HistoryService {
     public List<HistoryLog> getPostLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent()) {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
 
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
@@ -60,11 +59,11 @@ public class HistoryService {
 
     @Transactional
     public HistoryLogDetail getLogDetail(Long type,Long postId, PostGetLogDetailRequest request) {
-        if(type ==0){
+        if(type == 0){
             Optional<Post> post = postRepository.findById(postId);
 
             if(!post.isPresent()) {
-                throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new PostNotFoundException();
             }
 
             boolean check = false;
@@ -75,32 +74,32 @@ public class HistoryService {
             }
 
             if(check == false ){
-                throw new PostNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+                throw new PostNoAuthorityException();
             }
             return new HistoryLogDetail(post.get());
         }
-        else if(type ==1){
+        else if(type == 1){
             Optional<KTX> ktx = ktxRepository.findById(postId);
 
             if (!ktx.isPresent()) {
-                throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new KTXNotFoundException();
             }
 
             boolean check = false;
-            for(int i =  0; i<ktx.get().getJoiners().size(); i++){
+            for(int i =  0; i < ktx.get().getJoiners().size(); i++){
                 if(ktx.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
                     check = true;
                 }
             }
 
             if(check == false){
-                throw new KTXNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+                throw new KTXNoAuthorityException();
             }
 
             return new HistoryLogDetail(ktx.get());
         }
         else{
-            throw new HistoryNoTypeException();
+            throw new HistoryBadTypeException();
         }
 
 

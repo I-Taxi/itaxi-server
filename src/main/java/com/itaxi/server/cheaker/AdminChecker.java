@@ -19,11 +19,8 @@ public class AdminChecker {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
 
         if(!member.isPresent()) {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
-
-        if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         Member memberInfo = member.get();
         if (memberInfo.getName().equals("admin")) {

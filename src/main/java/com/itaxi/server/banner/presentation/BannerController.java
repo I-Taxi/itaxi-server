@@ -5,11 +5,10 @@ import com.itaxi.server.banner.application.dto.*;
 import com.itaxi.server.banner.presentation.reponse.*;
 import com.itaxi.server.banner.presentation.request.*;
 import com.itaxi.server.docs.ApiDoc;
-import com.itaxi.server.exception.banner.BannerRequestBodyException;
+import com.itaxi.server.exception.banner.BannerBadParamException;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
@@ -57,7 +56,7 @@ public class BannerController {
     @ApiOperation(value = ApiDoc.BANNER_READ_RECENT_ALL)
     @GetMapping("/recent")
     public ResponseEntity<List> readAllRecentBanner(@RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) final LocalDateTime time) {
-        if(time==null) throw new BannerRequestBodyException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(time==null) throw new BannerBadParamException();
         List<BannerReadAllRecentResponse> result = bannerService.readAllRecentBanners(time);
         return ResponseEntity.ok(result);
     }

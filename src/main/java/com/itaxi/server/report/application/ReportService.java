@@ -38,9 +38,7 @@ public class ReportService {
 
         if (writer.isPresent() && reportedMember.isPresent()) {
             if(writer.get().isDeleted())
-                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-            if(reportedMember.get().isDeleted())
-                throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new MemberNotFoundException();
 
             AddReportMemberDto reportMemberDto = new AddReportMemberDto(dto, writer.get(), reportedMember.get());
             Member member = reportedMember.get();
@@ -48,7 +46,7 @@ public class ReportService {
             memberRepository.save(member);
             report = reportRepository.save(reportMemberDto.toEntity());
         } else {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
 
         return "Success";
@@ -59,10 +57,10 @@ public class ReportService {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
 
         if(!member.isPresent() && !adminChecker.isAdmin(uid)) {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
 
         List<ReportGetResDto> results = null;
@@ -99,10 +97,10 @@ public class ReportService {
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
 
         if (reportInfo.getWriter().getId() == memberInfo.getId()) {
@@ -132,10 +130,10 @@ public class ReportService {
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
 
         if (reportInfo.getWriter().getId() == memberInfo.getId()) {

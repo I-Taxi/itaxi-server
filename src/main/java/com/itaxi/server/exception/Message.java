@@ -20,6 +20,7 @@ public class Message {
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";
     public static final String MEMBER_UPDATE_FAILED = "알 수 없는 오류로 인하여 회원정보 수정에 실패하였습니다.";
     public static final String MEMBER_DELETE_FAILED = "알 수 없는 오류로 인하여 회원정보 삭제에 실패하였습니다.";
+    public static final String MEMBER_CAN_NOT_DELETE = "다른 방에 입장해있어 삭제에 실패하였습니다.";
     public static final String MEMBER_UID_ISNULL = "UID 값이 올바르지 않습니다.";
     public static final String MEMBER_EMAIL_ISNULL = "Email 값이 올바르지 않습니다.";
     public static final String MEMBER_PHONE_ISNULL = "연락처 값이 올바르지 않습니다.";
@@ -46,7 +47,7 @@ public class Message {
     public static final String BANNER_BAD_TYPE_EXCEPTION = "배너 타입은 0 또는 1 이어야 합니다.";
     public static final String BANNER_BAD_WEATHER_STATUS_EXCEPTION = "존재하지 않는 날씨 상태입니다.";
     public static final String BANNER_BAD_REPORT_TIME_EXCEPTION = "현재 시간보다 이전에 제보할 수 없습니다.";
-    public static final String BANNER_REQUEST_BODY_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
+    public static final String BANNER_BAD_PARAM_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
     public static final String BANNER_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
     public static final String BANNER_PLACE_CNT_MINUS_EXCEPTION = "조회수는 0보다 작을 수 없습니다.";
     public static final String BANNER_PLACE_NAME_NULL_EXCEPTION = "장소의 이름은 null값일 수 없습니다.";
@@ -54,7 +55,7 @@ public class Message {
     public static final String Joiner_NOT_FOUND = "채팅방에 존재하지 않는 유저입니다.";
     public static final String JOINER_NOT_OWNER = "유저가 해당 채팅방의 주인이 아닙니다.";
     public static final String KTX_MEMBER_FULL = "KTX 채팅방의 인원이 이미 최대입니다.";
-    public static final String KTX_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 KTX 채팅방입니다.";
+    public static final String KTX_TIMEOVER = "이미 입장 및 퇴장 시간이 지난 KTX 채팅방입니다.";
     public static final String KTX_NOT_FOUND = "존재하지 않는 KTX 채팅방입니다.";
     public static final String KTX_WRONG_CAPACITY = "잘못된 최대인원 값입니다. (1 이상 10 이하)";
     public static final String KTX_SAME_PLACE = "출발 장소와 도착 장소는 같을 수 없습니다.";
@@ -69,6 +70,6 @@ public class Message {
     public static final String FAVOR_JOINER_DUPLICATED = "이미 즐겨찾기로 등록된 장소입니다.";
     public static final String FAVOR_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
 
-    public static final String HISTORY_NO_TYPE_EXCEPTION = "타입은 0 또는 1만이 존재합니다.";
+    public static final String HISTORY_BAD_TYPE_EXCEPTION = "잘못된 타입입니다.";
 }
 

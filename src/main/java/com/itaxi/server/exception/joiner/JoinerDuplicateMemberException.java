@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class JoinerDuplicateMemberException extends JoinerException {
     public JoinerDuplicateMemberException() {
-        super(Message.JOINER_DUPLICATE_MEMBER, HttpStatus.INTERNAL_SERVER_ERROR);
+        super(Message.JOINER_DUPLICATE_MEMBER, HttpStatus.BAD_REQUEST);
     }
 }

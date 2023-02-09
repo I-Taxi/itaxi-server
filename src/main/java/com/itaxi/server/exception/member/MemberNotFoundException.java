@@ -5,7 +5,7 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class MemberNotFoundException extends MemberException {
-    public MemberNotFoundException(HttpStatus httpStatus) {
-        super(Message.MEMBER_NOT_FOUND, httpStatus);
+    public MemberNotFoundException() {
+        super(Message.MEMBER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }

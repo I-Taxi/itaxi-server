@@ -1,8 +1,8 @@
 package com.itaxi.server.ktxPlace.presentation;
 
 import com.itaxi.server.docs.ApiDoc;
-import com.itaxi.server.exception.ktx.BadCntException;
-import com.itaxi.server.exception.ktx.NameNullException;
+import com.itaxi.server.exception.ktx.KTXBadCntException;
+import com.itaxi.server.exception.ktx.KTXNameEmptyException;
 import com.itaxi.server.ktxPlace.application.dto.*;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import com.itaxi.server.ktxPlace.presentation.request.DeleteKTXPlaceRequest;
@@ -30,8 +30,8 @@ public class KTXPlaceController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<KTXResDto> create(@Valid @RequestBody final AddKTXPlaceDto dto) {
-        if (dto.getName().equals(null) || dto.getName().equals("") || dto.getName().equals(" ")) throw new NameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if (dto.getCnt() < 0) throw new BadCntException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getName().equals(null) || dto.getName().equals("") || dto.getName().equals(" ")) throw new KTXNameEmptyException();
+        if (dto.getCnt() < 0) throw new KTXBadCntException();
 
         return ResponseEntity.ok(new KTXResDto(ktxPlaceService.create(dto)));
     }

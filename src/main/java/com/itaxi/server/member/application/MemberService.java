@@ -8,10 +8,8 @@ import com.itaxi.server.member.application.dto.MemberInfo;
 import com.itaxi.server.member.application.dto.MemberUpdateRequestDTO;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 
-import com.itaxi.server.notice.domain.Notice;
 import com.itaxi.server.post.application.PostService;
 import com.itaxi.server.post.application.dto.PostLog;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,7 @@ public class MemberService {
             if (memberCreateRequestDTO.getName().equals("admin")) {
                 Optional<Member> member = memberRepository.findMemberByName(memberCreateRequestDTO.getName());
                 if (member.isPresent()) {
-                    throw new MemberAdminDuplicateException();
+                    throw new MemberDuplicateAdminException();
                 }
             }
             List<Member> memberList = memberRepository.findAll();
@@ -54,19 +52,18 @@ public class MemberService {
             return "Success";
         }
         catch(MemberException e) {
-            if(e instanceof MemberUidNullException)
-                throw new MemberUidNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-            else if(e instanceof MemberEmailNullException)
-                throw new MemberEmailNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-            else if(e instanceof MemberPhoneNullException)
-                throw new MemberPhoneNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-            else if(e instanceof MemberNameNullException)
-                throw new MemberNameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
-            else if(e instanceof MemberAdminDuplicateException) {
-                throw new MemberAdminDuplicateException();
-            }
+            if(e instanceof MemberUidEmptyException)
+                throw new MemberUidEmptyException();
+            else if(e instanceof MemberEmailEmptyException)
+                throw new MemberEmailEmptyException();
+            else if(e instanceof MemberPhoneEmptyException)
+                throw new MemberPhoneEmptyException();
+            else if(e instanceof MemberNameEmptyException)
+                throw new MemberNameEmptyException();
+            else if(e instanceof MemberDuplicateAdminException)
+                throw new MemberDuplicateAdminException();
             else
-                throw new MemberCreateFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new MemberCreateFailedException();
         }
     }
 
@@ -75,10 +72,7 @@ public class MemberService {
     public MemberInfo getMember(String uid) {
         Optional<Member> checkMember = memberRepository.findMemberByUid(uid);
         if(!checkMember.isPresent()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if(checkMember.get().isDeleted()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
 
         Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
@@ -89,24 +83,20 @@ public class MemberService {
     @Transactional
     public LoginResponse login(String uid) {
         Optional<Member> checkMember = memberRepository.findMemberByUid(uid);
-        if(checkMember.get().isDeleted()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         Optional<LoginResponse> response = memberRepository.findMemberForLoginByUid(uid);
+
         if(response.isPresent())
             return response.get();
-        throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new MemberNotFoundException();
     }
 
     /* UPDATE */
     @Transactional
     public String updateMember(MemberUpdateRequestDTO memberUpdateRequestDTO) {
         Optional<Member> member = memberRepository.findMemberByUid(memberUpdateRequestDTO.getUid());
-        if(!member.isPresent())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
+        if(!member.isPresent())
+            throw new MemberNotFoundException();
         Member memberInfo = member.get();
         if(memberUpdateRequestDTO.getPhone() != null)
             memberInfo.setPhone(memberUpdateRequestDTO.getPhone());
@@ -116,7 +106,7 @@ public class MemberService {
             return "Success";
         }
         catch(MemberException e) {
-            throw new MemberUpdateFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberUpdateFailedException();
         }
     }
 
@@ -125,9 +115,7 @@ public class MemberService {
     public String deleteMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
-            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
-        if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new MemberNotFoundException();
         Member memberInfo = member.get();
         boolean isAvailable = true; // 삭제가능 여부
 
@@ -144,10 +132,10 @@ public class MemberService {
                 return "Success";
             }
             catch(MemberException e) {
-                throw new MemberDeleteFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new MemberDeleteFailedException();
             }
         } else {
-            throw new MemberConstraintViolationException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberConstraintViolationException();
         }
     }
 }
