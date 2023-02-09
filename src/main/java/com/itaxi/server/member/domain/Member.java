@@ -37,14 +37,13 @@ public class Member extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)
     private String name;
 
     private int penalty;
-
 
     @OneToMany(mappedBy = "member")
     private List<Joiner> joiners = new ArrayList<>();

@@ -57,15 +57,7 @@ public class MemberService {
             return "Success";
         }
         catch(MemberException e) {
-            if(e instanceof MemberUidEmptyException)
-                throw new MemberUidEmptyException();
-            else if(e instanceof MemberEmailEmptyException)
-                throw new MemberEmailEmptyException();
-            else if(e instanceof MemberPhoneEmptyException)
-                throw new MemberPhoneEmptyException();
-            else if(e instanceof MemberNameEmptyException)
-                throw new MemberNameEmptyException();
-            else if(e instanceof MemberDuplicateAdminException)
+            if(e instanceof MemberDuplicateAdminException)
                 throw new MemberDuplicateAdminException();
             else
                 throw new MemberCreateFailedException();
