@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class NoticeContentEmptyException extends NoticeException {
     public NoticeContentEmptyException() {
-        super(Message.NOTICE_CONTENT_EMPTY_EXCEPTION, HttpStatus.BAD_REQUEST);
+        super(Message.NOTICE_CONTENT, HttpStatus.BAD_REQUEST);
     }
 }
