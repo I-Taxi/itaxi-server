@@ -27,6 +27,6 @@ public class Advertisement extends BaseEntity {
     @Column(nullable = false)
     private String type;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false)
     private byte[] image;
 }
