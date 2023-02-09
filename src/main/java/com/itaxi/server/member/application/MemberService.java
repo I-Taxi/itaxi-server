@@ -42,8 +42,6 @@ public class MemberService {
             for(int i = 0; i<memberList.size(); i++){
                 if(memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()){
                     Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
-                    if (reMember.get().isDeleted())
-                        throw new MemberNotFoundException();
 
                     if(reMember.isPresent()){
                         reMember.get().setDeleted(false);
