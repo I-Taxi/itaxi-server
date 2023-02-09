@@ -90,13 +90,14 @@ public class MemberService {
     @Transactional
     public LoginResponse login(String uid) {
         Optional<Member> checkMember = memberRepository.findMemberByUid(uid);
+        if(!checkMember.isPresent()) throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         if(checkMember.get().isDeleted()){
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         }
         Optional<LoginResponse> response = memberRepository.findMemberForLoginByUid(uid);
         if(response.isPresent())
             return response.get();
-        throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
     }
 
     /* UPDATE */
