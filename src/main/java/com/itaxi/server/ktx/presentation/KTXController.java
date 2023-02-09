@@ -7,6 +7,8 @@ import com.itaxi.server.ktx.presentation.request.KTXGetDetailRequest;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import com.itaxi.server.member.application.dto.MemberUidDTO;
 import com.itaxi.server.member.domain.Member;
+import com.itaxi.server.post.application.dto.PostLogDetail;
+import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,6 +45,12 @@ public class KTXController {
         return ResponseEntity.ok(ktxService.getKTX(depId, dstId, time));
     }
 
+    @ApiOperation(value = ApiDoc.KTX_GET_SINGLE)
+    @PostMapping(value = "/{ktxId}")
+    public ResponseEntity<KTXLogDetail> getSinglePost(@PathVariable long ktxId, @RequestBody PostGetLogDetailRequest request) {
+        return ResponseEntity.ok(ktxService.getSingleKTXPost(ktxId,request));
+    }
+
     @ApiOperation(value = ApiDoc.KTX_CREATE)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -61,9 +69,9 @@ public class KTXController {
 
     @ApiOperation(value = ApiDoc.EXIT_KTX)
     @PutMapping("/{ktxId}/join")
-    public ResponseEntity<String> exitKTX(@PathVariable Long ktxId, @RequestBody KTXExitRequest request) {
+    public ResponseEntity<Long> exitKTX(@PathVariable Long ktxId, @RequestBody KTXExitRequest request) {
         Member result = ktxService.exitKTX(ktxId, request.getUid());
-        return ResponseEntity.ok(result.getName());
+        return ResponseEntity.ok(result.getId());
     }
 
     @ApiOperation(value = ApiDoc.KTX_STOP)
