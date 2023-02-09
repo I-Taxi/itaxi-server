@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class MemberConstraintViolationException extends MemberException {
     public MemberConstraintViolationException() {
-        super(Message.MEMBER_CAN_NOT_DELETE, HttpStatus.METHOD_NOT_ALLOWED);
+        super(Message.MEMBER_CONSTRANINT_VIOLATION, HttpStatus.METHOD_NOT_ALLOWED);
     }
 }
