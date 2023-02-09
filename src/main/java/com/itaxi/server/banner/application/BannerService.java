@@ -126,23 +126,33 @@ public class BannerService {
 
     @Transactional
     public BannerReadResponse readBanner(Long bannerId){
+
         Optional<Banner> banner = bannerRepository.findById(bannerId);
+
+        if(!banner.isPresent())
+            throw new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        ;
         Optional<Member> member = memberRepository.findMemberByUid(banner.get().getMember().getUid());
+
         if(member.get().isDeleted())
             throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+
+
         BannerReadResponse response = null;
 
-        if(banner.isPresent()){
-            if(member.isPresent()){
-                Banner bannerInfo = banner.get();
-                response = new BannerReadResponse(
-                        bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(),
-                        bannerInfo.getDeparture().getId(), bannerInfo.getDestination().getId(),
-                        bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
-            }
-            else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
+
+
+
+        if(member.isPresent()){
+            Banner bannerInfo = banner.get();
+            response = new BannerReadResponse(
+                    bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(),
+                    bannerInfo.getDeparture().getId(), bannerInfo.getDestination().getId(),
+                    bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
         }
-        else{throw new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
+        else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
+
+
 
         return response;
     }
@@ -156,20 +166,21 @@ public class BannerService {
 
         List<BannerReadAllResponse> result = new ArrayList<>();
         for(Banner banner : bannerRepository.findAll()){
+            if(banner == null) throw new BannerNotFoundException(HttpStatus.BAD_REQUEST);
             Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
             if(member.get().isDeleted())
                 throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
 
-            if(banner != null){
                 if(member.isPresent()){
                     result.add(0,new BannerReadAllResponse(banner.getId(), member.get().getName(),
                             banner.getWeatherStatus(), banner.getDeparture().getId(),
                             banner.getDestination().getId(), banner.getReportAt()));
                 }
                 else {throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
-            }
-            else{throw new BannerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);}
         }
+
+        if(result.size() == 0)
+            throw new BannerNotFoundException(HttpStatus.BAD_REQUEST);
         return result;
     }
 
@@ -183,6 +194,7 @@ public class BannerService {
             Optional<Place> placeDest = placeRepository.findById(banner.getDestination().getId());
 
             output = "제보자: ";
+            if(banner == null) throw new BannerNotFoundException(HttpStatus.BAD_REQUEST);
             Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
             if(member.get().isDeleted())
                 throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);

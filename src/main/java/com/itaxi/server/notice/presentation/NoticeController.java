@@ -61,7 +61,7 @@ public class NoticeController {
 
     @Transactional
     @ApiOperation(value = ApiDoc.DELETE_NOTICE)
-    @DeleteMapping("/{noticeId}")
+    @PutMapping("/delete/{noticeId}")
     public ResponseEntity<String> deleteNotice(@PathVariable Long noticeId, @RequestBody NoticeDeleteRequest request) {
         String result = noticeService.deleteNotice(noticeId, request.getUid());
 
