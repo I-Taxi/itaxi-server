@@ -72,7 +72,7 @@ public class ReportService {
         if (report.isPresent()) {
             reportInfo = report.get();
         } else {
-            throw new ReportNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new ReportNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(dto.getUid());
@@ -87,7 +87,7 @@ public class ReportService {
             reportInfo.setTitle(dto.getTitle());
             reportRepository.save(reportInfo);
         } else {
-            throw new MemberNotWriterException(HttpStatus.BAD_REQUEST);
+            throw new MemberNotWriterException();
         }
 
         return "Success";
@@ -102,7 +102,7 @@ public class ReportService {
         if (report.isPresent()) {
             reportInfo = report.get();
         } else {
-            throw new ReportNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new ReportNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(uid);
@@ -116,7 +116,7 @@ public class ReportService {
             reportInfo.setDeleted(true);
             reportRepository.save(reportInfo);
         } else {
-            throw new MemberNotWriterException(HttpStatus.BAD_REQUEST);
+            throw new MemberNotWriterException();
         }
 
         return "Success";

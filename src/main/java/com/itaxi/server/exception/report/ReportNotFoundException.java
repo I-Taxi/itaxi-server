@@ -5,7 +5,7 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class ReportNotFoundException extends ReportException {
-    public ReportNotFoundException(HttpStatus httpStatus) {
-        super(Message.REPORT_NOT_FOUND, httpStatus);
+    public ReportNotFoundException() {
+        super(Message.REPORT_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
 }

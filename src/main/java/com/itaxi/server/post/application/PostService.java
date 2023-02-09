@@ -1,10 +1,13 @@
 package com.itaxi.server.post.application;
 
+import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
+import com.itaxi.server.exception.joiner.JoinerNotFoundException;
 import com.itaxi.server.exception.ktx.BadDateException;
 import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
+import com.itaxi.server.exception.stopover.TooManyStopoversException;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.place.application.PlaceService;
@@ -74,15 +77,15 @@ public class PostService {
     public PostLogDetail getPostLogDetail(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
         if(!post.isPresent()) {
-            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new PostNotFoundException();
         }
         return new PostLogDetail(post.get());
     }
 
     @Transactional
     public PostInfoResponse createPost(AddPostDto dto) {
-        if (dto.getStopoverIds().size() > 3) {
-            throw new TooManyStopoversException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getStopoverIds().size() > 1) {
+            throw new TooManyStopoversException();
         }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
@@ -169,14 +172,14 @@ public class PostService {
         if (post.isPresent()) {
             postInfo = post.get();
             if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {
-                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new PostTimeOverException();
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new PostNotFoundException();
         }
 
         if (postInfo.getStatus() == 2) {
-            throw new PostMemberFullException(HttpStatus.BAD_REQUEST);
+            throw new PostMemberFullException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(postJoinDto.getUid());
@@ -191,7 +194,7 @@ public class PostService {
             JoinerCreateDto joinerCreateDto = new JoinerCreateDto(memberInfo, postInfo, postJoinDto.isOwner());
             joinerRepository.save(new Joiner(joinerCreateDto));
         } else {
-            throw new JoinerDuplicateMemberException(HttpStatus.BAD_REQUEST);
+            throw new JoinerDuplicateMemberException();
         }
 
         List<Joiner> joiners = joinerRepository.findJoinersByPost(postInfo);
@@ -217,10 +220,10 @@ public class PostService {
         if (post.isPresent()) {
             postInfo = post.get();
             if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {
-                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new PostTimeOverException();
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new PostNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(uid);
@@ -269,10 +272,10 @@ public class PostService {
         if (post.isPresent()) {
             postInfo = post.get();
             if (compareMinute(LocalDateTime.now(), postInfo.getDeptTime()) == 1) {
-                throw new PostTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new PostTimeOverException();
             }
         } else {
-            throw new PostNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new PostNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(dto.getUid());
@@ -284,12 +287,12 @@ public class PostService {
 
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {
-            throw new CannotChangeDeptTimeException(HttpStatus.BAD_REQUEST);
+            throw new ChangeDeptTimeException();
         }
 
         long minutes = ChronoUnit.MINUTES.between(postInfo.getDeptTime(), dto.getDeptTime());
         if (minutes >= 30) {
-            throw new DeptTimeWrongException(HttpStatus.BAD_REQUEST);
+            throw new DeptTimeWrongException();
         }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);

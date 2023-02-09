@@ -7,10 +7,10 @@ public class Message {
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
 
-    public static final String PLACE_NOT_NULL_EXCEPTION = "장소의 이름은 NULL일 수 없습니다";
-    public static final String PLACE_CNT_MINUS_EXCEPTION = "장소의 조회수는 0보다 작을 수 없습니다";
+    public static final String PLACE_NOT_NULL_EXCEPTION = "장소 이름이 잘못되었습니다.";
+    public static final String PLACE_CNT_MINUS_EXCEPTION = "장소 조회수가 잘못되었습니다.";
     public static final String PLACE_TYPE_MINUS_EXCEPTION = "장소의 타입은 0~4 사이의 값입니다";
-    public static final String PLACE_FIND_NOT_EXIST_EXCEPTION = "Find는 0번과 1번만 존재합니다.";
+    public static final String PLACE_FIND_TYPE_EXCEPTION = "FindType이 잘못되었습니다.";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
 
     public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
@@ -25,18 +25,18 @@ public class Message {
     public static final String MEMBER_PHONE_ISNULL = "연락처 값이 올바르지 않습니다.";
     public static final String MEMBER_NAME_ISNULL = "사용자 이름 값이 올바르지 않습니다.";
     public static final String MEMBER_NOT_ADMIN = "사용자에게 권한이 없습니다.";
-    public static final String MEMBER_NOT_WRITER = "리포트의 작성자가 아닙니다.";
-    public static final String MEMBER_ADMIN_DUPLICATE = "잘못된 이름입니다.";
+    public static final String MEMBER_NOT_WRITER = "작성자가 아닙니다.";
+    public static final String MEMBER_ADMIN_DUPLICATE = "이름이 중복됩니다.";
 
     public static final String NOTICE_TITLE_EMPTY_EXCEPTION = "공지사항의 제목이 없습니다";
     public static final String NOTICE_CONTENT_EMPTY_EXCEPTION = "공지사항의 내용이 없습니다";
     public static final String NOTICE_DELETED = "이미 삭제된 게시글입니다.";
     public static final String NOTICE_BAD_TYPE_EXCEPTION = "지원하지 않는 공지 형식입니다.";
-    public static final String NOTICE_NOTICE_ElEMENT_NOT_MATCH_WITH_NOTICE_TYPE_EXCEPTION = "해당 공지 형식은 시간의 입력이 필요합니다.";
+    public static final String NOTICE_TIME_EMPTY_EXCEPTION = "해당 공지 형식은 시간의 입력이 필요합니다.";
 
     public static final String JOINER_DUPLICATE_MEMBER = "이미 해당 채팅방에 존재하는 멤버입니다";
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
-    public static final String POST_TIMEOUT = "이미 입장 및 퇴장 시간이 지난 채팅방입니다.";
+    public static final String POST_TIMEOVER = "입장 및 퇴장 시간이 지난 채팅방입니다.";
     public static final String DEPT_TIME_WRONG = "30분 이상 시간을 미룰 수 없습니다.";
     public static final String CANNOT_CHANGE_DEPT_TIME = "출발시각까지 3분 이하가 남았을 때는 시간을 바꿀 수 없습니다.";
     public static final String POST_TOO_MANY_STOPOVERS = "경유지는 최대 3개까지 선택할 수 있습니다.";

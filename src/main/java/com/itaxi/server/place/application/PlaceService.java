@@ -1,9 +1,7 @@
 package com.itaxi.server.place.application;
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
-import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.exception.place.*;
-import com.itaxi.server.notice.domain.Notice;
 import com.itaxi.server.place.application.dto.AddPlaceDto;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
 import com.itaxi.server.place.domain.repository.PlaceRepository;
@@ -42,7 +40,7 @@ public class PlaceService {
             }
         }
         else{
-            throw new PlaceFindNotExistException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new PlaceBadFindTypeException();
         }
 
         return result;
@@ -50,9 +48,9 @@ public class PlaceService {
 
     @Transactional
     public Place create(AddPlaceDto dto) {
-        if(dto.getCnt()<0) throw new PlaceCntMinusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(dto.getPlaceType()<0||dto.getPlaceType()>=5) throw new PlaceTypeMinusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(dto.getName()==null || dto.getName()==""|| dto.getName().equals(" ")) throw new PlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getCnt() < 0) throw new PlaceBadCntException();
+        if (dto.getPlaceType() < 0 || dto.getPlaceType() >= 5) throw new PlaceBadTypeException();
+        if (dto.getName() == null || dto.getName()==""|| dto.getName().equals(" ")) throw new PlaceNotNullException();
 
 
         Place savedPlace = null;
@@ -67,8 +65,8 @@ public class PlaceService {
 
     @Transactional
     public Place updatePlace(long id, UpdatePlaceDto dto) {
-        if(dto.getPlaceType()<0||dto.getPlaceType()>=5) throw new PlaceTypeMinusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(dto.getName()==null || dto.getName()==""|| dto.getName().equals(" ")) throw new PlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getPlaceType() < 0 || dto.getPlaceType() >= 5) throw new PlaceBadTypeException();
+        if (dto.getName() == null || dto.getName() == "" || dto.getName().equals(" ")) throw new PlaceNotNullException();
         final Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
 
         if (adminChecker.isAdmin(dto.getUid())) {

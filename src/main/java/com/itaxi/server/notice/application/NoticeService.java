@@ -4,7 +4,7 @@ package com.itaxi.server.notice.application;
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotAdminException;
 import com.itaxi.server.exception.notice.NoticeBadTypeException;
-import com.itaxi.server.exception.notice.NoticeElementNotMatchWithNoticeTypeException;
+import com.itaxi.server.exception.notice.NoticeTimeEmptyException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.notice.application.dto.NoticeCreateDto;
 import com.itaxi.server.notice.application.dto.NoticeUpdateDto;
@@ -33,12 +33,14 @@ public class NoticeService {
 
         Notice savedNotice = null;
 
-        if ((noticeCreateDto.getNoticeType()<0) || (noticeCreateDto.getNoticeType()>3))
+        if ((noticeCreateDto.getNoticeType() < 0) || (noticeCreateDto.getNoticeType() > 3)) {
             throw new NoticeBadTypeException();
+        }
 
-        if((noticeCreateDto.getNoticeType() == 2 || noticeCreateDto.getNoticeType() ==3 )&&
-                (noticeCreateDto.getStartTime() == null || noticeCreateDto.getEndTime() ==null))
-            throw new NoticeElementNotMatchWithNoticeTypeException();
+        if ((noticeCreateDto.getNoticeType() == 2 || noticeCreateDto.getNoticeType() == 3 ) &&
+                (noticeCreateDto.getStartTime() == null || noticeCreateDto.getEndTime() == null)) {
+            throw new NoticeTimeEmptyException();
+        }
 
 
         if (adminChecker.isAdmin(uid)) {
@@ -96,7 +98,7 @@ public class NoticeService {
             noticeInfo.setContent(noticeUpdateDto.getContent());
             if((noticeInfo.getNoticeType()==2 || noticeInfo.getNoticeType()==3)  &&
                     (noticeInfo.getStartTime() == null || noticeInfo.getEndTime() == null ))
-                throw new NoticeElementNotMatchWithNoticeTypeException();
+                throw new NoticeTimeEmptyException();
 
             noticeRepository.save(noticeInfo);
         } else {

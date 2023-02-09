@@ -1,4 +1,4 @@
-package com.itaxi.server.exception.post;
+package com.itaxi.server.exception.joiner;
 
 import com.itaxi.server.exception.ITaxiException;
 

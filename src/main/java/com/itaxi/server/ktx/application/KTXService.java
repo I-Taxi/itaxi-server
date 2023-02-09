@@ -3,8 +3,8 @@ package com.itaxi.server.ktx.application;
 import com.itaxi.server.exception.ktx.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
-import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
-import com.itaxi.server.exception.post.JoinerNotFoundException;
+import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
+import com.itaxi.server.exception.joiner.JoinerNotFoundException;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
@@ -69,17 +69,17 @@ public class KTXService {
     @Transactional
     public KTXInfoResponse createKTX(AddKTXDto dto) {
         if (dto == null) {
-            throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXRequestBodyNullException(HttpStatus.BAD_REQUEST);
         }
         if (dto.getDstId() == dto.getDepId()) {
-            throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SamePlaceException(HttpStatus.BAD_REQUEST);
         }
         if (dto.getCapacity() > 10 || dto.getCapacity() < 1) {
-            throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new WrongCapacityException(HttpStatus.BAD_REQUEST);
         }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
-            throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BadDateException(HttpStatus.BAD_REQUEST);
         }
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
@@ -153,7 +153,7 @@ public class KTXService {
             KTXJoinerCreateDto ktxJoinerCreateDto = new KTXJoinerCreateDto(memberInfo, ktxInfo, ktxJoinDto.isOwner());
             ktxJoinerRepository.save(new KTXJoiner(ktxJoinerCreateDto));
         } else {
-            throw new JoinerDuplicateMemberException(HttpStatus.BAD_REQUEST);
+            throw new JoinerDuplicateMemberException();
         }
 
         List<KTXJoiner> ktxJoiners = ktxJoinerRepository.findKtxJoinerByKtx(ktxInfo);

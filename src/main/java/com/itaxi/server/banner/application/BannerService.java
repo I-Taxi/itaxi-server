@@ -11,7 +11,6 @@ import com.itaxi.server.exception.banner.*;
 import com.itaxi.server.exception.member.MemberNotFoundException;
 import com.itaxi.server.exception.notice.NoticeNotFoundException;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
-import com.itaxi.server.exception.place.PlaceNotNullException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
 import com.itaxi.server.notice.domain.Notice;
@@ -45,27 +44,27 @@ public class BannerService {
 
         LocalDateTime currentDate = LocalDateTime.now().minusMinutes(gapBetweenReportAndNow);
 
-        if(bannerCreateDto.getWeatherStatus()<0 || bannerCreateDto.getWeatherStatus()>weather.length-1) throw
+        if (bannerCreateDto.getWeatherStatus() < 0 || bannerCreateDto.getWeatherStatus() > weather.length-1) throw
                 new BannerUidEmptyException();
 
-        if(bannerCreateDto.getUid()==null ||bannerCreateDto.getUid()==""|| bannerCreateDto.getUid().equals(" ")) throw
-                new PlaceNotNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (bannerCreateDto.getUid() == null || bannerCreateDto.getUid() == "" || bannerCreateDto.getUid().equals(" ")) throw
+                new BannerUidEmptyException();
 
-        if(bannerCreateDto.getBannerType()!=0) throw
+        if (bannerCreateDto.getBannerType() != 0) throw
                 new BannerBadTypeException();
 
-        if(currentDate.isAfter(bannerCreateDto.getReportAt())) throw
+        if (currentDate.isAfter(bannerCreateDto.getReportAt())) throw
                 new BannerReportTimeException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         Optional<Place> placeDepart = placeRepository.findById(bannerCreateDto.getDepId());
         Optional<Place> placeDest = placeRepository.findById(bannerCreateDto.getDesId());
         Optional<Member> member = memberRepository.findMemberByUid(bannerCreateDto.getUid());
 
-        if(!(placeDepart.isPresent() && placeDest.isPresent())) throw
+        if (!(placeDepart.isPresent() && placeDest.isPresent())) throw
                 new PlaceNotFoundException();
-        if(!(member.isPresent())) throw
-                new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
-        if(!(bannerCreateDto.getWeatherStatus()>=0&& bannerCreateDto.getWeatherStatus()<=3)) throw
+        if (!(member.isPresent())) throw
+                new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+        if (!(bannerCreateDto.getWeatherStatus() >= 0 && bannerCreateDto.getWeatherStatus() <= 3)) throw
                 new BannerBadWeatherStatusException();
 
         BannerCreateEntityDto bannerCreateEntityDto =

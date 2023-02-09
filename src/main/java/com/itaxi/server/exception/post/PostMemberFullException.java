@@ -4,7 +4,7 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class PostMemberFullException extends PostException {
-    public PostMemberFullException(HttpStatus httpStatus) {
-        super(Message.POST_MEMBER_FULL, httpStatus);
+    public PostMemberFullException() {
+        super(Message.POST_MEMBER_FULL, HttpStatus.BAD_REQUEST);
     }
 }

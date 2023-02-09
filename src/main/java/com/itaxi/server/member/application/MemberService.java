@@ -33,8 +33,9 @@ public class MemberService {
         try {
             if (memberCreateRequestDTO.getName().equals("admin")) {
                 Optional<Member> member = memberRepository.findMemberByName(memberCreateRequestDTO.getName());
-                if (member.isPresent())
-                    throw new MemberAdminDuplicateException(HttpStatus.BAD_REQUEST);
+                if (member.isPresent()) {
+                    throw new MemberAdminDuplicateException();
+                }
             }
 
             memberRepository.save(new Member(memberCreateRequestDTO));
@@ -50,7 +51,7 @@ public class MemberService {
             else if(e instanceof MemberNameNullException)
                 throw new MemberNameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
             else if(e instanceof MemberAdminDuplicateException) {
-                throw new MemberAdminDuplicateException(HttpStatus.BAD_REQUEST);
+                throw new MemberAdminDuplicateException();
             }
             else
                 throw new MemberCreateFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -102,17 +103,18 @@ public class MemberService {
     @Transactional
     public String deleteMember(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
-        if(!member.isPresent())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (!member.isPresent())
+            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
         Member memberInfo = member.get();
         boolean isAvailable = true; // 삭제가능 여부
 
         List<PostLog> memberLogs = postService.getPostLog(uid);
-        for(PostLog log : memberLogs)
-            if(log.getStatus() == 1 || log.getStatus() == 2)
+        for (PostLog log : memberLogs) {
+            if (log.getStatus() == 1 || log.getStatus() == 2)
                 isAvailable = false;
+        }
 
-        if(isAvailable) {
+        if (isAvailable) {
             memberInfo.setDeleted(true);
             try {
                 memberRepository.save(memberInfo);
@@ -121,8 +123,7 @@ public class MemberService {
             catch(MemberException e) {
                 throw new MemberDeleteFailedException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
-        else {
+        } else {
             throw new MemberConstraintViolationException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

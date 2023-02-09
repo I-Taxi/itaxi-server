@@ -15,6 +15,7 @@ import java.time.format.DateTimeParseException;
 @ControllerAdvice
 public class GlobalExceptionHandler extends Throwable {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    // TODO: User-Agent Flutter Application으로 전환 (flutter 딴의 header 설정도 확인)
 
     @ExceptionHandler(ITaxiException.class)
     public ResponseEntity<ExceptionResponse> iTaxiException(ITaxiException e) {
@@ -41,22 +42,22 @@ public class GlobalExceptionHandler extends Throwable {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponse> httpMessageNotReadableException(HttpMessageNotReadableException e) {
         logger.error("HttpMessageNotReadableException : " + e.getMessage());
-        // 단지 LocalDateTime뿐만이 아니라 Json으로 넘어온 데이터들 중 parse가 안되면 나오는 거임
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        // Json으로 넘어온 데이터들 중 parse가 안되면 나오는 것
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse("데이터 포맷이 틀립니다."));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ExceptionResponse> dataIntegrityViolationException(DataIntegrityViolationException e){
         logger.error("DataIntegrityViolationException :"+e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse("중복이될 수 없는 자료를 포함하고 있습니다."));
     }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ExceptionResponse> nullPointerException(NullPointerException e){
         logger.error("NullPointerException :"+e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse("Null인 데이터를 불러올 수 없습니다."));
     }
 
