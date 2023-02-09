@@ -42,16 +42,19 @@ public class KTX extends BaseEntity {
 
     private int status;
 
+    private int sale;
+
     @OneToMany(mappedBy = "ktx")
     private List<KTXJoiner> joiners = new ArrayList<>();
 
     @Builder
-    public KTX(KTXPlace departure, KTXPlace destination, LocalDateTime deptTime, int capacity, int status) {
+    public KTX(KTXPlace departure, KTXPlace destination, LocalDateTime deptTime, int capacity, int status, int sale) {
         this.departure = departure;
         this.destination = destination;
         this.deptTime = deptTime;
         this.capacity = capacity;
         this.status = status;
+        this.sale = sale;
     }
 
     public KTXInfoResponse toKTXInfoResponse() {
@@ -63,6 +66,6 @@ public class KTX extends BaseEntity {
             joinerResponse.add(new KTXJoinerInfo(joiner));
         }
 
-        return new KTXInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status, joinerResponse);
+        return new KTXInfoResponse(id, deptResponse, destResponse, deptTime, capacity, status,sale,joinerResponse);
     }
 }

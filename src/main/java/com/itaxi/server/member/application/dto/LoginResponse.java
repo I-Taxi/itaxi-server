@@ -6,8 +6,6 @@ public interface LoginResponse {
     String getEmail();
     String getPhone();
     String getName();
-    String getBank();
-    String getBankAddress();
-    String getBankOwner();
+
 
 }

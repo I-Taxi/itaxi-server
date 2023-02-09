@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.common.BaseEntity;
 import com.itaxi.server.exception.member.MemberEmailNullException;
 import com.itaxi.server.exception.member.MemberNameNullException;
@@ -21,7 +22,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 import org.springframework.http.HttpStatus;
 
-@Where(clause = "deleted=false")
+
 @Entity
 @Getter
 @Setter
@@ -44,13 +45,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    private String bank;
-
     private int penalty;
 
-    private String bankAddress;
-
-    private String bankOwner;
 
     @OneToMany(mappedBy = "member")
     private List<Joiner> joiners = new ArrayList<>();
@@ -67,15 +63,15 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "reportedMember")
     private List<Report> reportedMembers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Banner> banners = new ArrayList<>();
+
 
     public Member(MemberCreateRequestDTO memberCreateRequestDTO) {
         this.uid = memberCreateRequestDTO.getUid();
         this.email = memberCreateRequestDTO.getEmail();
         this.phone = memberCreateRequestDTO.getPhone();
         this.name = memberCreateRequestDTO.getName();
-        this.bank = memberCreateRequestDTO.getBank();
-        this.bankAddress = memberCreateRequestDTO.getBankAddress();
-        this.bankOwner = memberCreateRequestDTO.getBankOwner();
 
         /* data validation - uid */
         if(this.uid == null || this.uid.trim().isEmpty())
