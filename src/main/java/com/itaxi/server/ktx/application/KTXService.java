@@ -5,6 +5,9 @@ import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.post.JoinerNotFoundException;
+import com.itaxi.server.exception.post.PostNoAuthorityToGetException;
+import com.itaxi.server.exception.post.PostNotFoundException;
+import com.itaxi.server.history.application.dto.HistoryLogDetail;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
@@ -17,6 +20,9 @@ import com.itaxi.server.ktx.domain.repository.KTXRepository;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
+import com.itaxi.server.post.application.dto.PostLogDetail;
+import com.itaxi.server.post.domain.Post;
+import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -79,6 +85,30 @@ public class KTXService {
         }
 
         return new KTXLogDetail(ktx.get());
+    }
+
+    @Transactional
+    public KTXLogDetail getSingleKTXPost(Long ktxId, PostGetLogDetailRequest request) {
+
+        Optional<KTX> ktx = ktxRepository.findById(ktxId);
+
+        if (!ktx.isPresent()) {
+            throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        boolean check = false;
+        for(int i =  0; i<ktx.get().getJoiners().size(); i++){
+            if(ktx.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
+                check = true;
+            }
+        }
+
+        if(check == false){
+            throw new KTXNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+        }
+
+        return new KTXLogDetail(ktx.get());
+
     }
 
     @Transactional

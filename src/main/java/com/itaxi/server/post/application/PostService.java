@@ -1,11 +1,11 @@
 package com.itaxi.server.post.application;
 
-import com.itaxi.server.exception.ktx.BadDateException;
-import com.itaxi.server.exception.ktx.JoinerNotOwnerException;
-import com.itaxi.server.exception.ktx.SamePlaceException;
+import com.itaxi.server.exception.history.HistoryNoTypeException;
+import com.itaxi.server.exception.ktx.*;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
+import com.itaxi.server.history.application.dto.HistoryLogDetail;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.place.application.PlaceService;
@@ -177,6 +177,29 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return resultList;
+    }
+    @Transactional
+    public PostLogDetail getSinglePost(Long postId, PostGetLogDetailRequest request) {
+
+        Optional<Post> post = postRepository.findById(postId);
+
+        if(!post.isPresent()) {
+            throw new PostNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        boolean check = false;
+        for(int i =  0; i<post.get().getJoiners().size(); i++){
+            if(post.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
+                check = true;
+            }
+        }
+
+        if(check == false ){
+            throw new PostNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+        }
+
+        return new PostLogDetail(post.get());
+
     }
 
     @Transactional

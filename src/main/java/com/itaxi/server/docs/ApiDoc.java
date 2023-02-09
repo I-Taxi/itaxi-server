@@ -24,6 +24,7 @@ public class ApiDoc {
     public static final String POST_CREATE = "채팅방 생성";
     public static final String POST_READ = "날짜별 채팅방 조회";
     public static final String POST_CHANGE_DEPT_TIME = "출발시각 변경";
+    public static final String POST_GET_SINGLE = "게시글 단일 조회";
 
     /* Place 관련 API 명세 */
     public static final String PLACE_CREATE = "장소 생성";
@@ -38,6 +39,7 @@ public class ApiDoc {
     public static final String KTX_PLACE_UPDATE_COUNT = "KTX 장소 조회수 증가";
     public static final String KTX_PLACE_UPDATE = "KTX 장소 수정";
     public static final String KTX_PLACE_DELETE = "KTX 장소 삭제";
+    public static final String KTX_GET_SINGLE = "KTX 게시글 단일 조회";
 
     /* KTX 관련 API 명세 */
     public static final String KTX_CREATE = "KTX 채팅방 생성";
