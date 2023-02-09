@@ -57,6 +57,8 @@ public class PostService {
         if(!member.isPresent()) {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
@@ -226,6 +228,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
@@ -270,6 +274,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         int joinerSize = postInfo.getJoiners().size();
         boolean checkOwner = false;
@@ -327,6 +333,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
 
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {

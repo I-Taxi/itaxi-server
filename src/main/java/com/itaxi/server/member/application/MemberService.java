@@ -34,12 +34,17 @@ public class MemberService {
                 if (member.isPresent()) {
                     throw new MemberDuplicateAdminException();
                 }
+                if (member.get().isDeleted())
+                    throw new MemberNotFoundException();
             }
             List<Member> memberList = memberRepository.findAll();
 
             for(int i = 0; i<memberList.size(); i++){
                 if(memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()){
                     Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
+                    if (reMember.get().isDeleted())
+                        throw new MemberNotFoundException();
+
                     if(reMember.isPresent()){
                         reMember.get().setDeleted(false);
                         reMember.get().setUid(memberCreateRequestDTO.getUid());
@@ -76,6 +81,8 @@ public class MemberService {
         if(!checkMember.isPresent()){
             throw new MemberNotFoundException();
         }
+        if (checkMember.get().isDeleted())
+            throw new MemberNotFoundException();
 
         Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
         return member.get();
@@ -103,6 +110,9 @@ public class MemberService {
 
         if(!member.isPresent())
             throw new MemberNotFoundException();
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
+
         Member memberInfo = member.get();
         if(memberUpdateRequestDTO.getPhone() != null)
             memberInfo.setPhone(memberUpdateRequestDTO.getPhone());
@@ -122,6 +132,9 @@ public class MemberService {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
             throw new MemberNotFoundException();
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
+
         Member memberInfo = member.get();
         boolean isAvailable = true; // 삭제가능 여부
 
