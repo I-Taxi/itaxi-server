@@ -1,21 +1,50 @@
 package com.itaxi.server.exception;
 
 public class Message {
+    public static final String BANNER_BAD_PARAM = "데이터 형식이 잘못되었습니다.";
+    public static final String BANNER_BAD_REPORT_TIME = "리포트 시간이 잘못되었습니다.";
+    public static final String BANNER_BAD_TYPE = "배너 타입이 잘못되었습니다.";
+    public static final String BANNER_BAD_WEATHER_STATUS = "날씨 상태가 잘못되었습니다.";
+    public static final String BANNER_NO_AUTHORITY = "본 요청에 대한 권한이 없습니다.";
+    public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
+    public static final String BANNER_UID_EMPTY = "UID 값이 잘못되었습니다.";
+
+    public static final String BANNER_PLACE_NOT_FOUND = "존재하지 않는 배너 장소입니다.";
+    public static final String BANNER_PLACE_CNT_MINUS_EXCEPTION = "조회수가 잘못되었습니다.";
+    public static final String BANNER_PLACE_NAME_NULL_EXCEPTION = "장소의 이름이 잘못되었습니다.";
+
+    public static final String FAVOR_DUPLICATE = "즐겨찾기가 중복됩니다.";
+    public static final String FAVOR_NO_AUTHORITY = "본 요청에 대한 권한이 없습니다.";
+
+    public static final String JOINER_DUPLICATE_MEMBER = "이미 해당 채팅방에 존재하는 멤버입니다";
+    public static final String Joiner_NOT_FOUND = "채팅방에 존재하지 않는 유저입니다.";
+
+    public static final String KTX_BAD_CAPACITY = "최대인원이 잘못되었습니다";
+    public static final String KTX_BAD_CNT = "count가 잘못되었습니다.";
+    public static final String KTX_BAD_DATE = "출발 시간이 잘못되었습니다.";
+    public static final String KTX_BAD_SALE = "할인률이 잘못되었습니다.";
+    public static final String KTX_DUPLICATE_PLACE = "출발 장소와 도착 장소는 같을 수 없습니다.";
+    public static final String KTX_MEMBER_FULL = "KTX 채팅방의 인원이 이미 최대입니다.";
+    public static final String KTX_NAME_EMPTY = "이름이 잘못되었습니다.";
+    public static final String KTX_NO_AUTHORITY = "본 요청에 대한 권한이 없습니다.";
+    public static final String KTX_NOT_FOUND = "존재하지 않는 KTX 채팅방입니다.";
+    public static final String KTX_REQUEST_BODY_EMPTY= "올바르지 않은 형식으로 데이터가 전달됐습니다.";
+    public static final String KTX_TIME_OVER = "출발 시간이 잘못되었습니다.";
+
+
+
+    // TODO: 이어서 하기
     public static final String REPORT_NOT_FOUND = "존재하지 않는 리포트입니다.";
     public static final String MEMBER_NOT_FOUND = "존재하지 않는 멤버입니다.";
     public static final String NOTICE_NOT_FOUND = "존재하지 않는 공지입니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String PLACE_NOT_FOUND = "존재하지 않는 장소입니다.";
-
     public static final String PLACE_NOT_NULL_EXCEPTION = "장소 이름이 잘못되었습니다.";
     public static final String PLACE_CNT_MINUS_EXCEPTION = "장소 조회수가 잘못되었습니다.";
     public static final String PLACE_TYPE_MINUS_EXCEPTION = "장소의 타입은 0~4 사이의 값입니다";
     public static final String PLACE_FIND_TYPE_EXCEPTION = "FindType이 잘못되었습니다.";
     public static final String PLACE_PARAM_NOT_FOUND = "적절하지 않은 PARAM.";
-
-    public static final String BANNER_NOT_FOUND = "존재하지 않는 배너입니다";
-    public static final String BANNER_PLACE_NOT_FOUND = "존재하지 않는 배너 장소입니다.";
-
+    public static final String HISTORY_BAD_TYPE = "잘못된 타입입니다.";
 
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";
     public static final String MEMBER_UPDATE_FAILED = "알 수 없는 오류로 인하여 회원정보 수정에 실패하였습니다.";
@@ -35,7 +64,6 @@ public class Message {
     public static final String NOTICE_BAD_TYPE_EXCEPTION = "지원하지 않는 공지 형식입니다.";
     public static final String NOTICE_TIME_EMPTY_EXCEPTION = "해당 공지 형식은 시간의 입력이 필요합니다.";
 
-    public static final String JOINER_DUPLICATE_MEMBER = "이미 해당 채팅방에 존재하는 멤버입니다";
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
     public static final String POST_TIMEOVER = "입장 및 퇴장 시간이 지난 채팅방입니다.";
     public static final String DEPT_TIME_WRONG = "30분 이상 시간을 미룰 수 없습니다.";
@@ -43,33 +71,8 @@ public class Message {
     public static final String POST_TOO_MANY_STOPOVERS = "경유지는 최대 3개까지 선택할 수 있습니다.";
     public static final String POST_NO_AUTHORITY_TO_GET = "해당 채팅방에 참가되어 있지 않아 접근 권한이 존재하지 않습니다.";
 
-    public static final String BANNER_UID_EMPTY_EXCEPTION = "UID 값이 올바르지 않습니다.";
-    public static final String BANNER_BAD_TYPE_EXCEPTION = "배너 타입은 0 또는 1 이어야 합니다.";
-    public static final String BANNER_BAD_WEATHER_STATUS_EXCEPTION = "존재하지 않는 날씨 상태입니다.";
-    public static final String BANNER_BAD_REPORT_TIME_EXCEPTION = "현재 시간보다 이전에 제보할 수 없습니다.";
-    public static final String BANNER_BAD_PARAM_EXCEPTION = "올바르지 않은 형식으로 데이터가 전달 되었습니다.";
-    public static final String BANNER_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
-    public static final String BANNER_PLACE_CNT_MINUS_EXCEPTION = "조회수는 0보다 작을 수 없습니다.";
-    public static final String BANNER_PLACE_NAME_NULL_EXCEPTION = "장소의 이름은 null값일 수 없습니다.";
 
-    public static final String Joiner_NOT_FOUND = "채팅방에 존재하지 않는 유저입니다.";
+
     public static final String JOINER_NOT_OWNER = "유저가 해당 채팅방의 주인이 아닙니다.";
-    public static final String KTX_MEMBER_FULL = "KTX 채팅방의 인원이 이미 최대입니다.";
-    public static final String KTX_TIMEOVER = "이미 입장 및 퇴장 시간이 지난 KTX 채팅방입니다.";
-    public static final String KTX_NOT_FOUND = "존재하지 않는 KTX 채팅방입니다.";
-    public static final String KTX_WRONG_CAPACITY = "잘못된 최대인원 값입니다. (1 이상 10 이하)";
-    public static final String KTX_SAME_PLACE = "출발 장소와 도착 장소는 같을 수 없습니다.";
-    public static final String KTX_BAD_CNT = "cnt가 음수입니다.";
-    public static final String KTX_NAME_NULL = "이름이 비어있습니다.";
-    public static final String KTX_BAD_DATE = "채팅방 생성 가능 날짜는 현재로부터 3개월입니다.";
-    public static final String KTX_REQUEST_BODY_NULL = "올바르지 않은 형식으로 데이터가 전달됐습니다.";
-    public static final String KTX_NO_AUTHORITY_TO_GET = "해당 채팅방에 참가되어 있지 않아 접근 권한이 존재하지 않습니다.";
-    public static final String KTX_SALE_RANGE_EXCEPTION = "할인률은 15~35% 사이로 해야 합니다.";
-
-
-    public static final String FAVOR_JOINER_DUPLICATED = "이미 즐겨찾기로 등록된 장소입니다.";
-    public static final String FAVOR_NO_AUTHORITY_EXCEPTION = "본 요청에 대한 권한이 존재하지 않습니다.";
-
-    public static final String HISTORY_BAD_TYPE_EXCEPTION = "잘못된 타입입니다.";
 }
 

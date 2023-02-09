@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class KTXNameEmptyException extends KTXException{
     public KTXNameEmptyException() {
-        super(Message.KTX_NAME_NULL, HttpStatus.BAD_REQUEST);
+        super(Message.KTX_NAME_EMPTY, HttpStatus.BAD_REQUEST);
     }
 }

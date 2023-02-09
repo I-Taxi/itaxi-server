@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class BannerNoAuthorityException extends BannerException{
     public BannerNoAuthorityException(){
-        super(Message.BANNER_NO_AUTHORITY_EXCEPTION, HttpStatus.FORBIDDEN);
+        super(Message.BANNER_NO_AUTHORITY, HttpStatus.FORBIDDEN);
     }
 }

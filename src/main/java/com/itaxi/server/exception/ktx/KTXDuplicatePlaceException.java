@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class KTXDuplicatePlaceException extends KTXException{
     public KTXDuplicatePlaceException() {
-        super(Message.KTX_SAME_PLACE, HttpStatus.BAD_REQUEST);
+        super(Message.KTX_DUPLICATE_PLACE, HttpStatus.BAD_REQUEST);
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class FavorDuplicateException extends FavoriteException {
     public FavorDuplicateException(){
-        super(Message.FAVOR_JOINER_DUPLICATED, HttpStatus.BAD_REQUEST);
+        super(Message.FAVOR_DUPLICATE, HttpStatus.BAD_REQUEST);
     }
 }

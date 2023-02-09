@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class KTXTimeOverException extends KTXException{
     public KTXTimeOverException() {
-        super(Message.KTX_TIMEOVER, HttpStatus.BAD_REQUEST);
+        super(Message.KTX_TIME_OVER, HttpStatus.BAD_REQUEST);
     }
 }

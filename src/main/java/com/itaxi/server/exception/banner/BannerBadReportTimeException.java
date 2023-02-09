@@ -5,5 +5,5 @@ import org.springframework.http.HttpStatus;
 
 
 public class BannerBadReportTimeException extends BannerException{
-    public BannerBadReportTimeException() {super(Message.BANNER_BAD_REPORT_TIME_EXCEPTION, HttpStatus.BAD_REQUEST);}
+    public BannerBadReportTimeException() {super(Message.BANNER_BAD_REPORT_TIME, HttpStatus.BAD_REQUEST);}
 }

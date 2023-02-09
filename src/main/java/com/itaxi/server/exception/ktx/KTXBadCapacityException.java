@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class KTXBadCapacityException extends KTXException{
     public KTXBadCapacityException() {
-        super(Message.KTX_WRONG_CAPACITY, HttpStatus.BAD_REQUEST);
+        super(Message.KTX_BAD_CAPACITY, HttpStatus.BAD_REQUEST);
     }
 }
