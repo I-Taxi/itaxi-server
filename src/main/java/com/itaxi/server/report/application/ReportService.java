@@ -2,7 +2,7 @@ package com.itaxi.server.report.application;
 
 import com.itaxi.server.cheaker.AdminChecker;
 import com.itaxi.server.exception.member.MemberNotFoundException;
-import com.itaxi.server.exception.report.MemberNotWriterException;
+import com.itaxi.server.exception.report.ReportNotWriterException;
 import com.itaxi.server.exception.report.ReportNotFoundException;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
@@ -13,7 +13,6 @@ import com.itaxi.server.report.application.dto.UpdateReportDto;
 import com.itaxi.server.report.domain.Report;
 import com.itaxi.server.report.domain.repository.ReportRepository;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -108,7 +107,7 @@ public class ReportService {
             reportInfo.setTitle(dto.getTitle());
             reportRepository.save(reportInfo);
         } else {
-            throw new MemberNotWriterException();
+            throw new ReportNotWriterException();
         }
 
         return "Success";
@@ -140,7 +139,7 @@ public class ReportService {
             reportInfo.setDeleted(true);
             reportRepository.save(reportInfo);
         } else {
-            throw new MemberNotWriterException();
+            throw new ReportNotWriterException();
         }
 
         return "Success";

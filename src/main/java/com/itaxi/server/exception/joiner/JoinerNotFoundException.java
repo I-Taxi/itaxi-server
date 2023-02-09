@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class JoinerNotFoundException extends JoinerException {
     public JoinerNotFoundException() {
-        super(Message.Joiner_NOT_FOUND, HttpStatus.NOT_FOUND);
+        super(Message.JOINER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }

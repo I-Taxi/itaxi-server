@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class MemberUidEmptyException extends MemberException {
     public MemberUidEmptyException() {
-        super(Message.MEMBER_UID_ISNULL, HttpStatus.BAD_REQUEST);
+        super(Message.MEMBER_UID_EMPTY, HttpStatus.BAD_REQUEST);
     }
 }
