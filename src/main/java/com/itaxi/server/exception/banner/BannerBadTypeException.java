@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class BannerBadTypeException extends BannerException{
     public BannerBadTypeException() {
-        super(Message.BANNER_BAD_TYPE_EXCEPTION, HttpStatus.BAD_REQUEST);
+        super(Message.BANNER_BAD_TYPE, HttpStatus.BAD_REQUEST);
     }
 }

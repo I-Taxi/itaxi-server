@@ -5,7 +5,5 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class PostNotFoundException extends PostException {
-    public PostNotFoundException(HttpStatus httpStatus) {
-        super(Message.POST_NOT_FOUND, httpStatus);
-    }
+    public PostNotFoundException() { super(Message.POST_NOT_FOUND, HttpStatus.NOT_FOUND); }
 }

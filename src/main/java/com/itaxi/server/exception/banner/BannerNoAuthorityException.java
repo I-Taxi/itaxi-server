@@ -4,7 +4,7 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class BannerNoAuthorityException extends BannerException{
-    public BannerNoAuthorityException(HttpStatus httpStatus){
-        super(Message.BANNER_NO_AUTHORITY_EXCEPTION, httpStatus);
+    public BannerNoAuthorityException(){
+        super(Message.BANNER_NO_AUTHORITY, HttpStatus.FORBIDDEN);
     }
 }

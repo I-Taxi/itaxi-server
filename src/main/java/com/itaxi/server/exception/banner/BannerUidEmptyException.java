@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class BannerUidEmptyException extends BannerException {
     public BannerUidEmptyException() {
-        super(Message.BANNER_UID_EMPTY_EXCEPTION, HttpStatus.BAD_REQUEST);
+        super(Message.BANNER_UID_EMPTY, HttpStatus.BAD_REQUEST);
     }
 }

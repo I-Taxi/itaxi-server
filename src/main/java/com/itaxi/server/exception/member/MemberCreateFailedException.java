@@ -4,7 +4,7 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class MemberCreateFailedException extends MemberException {
-    public MemberCreateFailedException(HttpStatus httpStatus) {
-        super(Message.MEMBER_CREATE_FAILED, httpStatus);
+    public MemberCreateFailedException() {
+        super(Message.MEMBER_CREATE_FAILED, HttpStatus.BAD_REQUEST);
     }
 }

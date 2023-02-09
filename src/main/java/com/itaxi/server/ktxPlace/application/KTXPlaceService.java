@@ -30,7 +30,7 @@ public class KTXPlaceService {
         if (adminChecker.isAdmin(dto.getUid())) {
             savedPlace = ktxPlaceRepository.save(dto.toEntity());
         } else {
-            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+            throw new MemberNotAdminException();
         }
 
         return savedPlace;
@@ -49,7 +49,7 @@ public class KTXPlaceService {
         if (adminChecker.isAdmin(dto.getUid())) {
             ktxPlace.updateKTXPlace(dto);
         } else {
-            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+            throw new MemberNotAdminException();
         }
 
         return ktxPlace;
@@ -63,7 +63,7 @@ public class KTXPlaceService {
             ktxPlace.setDeleted(true);
             ktxPlaceRepository.save(ktxPlace);
         } else {
-            throw new MemberNotAdminException(HttpStatus.UNAUTHORIZED);
+            throw new MemberNotAdminException();
         }
 
         return "Success";

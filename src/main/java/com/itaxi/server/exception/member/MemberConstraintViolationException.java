@@ -4,7 +4,7 @@ import com.itaxi.server.exception.Message;
 import org.springframework.http.HttpStatus;
 
 public class MemberConstraintViolationException extends MemberException {
-    public MemberConstraintViolationException(HttpStatus httpStatus) {
-        super(Message.MEMBER_DELETE_FAILED, httpStatus);
+    public MemberConstraintViolationException() {
+        super(Message.MEMBER_CONSTRANINT_VIOLATION, HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

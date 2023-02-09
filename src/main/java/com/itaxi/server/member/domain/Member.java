@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.common.BaseEntity;
-import com.itaxi.server.exception.member.MemberEmailNullException;
-import com.itaxi.server.exception.member.MemberNameNullException;
-import com.itaxi.server.exception.member.MemberPhoneNullException;
-import com.itaxi.server.exception.member.MemberUidNullException;
+import com.itaxi.server.exception.member.MemberEmailEmptyException;
+import com.itaxi.server.exception.member.MemberNameEmptyException;
+import com.itaxi.server.exception.member.MemberPhoneEmptyException;
+import com.itaxi.server.exception.member.MemberUidEmptyException;
 import com.itaxi.server.favorite.domain.FAVORJoiner;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.member.application.dto.MemberCreateRequestDTO;
@@ -20,8 +20,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
-import org.springframework.http.HttpStatus;
-
 
 @Entity
 @Getter
@@ -75,18 +73,18 @@ public class Member extends BaseEntity {
 
         /* data validation - uid */
         if(this.uid == null || this.uid.trim().isEmpty())
-            throw new MemberUidNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberUidEmptyException();
 
         /* data validation - email */
         if(this.email == null || this.email.trim().isEmpty())
-            throw new MemberEmailNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberEmailEmptyException();
 
         /* data validation - phone */
         if(this.phone == null || this.phone.trim().isEmpty())
-            throw new MemberPhoneNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberPhoneEmptyException();
 
         /* data validation - name */
         if(this.name == null || this.name.trim().isEmpty())
-            throw new MemberNameNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNameEmptyException();
     }
 }

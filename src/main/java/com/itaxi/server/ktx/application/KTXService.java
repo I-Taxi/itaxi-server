@@ -3,11 +3,8 @@ package com.itaxi.server.ktx.application;
 import com.itaxi.server.exception.ktx.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
-import com.itaxi.server.exception.post.JoinerDuplicateMemberException;
-import com.itaxi.server.exception.post.JoinerNotFoundException;
-import com.itaxi.server.exception.post.PostNoAuthorityToGetException;
-import com.itaxi.server.exception.post.PostNotFoundException;
-import com.itaxi.server.history.application.dto.HistoryLogDetail;
+import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
+import com.itaxi.server.exception.joiner.JoinerNotFoundException;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
@@ -24,7 +21,6 @@ import com.itaxi.server.post.application.dto.PostLogDetail;
 import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -49,10 +45,10 @@ public class KTXService {
     public List<KTXLog> getKTXLog(String uid) {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (!member.isPresent()) {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         MemberKTXJoinInfo joinInfo = new MemberKTXJoinInfo(member.get());
         List<KTXLog> ktxLogs = new ArrayList<>();
         PriorityQueue<KTXLog> kQueue = new PriorityQueue<>(Collections.reverseOrder());
@@ -66,7 +62,7 @@ public class KTXService {
     }
 
     @Transactional
-    public KTXLogDetail getKTXLogDetail(Long ktxId,String uid) {
+    public KTXLogDetail getKTXLogDetail(Long ktxId, String uid) {
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
 
         boolean check = false;
@@ -77,11 +73,11 @@ public class KTXService {
         }
 
         if (!ktx.isPresent()) {
-            throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXNotFoundException();
         }
 
         if(check == false){
-            throw new KTXNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+            throw new KTXNoAuthorityException();
         }
 
         return new KTXLogDetail(ktx.get());
@@ -93,7 +89,7 @@ public class KTXService {
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
 
         if (!ktx.isPresent()) {
-            throw new KTXNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXNotFoundException();
         }
 
         boolean check = false;
@@ -104,7 +100,7 @@ public class KTXService {
         }
 
         if(check == false){
-            throw new KTXNoAuthorityToGetException(HttpStatus.BAD_REQUEST);
+            throw new KTXNoAuthorityException();
         }
 
         return new KTXLogDetail(ktx.get());
@@ -114,23 +110,23 @@ public class KTXService {
     @Transactional
     public KTXInfoResponse createKTX(AddKTXDto dto) {
         if (dto == null) {
-            throw new KTXRequestBodyNullException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXRequestBodyEmptyException();
         }
         if (dto.getDstId() == dto.getDepId()) {
-            throw new SamePlaceException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXDuplicatePlaceException();
         }
         if (dto.getCapacity() > 10 || dto.getCapacity() < 1) {
-            throw new WrongCapacityException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXBadCapacityException();
         }
         Period period = getPeriod(LocalDateTime.now(), dto.getDeptTime());
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
-            throw new BadDateException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new KTXBadDateException();
         }
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
         }
         if (dto.getSale() > 35 || dto.getSale() < 15) {
-            throw new KTXSaleRangeException(HttpStatus.BAD_REQUEST);
+            throw new KTXBadSaleException();
         }
 
         final KTXPlace departure = ktxPlaceRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
@@ -179,24 +175,24 @@ public class KTXService {
         if (ktx.isPresent()) {
             ktxInfo = ktx.get();
             if (compareMinute(LocalDateTime.now(), ktxInfo.getDeptTime()) == 1) {
-                throw new KTXTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new KTXTimeOverException();
             }
         } else {
-            throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new KTXNotFoundException();
         }
 
         if (ktxInfo.getStatus() == 2) {
-            throw new KTXMemberFullException(HttpStatus.BAD_REQUEST);
+            throw new KTXMemberFullException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(ktxJoinDto.getUid());
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
 
 
         Optional<KTXJoiner> ktxJoiner = ktxJoinerRepository.findKtxJoinerByKtxAndMember(ktxInfo, memberInfo);
@@ -204,7 +200,7 @@ public class KTXService {
             KTXJoinerCreateDto ktxJoinerCreateDto = new KTXJoinerCreateDto(memberInfo, ktxInfo, ktxJoinDto.isOwner());
             ktxJoinerRepository.save(new KTXJoiner(ktxJoinerCreateDto));
         } else {
-            throw new JoinerDuplicateMemberException(HttpStatus.BAD_REQUEST);
+            throw new JoinerDuplicateMemberException();
         }
 
         List<KTXJoiner> ktxJoiners = ktxJoinerRepository.findKtxJoinerByKtx(ktxInfo);
@@ -230,20 +226,20 @@ public class KTXService {
         if (ktx.isPresent()) {
             ktxInfo = ktx.get();
             if (compareMinute(LocalDateTime.now(), ktxInfo.getDeptTime()) == 1) {
-                throw new KTXTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new KTXTimeOverException();
             }
         } else {
-            throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new KTXNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
 
         Optional<KTXJoiner> ktxJoiner = ktxJoinerRepository.findKtxJoinerByKtxAndMember(ktxInfo, memberInfo);
         int joinerSize = ktxInfo.getJoiners().size();
@@ -272,7 +268,7 @@ public class KTXService {
                 newOwner = joinerInfo.getMember();
             }
         } else {
-            throw new JoinerNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new JoinerNotFoundException();
         }
 
         return newOwner;
@@ -287,20 +283,20 @@ public class KTXService {
         if (ktx.isPresent()) {
             ktxInfo = ktx.get();
             if (compareMinute(LocalDateTime.now(), ktxInfo.getDeptTime()) == 1) {
-                throw new KTXTimeOutException(HttpStatus.BAD_REQUEST);
+                throw new KTXTimeOverException();
             }
         } else {
-            throw new KTXNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new KTXNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if (member.isPresent()) {
             memberInfo = member.get();
         } else {
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
         }
         if(member.get().isDeleted())
-            throw new MemberNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MemberNotFoundException();
 
         boolean exists = false;
         boolean isOwner = false;
@@ -313,10 +309,10 @@ public class KTXService {
         }
 
         if (!exists) {
-            throw new JoinerNotFoundException(HttpStatus.BAD_REQUEST);
+            throw new JoinerNotFoundException();
         }
         if (!isOwner) {
-            throw new JoinerNotOwnerException(HttpStatus.BAD_REQUEST);
+            throw new KTXJoinerNotOwnerException();
         }
 
         ktxInfo.setStatus(2);

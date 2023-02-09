@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 
 public class NoticeNotFoundException extends NoticeException {
     public NoticeNotFoundException() {
-        super(Message.NOTICE_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+        super(Message.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }
