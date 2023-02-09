@@ -39,6 +39,8 @@ public class ReportService {
         if (writer.isPresent() && reportedMember.isPresent()) {
             if(writer.get().isDeleted())
                 throw new MemberNotFoundException();
+            if (reportedMember.get().isDeleted())
+                throw new MemberNotFoundException();
 
             AddReportMemberDto reportMemberDto = new AddReportMemberDto(dto, writer.get(), reportedMember.get());
             Member member = reportedMember.get();

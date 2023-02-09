@@ -132,20 +132,16 @@ public class BannerService {
             throw new BannerNotFoundException();
         ;
         Optional<Member> member = memberRepository.findMemberByUid(banner.get().getMember().getUid());
+        if(!member.isPresent()) throw new MemberNotFoundException();
         if (member.get().isDeleted())
             throw new MemberNotFoundException();
         BannerReadResponse response = null;
 
-        if(member.isPresent()){
-            Banner bannerInfo = banner.get();
-            response = new BannerReadResponse(
-                    bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(),
-                    bannerInfo.getDeparture().getId(), bannerInfo.getDestination().getId(),
-                    bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
-        }
-        else {throw new MemberNotFoundException();}
-
-
+        Banner bannerInfo = banner.get();
+        response = new BannerReadResponse(
+                bannerInfo.getId(), member.get().getName(), bannerInfo.getWeatherStatus(),
+                bannerInfo.getDeparture().getId(), bannerInfo.getDestination().getId(),
+                bannerInfo.getCreatedAt(),bannerInfo.getUpdateAt());
 
         return response;
     }
@@ -161,15 +157,13 @@ public class BannerService {
         for(Banner banner : bannerRepository.findAll()){
             if(banner == null) throw new BannerNotFoundException();
             Optional<Member> member = memberRepository.findMemberByUid(banner.getMember().getUid());
+            if(!member.isPresent()) throw new MemberNotFoundException();
             if(member.get().isDeleted())
                 throw new MemberNotFoundException();
 
-                if(member.isPresent()){
-                    result.add(0,new BannerReadAllResponse(banner.getId(), member.get().getName(),
-                            banner.getWeatherStatus(), banner.getDeparture().getId(),
-                            banner.getDestination().getId(), banner.getReportAt()));
-                }
-                else {throw new MemberNotFoundException();}
+            result.add(0,new BannerReadAllResponse(banner.getId(), member.get().getName(),
+                    banner.getWeatherStatus(), banner.getDeparture().getId(),
+                    banner.getDestination().getId(), banner.getReportAt()));
         }
 
         if(result.size() == 0)
