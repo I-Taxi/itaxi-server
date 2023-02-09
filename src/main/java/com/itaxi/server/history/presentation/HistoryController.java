@@ -26,7 +26,7 @@ public class HistoryController {
     }
 
     @ApiOperation(value = ApiDoc.POST_HISTORY_DETAIL)
-    @PostMapping(value = "history/{Id}")
+    @PostMapping(value = "/{Id}")
     public ResponseEntity<HistoryLogDetail> getLogDetail(@RequestParam(value = "type")final Long type, @PathVariable long Id, @RequestBody PostGetLogDetailRequest request) {
         return ResponseEntity.ok(historyService.getLogDetail(type,Id,request));
     }
