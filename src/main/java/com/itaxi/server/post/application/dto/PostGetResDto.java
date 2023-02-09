@@ -1,5 +1,6 @@
 package com.itaxi.server.post.application.dto;
 
+
 import com.itaxi.server.place.application.dto.PlaceResponse;
 import com.itaxi.server.post.domain.Joiner;
 import com.itaxi.server.post.domain.Post;
@@ -21,6 +22,7 @@ public class PostGetResDto {
     private int participantNum;
     private int status;
     private Integer postType;
+    private final List<JoinerInfo> joiners;
     private List<PostGetStopoverInfo> stopovers;
 
 
@@ -34,6 +36,11 @@ public class PostGetResDto {
         this.participantNum = post.getJoiners().size();
         this.status = post.getStatus();
         this.postType = post.getPostType();
+
+        joiners = new ArrayList<JoinerInfo>();
+        for(Joiner joiner : post.getJoiners()) {
+            joiners.add(new JoinerInfo(joiner));
+        }
 
         stopovers = new ArrayList<PostGetStopoverInfo>();
         for(Stopover stopover : post.getStopovers()) {

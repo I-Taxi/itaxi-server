@@ -22,6 +22,9 @@ public class AdminChecker {
             throw new MemberNotFoundException();
         }
 
+        if(member.get().isDeleted())
+            throw new MemberNotFoundException();
+
         Member memberInfo = member.get();
         if (memberInfo.getName().equals("admin")) {
             return true;

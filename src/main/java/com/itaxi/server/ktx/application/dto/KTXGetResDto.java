@@ -1,9 +1,9 @@
 package com.itaxi.server.ktx.application.dto;
 
-import com.itaxi.server.ktxPlace.application.dto.KTXPlaceResponse;
-import com.itaxi.server.ktxPlace.domain.KTXPlace;
-import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.ktx.domain.KTXJoiner;
+import com.itaxi.server.ktxPlace.application.dto.KTXPlaceResponse;
+import com.itaxi.server.ktx.domain.KTX;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,6 +20,7 @@ public class KTXGetResDto {
     private int capacity;
     private int participantNum;
     private int status;
+    private final List<KTXJoinerInfo> joiners;
     private int sale;
 
 
@@ -31,6 +32,10 @@ public class KTXGetResDto {
         this.capacity = ktx.getCapacity();
         this.participantNum = ktx.getJoiners().size();
         this.status = ktx.getStatus();
+        joiners = new ArrayList<KTXJoinerInfo>();
+        for (KTXJoiner ktxJoiner : ktx.getJoiners()){
+            joiners.add(new KTXJoinerInfo(ktxJoiner));
+        }
         this.sale = ktx.getSale();
         }
     }

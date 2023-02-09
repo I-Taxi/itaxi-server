@@ -1,5 +1,7 @@
 package com.itaxi.server.post.presentation;
 
+import com.itaxi.server.history.application.HistoryService;
+import com.itaxi.server.history.application.dto.HistoryLogDetail;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.application.dto.*;
 import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
@@ -26,6 +28,7 @@ import javax.transaction.Transactional;
 @RequestMapping("/api/post")
 public class PostController {
     private final PostService postService;
+    private final HistoryService historyService;
 
     @ApiOperation(value = ApiDoc.POST_HISTORY)
     @PostMapping(value = "history")
@@ -43,6 +46,12 @@ public class PostController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<PostGetResDto>> getPostDto(@RequestParam(value = "depId", required = false)final Long depId, @RequestParam(value = "dstId", required = false)final Long dstId, @RequestParam(value = "time")@DateTimeFormat(iso=ISO.DATE) final LocalDate time, @RequestParam(value = "postType", required = false)final Integer postType) {
         return ResponseEntity.ok(postService.getPost(depId, dstId, time, postType));
+    }
+
+    @ApiOperation(value = ApiDoc.POST_GET_SINGLE)
+    @PostMapping(value = "/{postId}")
+    public ResponseEntity<PostLogDetail> getSinglePost(@PathVariable long postId, @RequestBody PostGetLogDetailRequest request) {
+        return ResponseEntity.ok(postService.getSinglePost(postId,request));
     }
 
     @ApiOperation(value = ApiDoc.POST_CREATE)
@@ -66,10 +75,10 @@ public class PostController {
     @Transactional
     @PutMapping("/{postId}/join")
     @ApiOperation(value = ApiDoc.EXIT_POST)
-    public ResponseEntity<String> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
+    public ResponseEntity<Long> exitPost(@PathVariable Long postId, @RequestBody PostExitRequest request) {
         Member result = postService.exitPost(postId, request.getUid());
 
-        return ResponseEntity.ok(result.getName());
+        return ResponseEntity.ok(result.getId());
     }
 
     @Transactional

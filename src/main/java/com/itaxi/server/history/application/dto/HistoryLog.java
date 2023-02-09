@@ -27,7 +27,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
     private final int status;
     private final int sale;
     private final Integer postType;
-    private  String owner;
+    private  String ownerName;
     private final int participantNum;
 
     public HistoryLog(Post p) {
@@ -51,7 +51,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
         for(Joiner joiner : p.getJoiners()){
             JoinerInfo joinerInfo = new JoinerInfo(joiner);
             if(joiner.isOwner()){
-                this.owner = joinerInfo.getMemberName();
+                this.ownerName = joinerInfo.getMemberName();
                 break;
             }
         }
@@ -73,7 +73,7 @@ public class HistoryLog implements Comparable<HistoryLog>{
         for(KTXJoiner ktxJoiner : ktx.getJoiners()){
             KTXJoinerInfo ktxJoinerInfo = new KTXJoinerInfo(ktxJoiner);
             if(ktxJoinerInfo.isOwner()){
-                this.owner = ktxJoinerInfo.getMemberName();
+                this.ownerName = ktxJoinerInfo.getMemberName();
                 break;
             }
         }

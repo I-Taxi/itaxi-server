@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
-@Where(clause = "deleted=false")
 @Entity
 @Getter
 @Setter
@@ -71,7 +70,6 @@ public class Member extends BaseEntity {
         this.email = memberCreateRequestDTO.getEmail();
         this.phone = memberCreateRequestDTO.getPhone();
         this.name = memberCreateRequestDTO.getName();
-        this.setDeleted(false);
 
         /* data validation - uid */
         if(this.uid == null || this.uid.trim().isEmpty())

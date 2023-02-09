@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,7 +23,7 @@ public class KTXPlaceController {
 
     @ApiOperation(value = ApiDoc.KTX_PLACE_READ)
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Iterable<KTXPlaceResponse>> findAllPlace() {
+    public ResponseEntity<List> findAllPlace() {
         return ResponseEntity.ok(ktxPlaceService.findAll());
     }
 

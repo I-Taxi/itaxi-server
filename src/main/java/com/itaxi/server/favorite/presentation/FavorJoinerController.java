@@ -31,7 +31,7 @@ public class FavorJoinerController {
     }
 
     @ApiOperation(value = ApiDoc.FAVORITE_JOINER_DELETE)
-    @DeleteMapping(value = "/{favorId}")
+    @PutMapping(value = "/delete/{favorId}")
     public ResponseEntity<String> deleteFavorite(@PathVariable Long favorId, @RequestBody FavorDeleteRequest request) {
         return ResponseEntity.ok(favorJoinerService.deleteFavorite(favorId,request));
     }
