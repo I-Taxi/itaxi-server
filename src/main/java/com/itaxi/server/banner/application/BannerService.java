@@ -60,6 +60,7 @@ public class BannerService {
         Optional<Place> placeDepart = placeRepository.findById(bannerCreateDto.getDepId());
         Optional<Place> placeDest = placeRepository.findById(bannerCreateDto.getDesId());
         Optional<Member> member = memberRepository.findMemberByUid(bannerCreateDto.getUid());
+        if(!member.isPresent()) throw new MemberNotFoundException();
         if (member.get().isDeleted())
             throw new MemberNotFoundException();
 
@@ -260,16 +261,16 @@ public class BannerService {
     @Transactional
     public String deleteBanner(Long bannerId, BannerDeleteDto bannerDeleteDto){
         Optional<Banner> banner = bannerRepository.findById(bannerId);
+        if(!banner.isPresent()) throw new BannerNotFoundException();
         if(!(banner.get().getMember().getUid().equals(bannerDeleteDto.getUid()))) throw
             new BannerNoAuthorityException();
-        if(banner.isPresent()){
+
             Banner bannerInfo = banner.get();
             bannerInfo.setDeleted(true);
             bannerRepository.save(bannerInfo);
-        }
-        else{
-            throw new BannerNotFoundException();
-        }
+
+
+
         return "Success";
     }
 }
