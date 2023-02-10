@@ -112,6 +112,9 @@ public class PostService {
         if(dto.getDeptTime().isBefore(LocalDateTime.now()))
             throw new PostBadDeptTimeException();
 
+        if(dto.getPostType()<0 || dto.getPostType()>2)
+            throw new PostBadPostTypeException();
+
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
         }
