@@ -40,7 +40,7 @@ out/
 /src/main/resources/*.yaml
 /src/main/resources/*.yml
 /*.yml
-/src/main/java/com/itaxi/server/config/*.java
+/src/main/java/com/itaxi/server/config/
 
 ### Linux ###
 *~
