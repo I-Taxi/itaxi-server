@@ -71,6 +71,7 @@ public class Message {
     public static final String POST_NO_AUTHORITY = "사용자에게 권한이 없습니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";
     public static final String POST_TIME_OVER = "입장 및 퇴장 시간이 지난 채팅방입니다.";
+    public static final String POST_BAD_TYPE = "잘못된 게시글 타입입니다.";
 
     // Report
     public static final String REPORT_NOT_FOUND = "존재하지 않는 리포트입니다.";

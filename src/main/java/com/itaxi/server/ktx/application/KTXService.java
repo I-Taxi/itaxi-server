@@ -6,6 +6,8 @@ import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.joiner.JoinerNotFoundException;
+import com.itaxi.server.exception.post.PostBadDeptTimeException;
+import com.itaxi.server.exception.post.PostBadPostTypeException;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
@@ -121,6 +123,9 @@ public class KTXService {
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
             throw new KTXBadDateException();
         }
+        if(dto.getDeptTime().isBefore(LocalDateTime.now()))
+            throw new PostBadDeptTimeException();
+
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
         }
