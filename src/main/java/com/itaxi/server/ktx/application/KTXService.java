@@ -1,5 +1,6 @@
 package com.itaxi.server.ktx.application;
 
+import com.itaxi.server.exception.joiner.JoinerNotOwnerException;
 import com.itaxi.server.exception.ktx.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
 import com.itaxi.server.exception.place.PlaceParamException;
@@ -17,8 +18,6 @@ import com.itaxi.server.ktx.domain.repository.KTXRepository;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.member.domain.repository.MemberRepository;
-import com.itaxi.server.post.application.dto.PostLogDetail;
-import com.itaxi.server.post.domain.Post;
 import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -312,7 +311,7 @@ public class KTXService {
             throw new JoinerNotFoundException();
         }
         if (!isOwner) {
-            throw new KTXJoinerNotOwnerException();
+            throw new JoinerNotOwnerException();
         }
 
         ktxInfo.setStatus(2);

@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class MemberPhoneEmptyException extends MemberException {
     public MemberPhoneEmptyException() {
-        super(Message.MEMBER_PHONE_ISNULL, HttpStatus.BAD_REQUEST);
+        super(Message.MEMBER_PHONE_EMPTY, HttpStatus.BAD_REQUEST);
     }
 }

@@ -34,12 +34,15 @@ public class MemberService {
                 if (member.isPresent()) {
                     throw new MemberDuplicateAdminException();
                 }
+                if (member.get().isDeleted())
+                    throw new MemberNotFoundException();
             }
             List<Member> memberList = memberRepository.findAll();
 
             for(int i = 0; i<memberList.size(); i++){
                 if(memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()){
                     Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
+
                     if(reMember.isPresent()){
                         reMember.get().setDeleted(false);
                         reMember.get().setUid(memberCreateRequestDTO.getUid());
@@ -54,15 +57,7 @@ public class MemberService {
             return "Success";
         }
         catch(MemberException e) {
-            if(e instanceof MemberUidEmptyException)
-                throw new MemberUidEmptyException();
-            else if(e instanceof MemberEmailEmptyException)
-                throw new MemberEmailEmptyException();
-            else if(e instanceof MemberPhoneEmptyException)
-                throw new MemberPhoneEmptyException();
-            else if(e instanceof MemberNameEmptyException)
-                throw new MemberNameEmptyException();
-            else if(e instanceof MemberDuplicateAdminException)
+            if(e instanceof MemberDuplicateAdminException)
                 throw new MemberDuplicateAdminException();
             else
                 throw new MemberCreateFailedException();
@@ -76,6 +71,8 @@ public class MemberService {
         if(!checkMember.isPresent()){
             throw new MemberNotFoundException();
         }
+        if (checkMember.get().isDeleted())
+            throw new MemberNotFoundException();
 
         Optional<MemberInfo> member = memberRepository.findMemberInfoByUid(uid);
         return member.get();
@@ -103,6 +100,9 @@ public class MemberService {
 
         if(!member.isPresent())
             throw new MemberNotFoundException();
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
+
         Member memberInfo = member.get();
         if(memberUpdateRequestDTO.getPhone() != null)
             memberInfo.setPhone(memberUpdateRequestDTO.getPhone());
@@ -122,6 +122,9 @@ public class MemberService {
         Optional<Member> member = memberRepository.findMemberByUid(uid);
         if(!member.isPresent())
             throw new MemberNotFoundException();
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
+
         Member memberInfo = member.get();
         boolean isAvailable = true; // 삭제가능 여부
 

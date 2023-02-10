@@ -2,12 +2,12 @@ package com.itaxi.server.post.application;
 
 import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.joiner.JoinerNotFoundException;
+import com.itaxi.server.exception.joiner.JoinerNotOwnerException;
 import com.itaxi.server.exception.ktx.*;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
-import com.itaxi.server.exception.stopover.TooManyStopoversException;
-import com.itaxi.server.history.application.dto.HistoryLogDetail;
+import com.itaxi.server.exception.stopover.StopoverTooManyException;
 import com.itaxi.server.ktx.domain.KTX;
 import com.itaxi.server.member.application.dto.MemberKTXJoinInfo;
 import com.itaxi.server.place.application.PlaceService;
@@ -57,6 +57,8 @@ public class PostService {
         if(!member.isPresent()) {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
@@ -97,7 +99,7 @@ public class PostService {
     @Transactional
     public PostInfoResponse createPost(AddPostDto dto) {
         if (dto.getStopoverIds().size() > 1) {
-            throw new TooManyStopoversException();
+            throw new StopoverTooManyException();
         }
         if (dto.getDstId() == dto.getDepId()) {
             throw new KTXDuplicatePlaceException();
@@ -226,6 +228,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
@@ -270,6 +274,8 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         int joinerSize = postInfo.getJoiners().size();
         boolean checkOwner = false;
@@ -327,15 +333,17 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
+        if (member.get().isDeleted())
+            throw new MemberNotFoundException();
 
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {
-            throw new BadChangeDeptTimeException();
+            throw new PostBadDeptTimeToChangeException();
         }
 
         long minutes = ChronoUnit.MINUTES.between(postInfo.getDeptTime(), dto.getDeptTime());
         if (minutes >= 30) {
-            throw new BadDeptTimeException();
+            throw new PostBadDeptTimeException();
         }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
@@ -345,7 +353,7 @@ public class PostService {
                 postInfo.setDeptTime(dto.getDeptTime());
                 postRepository.save(postInfo);
             } else {
-                throw new KTXJoinerNotOwnerException();
+                throw new JoinerNotOwnerException();
             }
         } else {
             throw new JoinerNotFoundException();
