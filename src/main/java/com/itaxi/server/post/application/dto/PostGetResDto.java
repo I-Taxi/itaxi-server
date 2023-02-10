@@ -22,7 +22,7 @@ public class PostGetResDto {
     private int participantNum;
     private int status;
     private Integer postType;
-    private final List<JoinerInfo> joiners;
+    private final List<JoinerResInfo> joiners;
     private List<PostGetStopoverInfo> stopovers;
 
 
@@ -37,9 +37,9 @@ public class PostGetResDto {
         this.status = post.getStatus();
         this.postType = post.getPostType();
 
-        joiners = new ArrayList<JoinerInfo>();
+        joiners = new ArrayList<JoinerResInfo>();
         for(Joiner joiner : post.getJoiners()) {
-            joiners.add(new JoinerInfo(joiner));
+            joiners.add(new JoinerResInfo(joiner));
         }
 
         stopovers = new ArrayList<PostGetStopoverInfo>();

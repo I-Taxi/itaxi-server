@@ -20,7 +20,7 @@ public class KTXGetResDto {
     private int capacity;
     private int participantNum;
     private int status;
-    private final List<KTXJoinerInfo> joiners;
+    private final List<KTXJoinerResInfo> joiners;
     private int sale;
 
 
@@ -32,9 +32,9 @@ public class KTXGetResDto {
         this.capacity = ktx.getCapacity();
         this.participantNum = ktx.getJoiners().size();
         this.status = ktx.getStatus();
-        joiners = new ArrayList<KTXJoinerInfo>();
+        joiners = new ArrayList<KTXJoinerResInfo>();
         for (KTXJoiner ktxJoiner : ktx.getJoiners()){
-            joiners.add(new KTXJoinerInfo(ktxJoiner));
+            joiners.add(new KTXJoinerResInfo(ktxJoiner));
         }
         this.sale = ktx.getSale();
         }
