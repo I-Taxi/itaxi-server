@@ -13,6 +13,7 @@ public class Message {
     // Favor
     public static final String FAVOR_DUPLICATE = "즐겨찾기가 중복됩니다.";
     public static final String FAVOR_NO_AUTHORITY = "본 요청에 대한 권한이 없습니다.";
+    public static final String FAVOR_NOT_FOUND = "존재하지 않는 즐겨찾기입니다.";
 
     // History
     public static final String HISTORY_BAD_TYPE = "타입이 잘못되었습니다.";
