@@ -3,6 +3,7 @@ package com.itaxi.server.advertisement.application;
 import com.itaxi.server.advertisement.application.dto.AdvertisementUploadResponse;
 import com.itaxi.server.advertisement.domain.Advertisement;
 import com.itaxi.server.advertisement.domain.repository.AdvertisementRepository;
+import com.itaxi.server.config.FilePathConfig;
 import com.itaxi.server.exception.advertisement.ImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
@@ -28,7 +29,7 @@ public class AdvertisementService {
     @Autowired
     private final AdvertisementRepository advertisementRepository;
 
-    private String FILE_PATH_ROOT = "/Users/david/Documents/server/src/main/java/com/itaxi/server/advertisement/images/";
+    private String FILE_PATH_ROOT = FilePathConfig.FILE_PATH_ROOT;
 
 //    @Transactional
 //    public AdvertisementUploadResponse createAdvertisement(MultipartFile file) throws IOException {

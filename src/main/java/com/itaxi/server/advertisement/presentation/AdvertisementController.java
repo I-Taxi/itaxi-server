@@ -68,7 +68,7 @@ public class AdvertisementController {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<String>> getAllAdvertisement() {
         List<String> imageNames = advertisementService.getAllAdvertisement();
 
