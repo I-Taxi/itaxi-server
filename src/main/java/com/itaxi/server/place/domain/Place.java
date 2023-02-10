@@ -25,7 +25,7 @@ public class Place extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
     private Long cnt;
     @OneToMany(mappedBy = "place")
