@@ -32,7 +32,7 @@ public class MemberService {
         if (memberCreateRequestDTO.getName().equals("admin")) {
             Optional<Member> member = memberRepository.findMemberByName(memberCreateRequestDTO.getName());
 
-            if(!member.isPresent()){
+            if (!member.isPresent()) {
                 memberRepository.save(new Member(memberCreateRequestDTO));
                 return "Success";
             }
@@ -47,12 +47,12 @@ public class MemberService {
 
         List<Member> memberList = memberRepository.findAll();
 
-        if(memberList.size()!=0){
-            for(int i = 0; i<memberList.size(); i++){
-                if(memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()){
+        if (memberList.size() != 0) {
+            for (int i = 0; i < memberList.size(); i++) {
+                if (memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()) {
                     Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
 
-                    if(reMember.isPresent()){
+                    if (reMember.isPresent()) {
                         reMember.get().setDeleted(false);
                         reMember.get().setUid(memberCreateRequestDTO.getUid());
                         reMember.get().setPhone(memberCreateRequestDTO.getPhone());
@@ -64,6 +64,7 @@ public class MemberService {
         }
 
         memberRepository.save(new Member(memberCreateRequestDTO));
+
         return "Success";
     }
 

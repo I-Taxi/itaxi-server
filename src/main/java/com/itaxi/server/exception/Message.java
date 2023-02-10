@@ -36,6 +36,7 @@ public class Message {
     public static final String KTX_TIME_OVER = "출발 시간이 잘못되었습니다.";
 
     // Member
+    public static final String MEMBER_BAD_EMAIL = "Email이 잘못되었습니다.";
     public static final String MEMBER_CONSTRANINT_VIOLATION = "다른 방에 입장해있으면 탈퇴할 수 없습니다.";
     public static final String MEMBER_CREATE_FAILED = "알 수 없는 오류로 인하여 회원가입에 실패하였습니다.";
     public static final String MEMBER_DELETE_FAILED = "알 수 없는 오류로 인하여 회원정보 삭제에 실패하였습니다.";
