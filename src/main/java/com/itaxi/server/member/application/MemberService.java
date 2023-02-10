@@ -28,17 +28,26 @@ public class MemberService {
     /* CREATE */
     @Transactional
     public String createMember(MemberCreateRequestDTO memberCreateRequestDTO) {
-        try {
-            if (memberCreateRequestDTO.getName().equals("admin")) {
-                Optional<Member> member = memberRepository.findMemberByName(memberCreateRequestDTO.getName());
-                if (member.isPresent()) {
-                    throw new MemberDuplicateAdminException();
-                }
-                if (member.get().isDeleted())
-                    throw new MemberNotFoundException();
-            }
-            List<Member> memberList = memberRepository.findAll();
 
+        if (memberCreateRequestDTO.getName().equals("admin")) {
+            Optional<Member> member = memberRepository.findMemberByName(memberCreateRequestDTO.getName());
+
+            if(!member.isPresent()){
+                memberRepository.save(new Member(memberCreateRequestDTO));
+                return "Success";
+            }
+            else if (member.isPresent() && !member.get().isDeleted()) {
+                throw new MemberDuplicateAdminException();
+            }
+
+            memberRepository.save(new Member(memberCreateRequestDTO));
+            return "Success";
+        }
+
+
+        List<Member> memberList = memberRepository.findAll();
+
+        if(memberList.size()!=0){
             for(int i = 0; i<memberList.size(); i++){
                 if(memberList.get(i).getEmail().equals(memberCreateRequestDTO.getEmail()) && memberList.get(i).isDeleted()){
                     Optional<Member> reMember = memberRepository.findMemberByUid(memberList.get(i).getUid());
@@ -52,16 +61,10 @@ public class MemberService {
                     }
                 }
             }
+        }
 
-            memberRepository.save(new Member(memberCreateRequestDTO));
-            return "Success";
-        }
-        catch(MemberException e) {
-            if(e instanceof MemberDuplicateAdminException)
-                throw new MemberDuplicateAdminException();
-            else
-                throw new MemberCreateFailedException();
-        }
+        memberRepository.save(new Member(memberCreateRequestDTO));
+        return "Success";
     }
 
     /* READ */
