@@ -108,6 +108,10 @@ public class PostService {
         if (period.getYears() >= 1 || period.getMonths() >= 3) {
             throw new KTXBadDateException();
         }
+
+        if(dto.getDeptTime().isBefore(LocalDateTime.now()))
+            throw new PostBadDeptTimeException();
+
         if (dto.getDepId() == null || dto.getDstId() == null || dto.getPostType() == null || dto.getDeptTime() == null || dto.getUid() == null) {
             throw new PlaceParamException();
         }

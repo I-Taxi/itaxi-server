@@ -51,7 +51,7 @@ public class GlobalExceptionHandler extends Throwable {
     public ResponseEntity<ExceptionResponse> dataIntegrityViolationException(DataIntegrityViolationException e){
         logger.error("DataIntegrityViolationException :"+e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ExceptionResponse("중복이될 수 없는 자료를 포함하고 있습니다."));
+                .body(new ExceptionResponse("중복이 될 수 없는 자료를 포함하고 있습니다."));
     }
 
     @ExceptionHandler(NullPointerException.class)
