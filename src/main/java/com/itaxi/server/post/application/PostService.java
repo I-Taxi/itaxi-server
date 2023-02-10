@@ -79,6 +79,10 @@ public class PostService {
     public PostLogDetail getPostLogDetail(Long postId, PostGetLogDetailRequest request) {
         Optional<Post> post = postRepository.findById(postId);
 
+        if(!post.isPresent()) {
+            throw new PostNotFoundException();
+        }
+
         boolean check = false;
         for(int i =  0; i<post.get().getJoiners().size(); i++){
             if(post.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
@@ -86,9 +90,6 @@ public class PostService {
             }
         }
 
-        if(!post.isPresent()) {
-            throw new PostNotFoundException();
-        }
         if(check == false ){
             throw new PostNoAuthorityException();
         }
