@@ -79,5 +79,8 @@ public class Message {
 
     // Stopover
     public static final String STOPOVER_TOO_MANY = "경유지의 수가 잘못되었습니다.";
+
+    // Advertisement
+    public static final String IMAGE_NOT_FOUND = "이미지가 존재하지 않습니다.";
 }
 
