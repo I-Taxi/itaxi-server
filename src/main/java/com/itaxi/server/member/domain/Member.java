@@ -88,13 +88,13 @@ public class Member extends BaseEntity {
     }
 
     private boolean isAvailableEmail(String email) {
-        System.out.println("email: " + email);
-        System.out.println("email-split: " + email.split("@")[1]);
-        if (email.split("@")[1].equals("handong.ac.kr")) {
-            System.out.println("email-split: ");
-            return true;
-        } else {
-            return false;
+        String[] emails = email.split("@");
+
+        if (emails.length > 1) {
+            if (email.split("@")[1].equals("handong.ac.kr")) {
+                return true;
+            }
         }
+        return false;
     }
 }
