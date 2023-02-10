@@ -6,10 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Where(clause = "deleted=false")
@@ -23,7 +20,7 @@ public class KTXPlace extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@NotBlank(message = "name이 비어있습니다")
+    @Column(unique = true, nullable = false)
     private String name;
 
     private Long cnt;
