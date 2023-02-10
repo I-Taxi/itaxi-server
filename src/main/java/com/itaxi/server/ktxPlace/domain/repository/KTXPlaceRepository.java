@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface KTXPlaceRepository extends JpaRepository<KTXPlace, Long> {
     @Query("SELECT p FROM KTXPlace p WHERE p.deleted = false ORDER BY p.cnt DESC NULLS LAST")
@@ -14,4 +16,6 @@ public interface KTXPlaceRepository extends JpaRepository<KTXPlace, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE KTXPlace p SET p.cnt = p.cnt + 1 WHERE p.id = id")
     int updateView(Long id);
+
+    Optional<KTXPlace> findByName(String name);
 }

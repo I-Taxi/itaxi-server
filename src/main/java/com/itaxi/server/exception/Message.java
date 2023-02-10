@@ -35,6 +35,7 @@ public class Message {
     public static final String KTX_NOT_FOUND = "존재하지 않는 KTX 채팅방입니다.";
     public static final String KTX_REQUEST_BODY_EMPTY= "올바르지 않은 형식으로 데이터가 전달됐습니다.";
     public static final String KTX_TIME_OVER = "출발 시간이 잘못되었습니다.";
+    public static final String KTX_PLACE_DUPLICATION_EXCEPTION = "중복이 될 수 없는 자료를 포함하고 있습니다.";
 
     // Member
     public static final String MEMBER_BAD_EMAIL = "Email이 잘못되었습니다.";
