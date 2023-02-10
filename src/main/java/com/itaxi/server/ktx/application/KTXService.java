@@ -7,7 +7,6 @@ import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.joiner.JoinerNotFoundException;
 import com.itaxi.server.exception.post.PostBadDeptTimeException;
-import com.itaxi.server.exception.post.PostBadPostTypeException;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.ktxPlace.application.KTXPlaceService;
