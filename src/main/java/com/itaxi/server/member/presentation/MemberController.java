@@ -20,33 +20,42 @@ public class MemberController {
     @ApiOperation(value = ApiDoc.MEMBER_CREATE)
     @PostMapping(value = "")
     public String createMember(@RequestBody MemberCreateRequestDTO memberCreateRequestDTO) {
-        return memberService.createMember(memberCreateRequestDTO);
+        String result = memberService.createMember(memberCreateRequestDTO);
+
+        return result;
     }
 
     /* READ */
     @ApiOperation(value = ApiDoc.MEMBER_READ)
     @PostMapping(value = "/info")
     public MemberInfo getMember(@RequestBody MemberUidDTO memberUidDTO) {
-        return memberService.getMember(memberUidDTO.getUid());
+        MemberInfo result = memberService.getMember(memberUidDTO.getUid());
+
+        return result;
     }
 
     @ApiOperation(value = ApiDoc.MEMBER_LOGIN)
     @PostMapping(value = "/login")
     public LoginResponse login(@RequestBody MemberUidDTO memberUidDTO) {
-        return memberService.login(memberUidDTO.getUid());
+        LoginResponse result =  memberService.login(memberUidDTO.getUid());
+
+        return result;
     }
 
     /* UPDATE */
     @ApiOperation(value = ApiDoc.MEMBER_UPDATE)
     @PatchMapping(value = "")
     public String updateMember(@RequestBody MemberUpdateRequestDTO memberUpdateRequestDTO) {
-        return memberService.updateMember(memberUpdateRequestDTO);
+        String result = memberService.updateMember(memberUpdateRequestDTO);
+
+        return result;
     }
 
     /* DELETE */
     @ApiOperation(value = ApiDoc.MEMBER_DELETE)
     @PatchMapping(value = "/resign")
     public String deleteMember(@RequestBody MemberUidDTO memberUidDTO) {
-        return memberService.deleteMember(memberUidDTO.getUid());
+        String result = memberService.deleteMember(memberUidDTO.getUid());
+        return result;
     }
 }

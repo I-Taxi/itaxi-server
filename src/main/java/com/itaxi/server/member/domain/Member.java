@@ -6,10 +6,7 @@ import javax.persistence.*;
 
 import com.itaxi.server.banner.domain.Banner;
 import com.itaxi.server.common.BaseEntity;
-import com.itaxi.server.exception.member.MemberEmailEmptyException;
-import com.itaxi.server.exception.member.MemberNameEmptyException;
-import com.itaxi.server.exception.member.MemberPhoneEmptyException;
-import com.itaxi.server.exception.member.MemberUidEmptyException;
+import com.itaxi.server.exception.member.*;
 import com.itaxi.server.favorite.domain.FAVORJoiner;
 import com.itaxi.server.ktx.domain.KTXJoiner;
 import com.itaxi.server.member.application.dto.MemberCreateRequestDTO;
@@ -82,8 +79,22 @@ public class Member extends BaseEntity {
         if(this.phone == null || this.phone.trim().isEmpty())
             throw new MemberPhoneEmptyException();
 
+        if (!isAvailableEmail(memberCreateRequestDTO.getEmail()))
+            throw new MemberBadEmailException();
+
         /* data validation - name */
         if(this.name == null || this.name.trim().isEmpty())
             throw new MemberNameEmptyException();
+    }
+
+    private boolean isAvailableEmail(String email) {
+        System.out.println("email: " + email);
+        System.out.println("email-split: " + email.split("@")[1]);
+        if (email.split("@")[1].equals("handong.ac.kr")) {
+            System.out.println("email-split: ");
+            return true;
+        } else {
+            return false;
+        }
     }
 }
