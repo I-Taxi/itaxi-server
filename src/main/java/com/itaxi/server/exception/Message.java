@@ -66,6 +66,7 @@ public class Message {
     // Post
     public static final String POST_BAD_DEPT_TIME_TO_CHANGE = "출발시각까지 3분 이하가 남았을 때는 시간을 바꿀 수 없습니다.";
     public static final String POST_BAD_DEPT_TIME = "30분 이상 시간을 미룰 수 없습니다.";
+    public static final String POST_PAST_DEPT_TIME = "현재 이전으로 출발 시간을 설정할 수 없습니다.";
     public static final String POST_MEMBER_FULL = "게시글의 인원이 이미 최대입니다.";
     public static final String POST_NO_AUTHORITY = "사용자에게 권한이 없습니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 게시글입니다.";

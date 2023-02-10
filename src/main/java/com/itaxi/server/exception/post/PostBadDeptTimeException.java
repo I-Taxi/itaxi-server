@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class PostBadDeptTimeException extends PostException{
     public PostBadDeptTimeException() {
-        super(Message.POST_BAD_DEPT_TIME, HttpStatus.BAD_REQUEST);
+        super(Message.POST_PAST_DEPT_TIME, HttpStatus.BAD_REQUEST);
     }
 }
