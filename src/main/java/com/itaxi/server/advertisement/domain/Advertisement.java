@@ -21,12 +21,10 @@ public class Advertisement extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String type;
 
-    @Column(nullable = false)
+    @Lob
     private byte[] image;
 }

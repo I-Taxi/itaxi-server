@@ -7,12 +7,16 @@ import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.report.application.dto.AddReportDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartResolver;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 
 @RestController
@@ -22,9 +26,10 @@ public class AdvertisementController {
     private final AdvertisementService advertisementService;
 
     //@ApiOperation(value = ApiDoc.REPORT_CREATE)
-    @RequestMapping(method = RequestMethod.POST)
+    //@PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<AdvertisementUploadResponse> createAdvertisement(@RequestParam("image")MultipartFile file) throws IOException {
+    public ResponseEntity<AdvertisementUploadResponse> createAdvertisement(@RequestPart("file")MultipartFile file) throws IOException {
         AdvertisementUploadResponse response = advertisementService.createAdvertisement(file);
 
         return ResponseEntity.ok(response);
