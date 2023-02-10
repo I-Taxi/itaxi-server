@@ -65,15 +65,14 @@ public class KTXService {
     public KTXLogDetail getKTXLogDetail(Long ktxId, String uid) {
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
 
+        if (!ktx.isPresent()) {
+            throw new KTXNotFoundException();
+        }
         boolean check = false;
         for(int i =  0; i<ktx.get().getJoiners().size(); i++){
             if(ktx.get().getJoiners().get(i).getMember().getUid().equals(uid)){
                 check = true;
             }
-        }
-
-        if (!ktx.isPresent()) {
-            throw new KTXNotFoundException();
         }
 
         if(check == false){
