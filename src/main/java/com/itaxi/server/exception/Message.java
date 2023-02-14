@@ -61,6 +61,7 @@ public class Message {
     // Place
     public static final String PLACE_BAD_CNT = "count가 잘못되었습니다.";
     public static final String PLACE_BAD_FIND_TYPE = "FindType이 잘못되었습니다.";
+    public static final String PLACE_BAD_POSTTYPE = "postType이 잘못되었습니다.";
     public static final String PLACE_BAD_TYPE = "타입이 잘못되었습니다.";
     public static final String PLACE_EMPTY_PLACE = "이름이 잘못되었습니다.";
     public static final String PLACE_EMPTY = "존재하지 않는 장소입니다.";

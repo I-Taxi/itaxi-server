@@ -4,6 +4,7 @@ import com.itaxi.server.exception.joiner.JoinerDuplicateMemberException;
 import com.itaxi.server.exception.joiner.JoinerNotFoundException;
 import com.itaxi.server.exception.joiner.JoinerNotOwnerException;
 import com.itaxi.server.exception.ktx.*;
+import com.itaxi.server.exception.place.PlaceBadPostTypeException;
 import com.itaxi.server.exception.place.PlaceParamException;
 import com.itaxi.server.exception.post.*;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
@@ -122,6 +123,13 @@ public class PostService {
 
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
+
+        if (departure.getPlaceType() < 0 || departure.getPlaceType() > 2) {
+            throw new PlaceBadPostTypeException();
+        } else if (destination.getPlaceType() < 0 || destination.getPlaceType() > 2) {
+            throw new PlaceBadPostTypeException();
+        }
+
         AddPostPlaceDto postPlaceDto = new AddPostPlaceDto(dto, departure, destination);
         ResDto result = new ResDto(postRepository.save(postPlaceDto.toEntity()));
         List<Long> stopoverList = dto.getStopoverIds();
@@ -169,7 +177,6 @@ public class PostService {
             if (depId == null && dstId == null) {
                 posts = postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime);
             } else if (depId == null) {
-                // TODO: dstID의 place Type이 3이나 4일 경우 다르게 서치하는 함수 제작
                 posts = postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime);
 
                 places = getPlacesByPlaceType(destination.getPlaceType());
@@ -205,10 +212,34 @@ public class PostService {
                 posts = postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime);
             } else if (depId == null) {
                 posts = postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime);
+
+                places = getPlacesByPlaceType(destination.getPlaceType());
+                if (places != null) {
+                    for (int i = 0; i < places.size(); i++) {
+                        posts.addAll(postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, places.get(i), startDateTime, endDateTime));
+                    }
+                }
             } else if (dstId == null) {
                 posts = postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime);
+
+                places = getPlacesByPlaceType(departure.getPlaceType());
+                if (places != null) {
+                    for (int i = 0; i < places.size(); i++) {
+                        posts.addAll(postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, places.get(i), startDateTime, endDateTime));
+                    }
+                }
             } else {
                 posts = postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime);
+
+                List<Place> deptPlaces = getPlacesByPlaceType(departure.getPlaceType());
+                List<Place> dstPlaces = getPlacesByPlaceType(destination.getPlaceType());
+                if (deptPlaces != null && dstPlaces != null) {
+                    for (int i = 0; i < deptPlaces.size(); i++) {
+                        for (int j = 0; j < dstPlaces.size(); j++) {
+                            posts.addAll(postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, deptPlaces.get(i), dstPlaces.get(j), startDateTime, endDateTime));
+                        }
+                    }
+                }
             }
         }
 
