@@ -153,8 +153,8 @@ public class PostService {
     @Transactional
     public List<PostGetResDto> getPost(final Long depId, final Long dstId,  final LocalDate time, final Integer postType) {
 
-        if(postType!=null){
-            if(postType<0 || postType>2) throw new PostBadPostTypeException();
+        if (postType!= null) {
+            if(postType < 0 || postType > 2) throw new PostBadPostTypeException();
         }
 
         final Place departure = (depId == null) ? null : placeRepository.findById(depId).orElseThrow(PlaceNotFoundException::new);
@@ -163,16 +163,42 @@ public class PostService {
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
         List<Post> posts = null;
+        List<Place> places = null;
 
         if (postType == null) {
             if (depId == null && dstId == null) {
                 posts = postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime);
             } else if (depId == null) {
+                // TODO: dstID의 place Type이 3이나 4일 경우 다르게 서치하는 함수 제작
                 posts = postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime);
+
+                places = getPlacesByPlaceType(destination.getPlaceType());
+                if (places != null) {
+                    for (int i = 0; i < places.size(); i++) {
+                        posts.addAll(postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(places.get(i), startDateTime, endDateTime));
+                    }
+                }
             } else if (dstId == null) {
                 posts = postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime);
+
+                places = getPlacesByPlaceType(departure.getPlaceType());
+                if (places != null) {
+                    for (int i = 0; i < places.size(); i++) {
+                        posts.addAll(postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(places.get(i), startDateTime, endDateTime));
+                    }
+                }
             } else {
                 posts = postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime);
+
+                List<Place> deptPlaces = getPlacesByPlaceType(departure.getPlaceType());
+                List<Place> dstPlaces = getPlacesByPlaceType(destination.getPlaceType());
+                if (deptPlaces != null && dstPlaces != null) {
+                    for (int i = 0; i < deptPlaces.size(); i++) {
+                        for (int j = 0; j < dstPlaces.size(); j++) {
+                            posts.addAll(postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(deptPlaces.get(i), dstPlaces.get(j), startDateTime, endDateTime));
+                        }
+                    }
+                }
             }
         } else {
             if (depId == null && dstId == null) {
@@ -385,5 +411,17 @@ public class PostService {
 
     private static Period getPeriod(LocalDateTime a, LocalDateTime b) {
         return Period.between(a.toLocalDate(), b.toLocalDate());
+    }
+
+    private List<Place> getPlacesByPlaceType(int placeType) {
+        List<Place> places = null;
+
+        if (placeType == 3) {
+            places = placeRepository.findAllByPlaceType(0);
+        } else if (placeType == 4) {
+            places = placeRepository.findAllByPlaceType(1);
+        }
+
+        return places;
     }
 }
