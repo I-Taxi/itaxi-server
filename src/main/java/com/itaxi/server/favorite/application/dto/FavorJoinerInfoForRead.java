@@ -19,7 +19,7 @@ public class FavorJoinerInfoForRead {
         this.joinerId = new ArrayList<>();
         if(favorType ==0){
             for (FAVORJoiner joiners : FAVORJoiners) {
-                if(joiners.getPlace().getName().contains("전체")==false){
+                if(joiners.getPlace().getName().contains("전체")==false && joiners.isDeleted() == false){
                     joinerId.add(joiners.getId());
                     places.add(joiners.getPlace());
                 }
@@ -27,8 +27,10 @@ public class FavorJoinerInfoForRead {
         }
         else if(favorType==1){
             for (FAVORJoiner joiners : FAVORJoiners) {
-                joinerId.add(joiners.getId());
-                places.add(joiners.getPlace());
+                if(joiners.isDeleted() == false){
+                    joinerId.add(joiners.getId());
+                    places.add(joiners.getPlace());
+                }
             }
 
         }
