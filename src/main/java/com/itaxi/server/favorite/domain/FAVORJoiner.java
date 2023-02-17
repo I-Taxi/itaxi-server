@@ -13,7 +13,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
-@Where(clause = "deleted=false")
+//@Where(clause = "deleted=false")
 @Entity
 @Getter
 @Setter

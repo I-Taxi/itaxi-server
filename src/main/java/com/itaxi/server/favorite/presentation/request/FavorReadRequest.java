@@ -9,4 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FavorReadRequest {
     private String uid;
+    private int favorType;
 }
