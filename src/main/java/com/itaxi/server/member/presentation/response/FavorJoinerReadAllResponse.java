@@ -13,12 +13,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FavorJoinerReadAllResponse implements Comparable<FavorJoinerReadAllResponse>{
     private Long id;
+    private int favorType;
     private FavorResDto place;
 
 
-    public FavorJoinerReadAllResponse(Place p, Long j) {
+    public FavorJoinerReadAllResponse(Place p, Long j,int f) {
         this.id = j;
         this.place = new FavorResDto(p);
+        this.favorType = f;
     }
 
     @Override

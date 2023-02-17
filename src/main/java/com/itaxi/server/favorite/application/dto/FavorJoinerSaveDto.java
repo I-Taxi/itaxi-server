@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class FavorJoinerSaveDto {
     private Member member;
     private Place place;
+    private int favorType;
 }

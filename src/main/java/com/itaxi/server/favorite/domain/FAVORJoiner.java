@@ -13,7 +13,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
-@Where(clause = "deleted=false")
+//@Where(clause = "deleted=false")
 @Entity
 @Getter
 @Setter
@@ -23,6 +23,7 @@ public class FAVORJoiner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private int favorType;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,5 +35,6 @@ public class FAVORJoiner extends BaseEntity {
     public FAVORJoiner(FavorJoinerSaveDto favorJoinerSaveDto) {
         this.member = favorJoinerSaveDto.getMember();
         this.place = favorJoinerSaveDto.getPlace();
+        this.favorType = favorJoinerSaveDto.getFavorType();
     }
 }

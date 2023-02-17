@@ -26,7 +26,7 @@ public class FavorJoinerController {
     @ApiOperation(value = ApiDoc.FAVORITE_JOINER_READ_ALL_BY_MEMBER)
     @PutMapping
     public ResponseEntity<List> readAllFavorByMember(@RequestBody FavorReadRequest request) {
-        return ResponseEntity.ok(favorJoinerService.readAllFavorByMember(request.getUid()));
+        return ResponseEntity.ok(favorJoinerService.readAllFavorByMember(request));
 
     }
 

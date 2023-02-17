@@ -9,16 +9,18 @@ import java.util.*;
 
 @Getter
 public class FavorJoinerInfo {
-    private final List<Long> joinerId;
+    private final List<FAVORJoiner> joiner;
     private final List<Place> places;
 
-    public FavorJoinerInfo(Member m) {
+    public FavorJoinerInfo(Member m,int favorType) {
         List<FAVORJoiner> FAVORJoiners = m.getFAVORJoiners();
         this.places = new ArrayList<>();
-        this.joinerId = new ArrayList<>();
+        this.joiner = new ArrayList<>();
         for (FAVORJoiner joiners : FAVORJoiners) {
-            joinerId.add(joiners.getId());
-            places.add(joiners.getPlace());
+            if(joiners.getFavorType()==favorType){
+                joiner.add(joiners);
+                places.add(joiners.getPlace());
+            }
         }
 
     }

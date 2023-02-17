@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class FavorJoinerCreateDto {
     private String uid;
     private Long placeId;
+    private int favorType;
 }
