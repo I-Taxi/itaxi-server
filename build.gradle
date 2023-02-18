@@ -27,6 +27,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.testng:testng:7.1.0'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
