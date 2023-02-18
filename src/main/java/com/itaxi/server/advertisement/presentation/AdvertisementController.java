@@ -61,14 +61,14 @@ public class AdvertisementController {
 //        return ResponseEntity.ok(image);
 //    }
 
-    @GetMapping("/{name}")
+    @RequestMapping(value ="/{name}",method = RequestMethod.GET)
     public ResponseEntity<byte[]> getAdvertisement(@PathVariable("name") String name){
         byte[] image = advertisementService.getAdvertisement(name);
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAllAdvertisement() {
         List<String> imageNames = advertisementService.getAllAdvertisement();
 

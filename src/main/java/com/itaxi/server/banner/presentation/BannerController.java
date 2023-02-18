@@ -23,7 +23,7 @@ public class BannerController {
 
     @Transactional
     @ApiOperation(value = ApiDoc.BANNER_CREATE)
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<BannerCreateResponse> createBanner(@RequestBody BannerCreateRequest request) {
         BannerCreateResponse bannerCreateResponse = bannerService.createBanner(BannerCreateDto.from(request));
 
@@ -32,21 +32,21 @@ public class BannerController {
 
     @Transactional
     @ApiOperation(value = ApiDoc.BANNER_UPDATE)
-    @PutMapping("/{bannerId}")
+    @RequestMapping(value = "/{bannerId}",method = RequestMethod.PUT)
     public ResponseEntity<BannerUpdateResponse> updateBanner(@PathVariable Long bannerId, @RequestBody BannerUpdateRequest request){
         BannerUpdateResponse bannerUpdateResponse = bannerService.updateBanner(bannerId,BannerUpdateDto.from(request));
         return ResponseEntity.ok(bannerUpdateResponse);
     }
 
     @ApiOperation(value = ApiDoc.BANNER_READ)
-    @GetMapping("/{bannerId}")
+    @RequestMapping(value = "/{bannerId}",method = RequestMethod.GET)
     public ResponseEntity<BannerReadResponse> readBanner(@PathVariable Long bannerId){
         BannerReadResponse bannerReadResponse = bannerService.readBanner(bannerId);
         return ResponseEntity.ok(bannerReadResponse);
     }
 
     @ApiOperation(value = ApiDoc.BANNER_READ_ALL)
-    @PostMapping("/all")
+    @RequestMapping(value = "/all",method = RequestMethod.POST)
     public ResponseEntity<List> readAllBanner(@RequestBody BannerReadAllRequest request) {
         List<BannerReadAllResponse> result = bannerService.readAllBanners(request.getUid());
 
@@ -54,7 +54,7 @@ public class BannerController {
     }
 
     @ApiOperation(value = ApiDoc.BANNER_READ_RECENT_ALL)
-    @GetMapping("/recent")
+    @RequestMapping(value = "/recent",method = RequestMethod.GET)
     public ResponseEntity<List> readAllRecentBanner(@RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) final LocalDateTime time) {
         if(time==null) throw new BannerBadParamException();
         List<BannerReadAllRecentResponse> result = bannerService.readAllRecentBanners(time);
@@ -63,7 +63,7 @@ public class BannerController {
 
     @Transactional
     @ApiOperation(value = ApiDoc.BANNER_DELETE)
-    @PutMapping("/delete/{bannerId}/")
+    @RequestMapping(value = "/delete/{bannerId}/",method = RequestMethod.PUT)
     public ResponseEntity<String> deleteBanner(@PathVariable Long bannerId, @RequestBody BannerDeleteRequest request){
         String result = bannerService.deleteBanner(bannerId,BannerDeleteDto.from(request));
         return ResponseEntity.ok(result);
