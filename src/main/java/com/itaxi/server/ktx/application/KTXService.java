@@ -268,6 +268,12 @@ public class KTXService {
                 ktxJoinerRepository.save(joinerBeOwner);
                 newOwner = joinerBeOwner.getMember();
             }
+            else if(joinerSize >1 && joinerInfo.isOwner() == false){
+                for (int i = 0; i<ktxInfo.getJoiners().size(); i++){
+                    if(ktxInfo.getJoiners().get(i).isOwner()==true)
+                        newOwner = ktxInfo.getJoiners().get(i).getMember();
+                }
+            }
             else{
                 newOwner = joinerInfo.getMember();
             }
