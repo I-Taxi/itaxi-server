@@ -28,6 +28,7 @@ public class Message {
     public static final String KTX_BAD_CAPACITY = "최대인원이 잘못되었습니다";
     public static final String KTX_BAD_CNT = "count가 잘못되었습니다.";
     public static final String KTX_BAD_DATE = "출발 시간이 잘못되었습니다.";
+    public static final String KTX_BAD_DATE_TIME = "현 날짜 전으로는 조회 할 수 없습니다.";
     public static final String KTX_BAD_SALE = "할인률이 잘못되었습니다.";
     public static final String KTX_DUPLICATE_PLACE = "출발 장소와 도착 장소는 같을 수 없습니다.";
     public static final String KTX_MEMBER_FULL = "KTX 채팅방의 인원이 이미 최대입니다.";

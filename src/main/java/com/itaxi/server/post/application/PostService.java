@@ -167,8 +167,10 @@ public class PostService {
 
         final Place departure = (depId == null) ? null : placeRepository.findById(depId).orElseThrow(PlaceNotFoundException::new);
         final Place destination = (dstId == null) ? null : placeRepository.findById(dstId).orElseThrow(PlaceNotFoundException::new);
-        final LocalDateTime startDateTime = (Objects.equals(time, LocalDate.now()))? LocalDateTime.of(time, LocalTime.now()):LocalDateTime.of(time, LocalTime.of(0, 0, 0));
+        final LocalDateTime startDateTime = LocalDateTime.now();
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
+
+        if(LocalDate.now().isAfter(time)==true) throw new KTXBadDateTimeException();
 
         List<Post> posts = null;
         List<Place> places = null;
