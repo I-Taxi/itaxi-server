@@ -365,12 +365,20 @@ public class PostService {
             }  else if (1 < joinerSize && joinerSize <= postInfo.getCapacity()) {
                 postInfo.setStatus(1);
             }
+
             postRepository.save(postInfo);
+
             if (joinerSize > 1 && checkOwner) {
                 joinerBeOwner = postInfo.getJoiners().get(1);
                 joinerBeOwner.setOwner(true);
                 joinerRepository.save(joinerBeOwner);
                 newOwner = joinerBeOwner.getMember();
+            }
+            else if(joinerSize >1 && joinerInfo.isOwner() == false){
+                for (int i = 0; i<postInfo.getJoiners().size(); i++){
+                    if(postInfo.getJoiners().get(i).isOwner()==true)
+                        newOwner = postInfo.getJoiners().get(i).getMember();
+                }
             }
             else{
                 newOwner = joinerInfo.getMember();
