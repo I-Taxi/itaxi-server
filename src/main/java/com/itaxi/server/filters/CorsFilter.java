@@ -23,6 +23,7 @@ public class CorsFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+        String header = request.getHeader("user-Agent");
 
         if("OPTIONS".equalsIgnoreCase(request.getMethod()) || "HEAD".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -31,7 +32,13 @@ public class CorsFilter implements Filter {
             response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
         else {
-            chain.doFilter(req, res);
+            if(!header.contains("Mozilla/5.0")){
+                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            }
+            else{
+                chain.doFilter(req, res);
+            }
+
         }
     }
 
