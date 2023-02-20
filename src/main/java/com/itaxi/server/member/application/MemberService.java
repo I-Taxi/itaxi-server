@@ -54,6 +54,7 @@ public class MemberService {
 
                     if (reMember.isPresent()) {
                         reMember.get().setDeleted(false);
+                        reMember.get().setName(memberCreateRequestDTO.getName());
                         reMember.get().setUid(memberCreateRequestDTO.getUid());
                         reMember.get().setPhone(memberCreateRequestDTO.getPhone());
                         memberRepository.save(reMember.get());
