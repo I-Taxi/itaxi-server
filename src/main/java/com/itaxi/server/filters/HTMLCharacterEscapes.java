@@ -3,6 +3,7 @@ package com.itaxi.server.filters;
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.translate.AggregateTranslator;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
@@ -54,6 +55,6 @@ public class HTMLCharacterEscapes extends CharacterEscapes {
         return new SerializedString(translator.translate(Character.toString((char) ch)));
 
         // 참고 - 커스터마이징이 필요없다면 아래와 같이 Apache Commons Lang3에서 제공하는 메서드를 써도 된다.
-        // return new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString((char) ch)));
+//         return new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString((char) ch)));
     }
 }
