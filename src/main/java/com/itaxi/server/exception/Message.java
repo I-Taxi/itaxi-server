@@ -89,5 +89,6 @@ public class Message {
 
     // Advertisement
     public static final String IMAGE_NOT_FOUND = "이미지가 존재하지 않습니다.";
+    public static final String IMAGE_TYPE_NOT_PROPER = "지원하지 않는 이미지 확장자 입니다.";
 }
 
