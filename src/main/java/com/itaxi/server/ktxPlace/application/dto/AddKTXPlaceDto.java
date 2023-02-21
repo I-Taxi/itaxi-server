@@ -2,8 +2,10 @@ package com.itaxi.server.ktxPlace.application.dto;
 
 import com.itaxi.server.ktxPlace.domain.KTXPlace;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class AddKTXPlaceDto {
     private String name;
     private Long cnt = 0L;

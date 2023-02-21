@@ -4,10 +4,12 @@ import com.itaxi.server.place.domain.Place;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AddPlaceDto {
     @NotBlank(message = "place name은 필수 값 입니다.")

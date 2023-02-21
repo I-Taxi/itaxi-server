@@ -32,12 +32,13 @@ public class CorsFilter implements Filter {
             response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
         else {
-            if(!header.contains("Mozilla/5.0")){
-                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-            }
-            else{
-                chain.doFilter(req, res);
-            }
+            chain.doFilter(req, res);
+//            if(!header.contains("Mozilla/5.0")){
+//                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+//            }
+//            else{
+//
+//            }
 
         }
     }

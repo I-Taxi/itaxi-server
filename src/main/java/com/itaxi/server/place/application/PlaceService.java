@@ -11,9 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +53,7 @@ public class PlaceService {
 
         Place savedPlace = null;
         if (adminChecker.isAdmin(dto.getUid())) {
+            dto.setName(XSSFiltering(dto.getName()));
             savedPlace = placeRepository.save(dto.toEntity());
         } else {
             throw new MemberNotAdminException();
@@ -112,5 +112,45 @@ public class PlaceService {
 
         return placeInfo.getCnt();
     }
+
+    public String XSSFiltering(String string){
+
+        Random rand = new Random();
+        List<Character> change = new ArrayList<>(Arrays.asList('<', '>', '&', '\"', '(', ')', '#', '\''));
+        List<Character> newString = new ArrayList<>();
+
+        int value_int;
+        int radix = 10;
+
+        for (int i = 0; i<string.length(); i++){
+            char check = string.charAt(i);
+            if(change.contains(check) == true){
+                newString.add(0,'&');
+                newString.add(0,'#');
+                int one = rand.nextInt(10);
+                value_int = one;
+                char one_char = Character.forDigit(value_int , 10);
+                newString.add(0,one_char);
+
+                int two = rand.nextInt(10);
+                value_int = one;
+                char two_char = Character.forDigit(value_int , 10);
+                newString.add(0,two_char);
+            }
+            else{
+                newString.add(check);
+            }
+
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Character ch: newString) {
+            sb.append(ch);
+        }
+        String result = sb.toString();
+
+        return result;
+    }
 }
+
 
