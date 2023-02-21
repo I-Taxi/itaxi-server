@@ -1,7 +1,6 @@
 package com.itaxi.server.advertisement.application;
 
 import com.itaxi.server.advertisement.application.dto.AdCreateDto;
-import com.itaxi.server.advertisement.application.dto.AdvertisementUploadResponse;
 import com.itaxi.server.advertisement.domain.Advertisement;
 import com.itaxi.server.advertisement.domain.repository.AdvertisementRepository;
 import com.itaxi.server.advertisement.presentation.request.AdCreateRequest;
@@ -10,26 +9,17 @@ import com.itaxi.server.advertisement.presentation.response.AdGetResponse;
 import com.itaxi.server.config.FilePathConfig;
 import com.itaxi.server.exception.advertisement.AdImageTypeNotProperException;
 import com.itaxi.server.exception.advertisement.ImageNotFoundException;
-import com.itaxi.server.notice.domain.Notice;
-import com.itaxi.server.notice.presentation.response.NoticeReadAllResponse;
+
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
+
 
 @Service
 @RequiredArgsConstructor

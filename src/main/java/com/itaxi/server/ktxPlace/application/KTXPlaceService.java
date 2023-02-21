@@ -1,7 +1,6 @@
 package com.itaxi.server.ktxPlace.application;
 
 import com.itaxi.server.cheaker.AdminChecker;
-import com.itaxi.server.exception.ktx.KTXDuplicatePlaceException;
 import com.itaxi.server.exception.member.MemberNotAdminException;
 import com.itaxi.server.exception.place.PlaceNameDuplicationException;
 import com.itaxi.server.ktxPlace.application.dto.AddKTXPlaceDto;
@@ -10,9 +9,9 @@ import com.itaxi.server.ktxPlace.application.dto.UpdateKTXPlaceDto;
 import com.itaxi.server.ktxPlace.domain.KTXPlace;
 import com.itaxi.server.ktxPlace.domain.repository.KTXPlaceRepository;
 import com.itaxi.server.exception.place.PlaceNotFoundException;
+import com.itaxi.server.place.application.PlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,6 +25,7 @@ public class KTXPlaceService {
     private final KTXPlaceRepository ktxPlaceRepository;
     private final AdminChecker adminChecker;
 
+    private final PlaceService placeService;
     @Transactional
     public KTXPlace create(AddKTXPlaceDto dto) {
         KTXPlace savedPlace = null;
@@ -33,6 +33,7 @@ public class KTXPlaceService {
         if (adminChecker.isAdmin(dto.getUid())) {
             Optional<KTXPlace> ktx = ktxPlaceRepository.findByName(dto.getName());
             if(ktx.isPresent()) throw new PlaceNameDuplicationException();
+            dto.setName(placeService.XSSFiltering(dto.getName()));
             KTXPlace ktxPlace = new KTXPlace(dto.getName(),dto.getCnt());
             savedPlace = ktxPlaceRepository.save(ktxPlace);
         } else {

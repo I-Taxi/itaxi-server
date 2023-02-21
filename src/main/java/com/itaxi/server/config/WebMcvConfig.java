@@ -13,9 +13,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.List;
-@EnableWebMvc
-@Configuration
-public class WebMcvConfig implements WebMvcConfigurer {
+//@EnableWebMvc
+//@Configuration
+//public class WebMcvConfig implements WebMvcConfigurer {
 //
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {
@@ -55,5 +55,5 @@ public class WebMcvConfig implements WebMvcConfigurer {
 //    public InternalResourceViewResolver defaultViewResolver() {
 //        return new InternalResourceViewResolver();
 //    }
-
-}
+//
+//}
