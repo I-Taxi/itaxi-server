@@ -147,7 +147,7 @@ public class KTXService {
     public List<KTXGetResDto> getKTX(final Long depId, final Long dstId, final LocalDate time) {
         final KTXPlace departure = (depId == null) ? null : ktxPlaceRepository.findById(depId).orElseThrow(PlaceNotFoundException::new);
         final KTXPlace destination = (dstId == null) ? null : ktxPlaceRepository.findById(dstId).orElseThrow(PlaceNotFoundException::new);
-        final LocalDateTime startDateTime = LocalDateTime.now();
+        final LocalDateTime startDateTime = LocalDateTime.of(time, LocalTime.of(00, 00, 00));
         final LocalDateTime endDateTime = LocalDateTime.of(time, LocalTime.of(23, 59, 59));
 
         if(LocalDate.now().isAfter(time)==true) throw new KTXBadDateTimeException();
