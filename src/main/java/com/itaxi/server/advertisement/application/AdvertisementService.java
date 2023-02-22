@@ -12,9 +12,13 @@ import com.itaxi.server.exception.advertisement.ImageNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +32,23 @@ public class AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
     private String FILE_PATH_ROOT = FilePathConfig.FILE_PATH_ROOT;
     private ArrayList<String> types = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
+
+    @Transactional
+    public byte[] getAdvertisementImage(String name) {
+        byte[] image;
+        Optional<Advertisement> advertisement = advertisementRepository.findByImgName(name);
+        if(!advertisement.isPresent()) throw new ImageNotFoundException();
+
+        String path = advertisement.get().getPath() + name + '.' + advertisement.get().getImgType();
+
+        try {
+            image = FileUtils.readFileToByteArray(new File(path));
+        } catch (IOException e) {
+            throw new ImageNotFoundException();
+        }
+
+        return image;
+    }
 
     @Transactional
     public String createAdvertisement(AdCreateRequest request){

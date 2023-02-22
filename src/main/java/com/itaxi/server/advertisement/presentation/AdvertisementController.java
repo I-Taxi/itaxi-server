@@ -2,10 +2,12 @@ package com.itaxi.server.advertisement.presentation;
 
 import com.itaxi.server.advertisement.application.AdvertisementService;
 import com.itaxi.server.advertisement.presentation.request.AdCreateRequest;
+import com.itaxi.server.advertisement.presentation.request.AdGetImageRequest;
 import com.itaxi.server.advertisement.presentation.response.AdGetAllResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetResponse;
 import com.itaxi.server.config.FilePathConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -25,6 +27,13 @@ public class AdvertisementController {
     @GetMapping("/{imgName}")
     public ResponseEntity<AdGetResponse> getAdvertisement(@PathVariable String imgName){
         return ResponseEntity.ok(advertisementService.getAdvertisement(imgName));
+    }
+
+    @PostMapping("/{name}")
+    public ResponseEntity<byte[]> getAdvertisementImage(@RequestBody AdGetImageRequest request){
+        byte[] image = advertisementService.getAdvertisementImage(request.getImgName());
+
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
     @GetMapping
