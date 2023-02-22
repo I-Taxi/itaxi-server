@@ -4,6 +4,7 @@ import com.itaxi.server.advertisement.application.AdvertisementService;
 import com.itaxi.server.advertisement.presentation.request.AdCreateRequest;
 import com.itaxi.server.advertisement.presentation.request.AdGetImageRequest;
 import com.itaxi.server.advertisement.presentation.response.AdGetAllResponse;
+import com.itaxi.server.advertisement.presentation.response.AdGetImageResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetResponse;
 import com.itaxi.server.config.FilePathConfig;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,10 @@ public class AdvertisementController {
     }
 
     @PostMapping("/{name}")
-    public ResponseEntity<byte[]> getAdvertisementImage(@RequestBody AdGetImageRequest request){
-        byte[] image = advertisementService.getAdvertisementImage(request.getImgName());
+    public ResponseEntity<AdGetImageResponse> getAdvertisementImage(@RequestBody AdGetImageRequest request){
 
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+
+        return ResponseEntity.ok(advertisementService.getAdvertisementImage(request.getImgName()));
     }
 
     @GetMapping

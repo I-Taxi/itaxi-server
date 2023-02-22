@@ -5,6 +5,7 @@ import com.itaxi.server.advertisement.domain.Advertisement;
 import com.itaxi.server.advertisement.domain.repository.AdvertisementRepository;
 import com.itaxi.server.advertisement.presentation.request.AdCreateRequest;
 import com.itaxi.server.advertisement.presentation.response.AdGetAllResponse;
+import com.itaxi.server.advertisement.presentation.response.AdGetImageResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetResponse;
 import com.itaxi.server.config.FilePathConfig;
 import com.itaxi.server.exception.advertisement.AdImageTypeNotProperException;
@@ -34,7 +35,7 @@ public class AdvertisementService {
     private ArrayList<String> types = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
 
     @Transactional
-    public byte[] getAdvertisementImage(String name) {
+    public AdGetImageResponse getAdvertisementImage(String name) {
         byte[] image;
         Optional<Advertisement> advertisement = advertisementRepository.findByImgName(name);
         if(!advertisement.isPresent()) throw new ImageNotFoundException();
@@ -46,8 +47,9 @@ public class AdvertisementService {
         } catch (IOException e) {
             throw new ImageNotFoundException();
         }
+        AdGetImageResponse result = new AdGetImageResponse(image,advertisement.get().getUrl());
 
-        return image;
+        return result;
     }
 
     @Transactional
