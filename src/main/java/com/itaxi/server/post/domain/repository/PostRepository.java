@@ -8,13 +8,8 @@ import com.itaxi.server.place.domain.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    //List<Person> findByLastname(String lastname);
-    Iterable<Post> findAllByDeparture(Place departure);
-    Iterable<Post> findByDestination(Place destination);
-    Iterable<Post> findByDepartureId(long departureId);
     List<Post> findByDeleted(boolean deleted);
 
-    //List<Post> findAllByDepartureAndDestinationAndDeptTimeBetween(Place departure, Place destination, LocalDateTime deptTime1, LocalDateTime deptTime2);
     /* depid + dstid + deptTime */
     List<Post> findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(Place departure, Place destination, LocalDateTime deptTime1, LocalDateTime deptTime2);
     /* type + depid + dstid + deptTime */

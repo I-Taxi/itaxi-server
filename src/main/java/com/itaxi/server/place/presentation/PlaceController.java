@@ -3,11 +3,8 @@ package com.itaxi.server.place.presentation;
 import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.place.application.PlaceService;
 import com.itaxi.server.place.application.dto.AddPlaceDto;
-import com.itaxi.server.place.application.dto.DeletePlaceDto;
 import com.itaxi.server.place.application.dto.ResDto;
 import com.itaxi.server.place.application.dto.UpdatePlaceDto;
-import com.itaxi.server.place.domain.Place;
-import com.itaxi.server.place.presentation.reponse.PlaceFindResponse;
 import com.itaxi.server.place.presentation.request.PlaceDeleteRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/place")
 public class PlaceController {
     private final PlaceService placeService;
-
 
     @ApiOperation(value = ApiDoc.PLACE_READ )
     @RequestMapping(value = "/{findType}",method = RequestMethod.GET)
@@ -58,6 +54,4 @@ public class PlaceController {
     public ResponseEntity<String> delete(@PathVariable final long id, @RequestBody final PlaceDeleteRequest dto) {
         return ResponseEntity.ok(placeService.deletePlace(id, dto.getUid()));
     }
-
-
 }

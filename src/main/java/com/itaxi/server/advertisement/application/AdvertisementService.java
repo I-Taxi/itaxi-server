@@ -7,7 +7,6 @@ import com.itaxi.server.advertisement.presentation.request.AdCreateRequest;
 import com.itaxi.server.advertisement.presentation.response.AdGetAllResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetImageResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetResponse;
-import com.itaxi.server.config.FilePathConfig;
 import com.itaxi.server.exception.advertisement.AdImageTypeNotProperException;
 import com.itaxi.server.exception.advertisement.ImageNotFoundException;
 
@@ -31,7 +30,6 @@ import java.util.Optional;
 public class AdvertisementService {
     @Autowired
     private final AdvertisementRepository advertisementRepository;
-    private String FILE_PATH_ROOT = FilePathConfig.FILE_PATH_ROOT;
     private ArrayList<String> types = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
 
     @Transactional
@@ -60,7 +58,9 @@ public class AdvertisementService {
                 check = true;
             }
         }
-        if(check == false) throw new AdImageTypeNotProperException();
+        if(check == false) {
+            throw new AdImageTypeNotProperException();
+        }
 
         AdCreateDto dto  = new AdCreateDto(request);
         Advertisement advertisement = new Advertisement(dto);
@@ -71,7 +71,9 @@ public class AdvertisementService {
     @Transactional
     public AdGetResponse getAdvertisement(String imgName) {
        Optional<Advertisement> advertisement = advertisementRepository.findByImgName(imgName);
-        if(!advertisement.isPresent())throw new ImageNotFoundException();
+        if(!advertisement.isPresent()) {
+            throw new ImageNotFoundException();
+        }
 
         AdGetResponse adGetResponse = new AdGetResponse(advertisement.get());
 
@@ -84,7 +86,7 @@ public class AdvertisementService {
         for (Advertisement advertisement : advertisementRepository.findAll()) {
             if (advertisement != null) {
                 result.add(0, new AdGetAllResponse(advertisement));
-            }else{
+            } else {
                 throw new ImageNotFoundException();
             }
         }
@@ -95,7 +97,9 @@ public class AdvertisementService {
     @Transactional
     public String deleteAdvertisement(Long imgId){
         Optional<Advertisement> advertisement = advertisementRepository.findById(imgId);
-        if(!advertisement.isPresent()) throw new ImageNotFoundException();
+        if(!advertisement.isPresent()) {
+            throw new ImageNotFoundException();
+        }
         advertisement.get().setDeleted(true);
         advertisementRepository.save(advertisement.get());
         return "Success";
