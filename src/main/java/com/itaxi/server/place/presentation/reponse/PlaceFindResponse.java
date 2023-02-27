@@ -1,14 +1,10 @@
 package com.itaxi.server.place.presentation.reponse;
 
-import com.itaxi.server.place.application.dto.FindPlaceDto;
 import com.itaxi.server.place.domain.Place;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter

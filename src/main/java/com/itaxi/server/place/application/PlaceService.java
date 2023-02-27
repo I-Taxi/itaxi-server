@@ -30,7 +30,6 @@ public class PlaceService {
                     result.add(0, new PlaceFindResponse(place));
                 }
             }
-
         }
         else if(findType==1){
             for(Place place :placeRepository.findAll(Sort.by(Sort.Direction.DESC, "cnt"))){
@@ -49,7 +48,6 @@ public class PlaceService {
         if (dto.getCnt() < 0) throw new PlaceBadCntException();
         if (dto.getPlaceType() < 0 || dto.getPlaceType() >= 5) throw new PlaceBadTypeException();
         if (dto.getName() == null || dto.getName()==""|| dto.getName().equals(" ")) throw new PlaceEmptyException();
-
 
         Place savedPlace = null;
         if (adminChecker.isAdmin(dto.getUid())) {
@@ -114,7 +112,6 @@ public class PlaceService {
     }
 
     public String XSSFiltering(String string){
-
         Random rand = new Random();
         List<Character> change = new ArrayList<>(Arrays.asList('<', '>', '&', '\"', '(', ')', '#', '\''));
         List<Character> newString = new ArrayList<>();

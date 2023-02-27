@@ -6,9 +6,7 @@ import com.itaxi.server.advertisement.presentation.request.AdGetImageRequest;
 import com.itaxi.server.advertisement.presentation.response.AdGetAllResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetImageResponse;
 import com.itaxi.server.advertisement.presentation.response.AdGetResponse;
-import com.itaxi.server.config.FilePathConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/advertisement")
 public class AdvertisementController {
     private final AdvertisementService advertisementService;
-    private String FILE_PATH_ROOT = FilePathConfig.FILE_PATH_ROOT;
 
     @PostMapping()
     public ResponseEntity<String> createAdvertisement(@RequestBody AdCreateRequest request){

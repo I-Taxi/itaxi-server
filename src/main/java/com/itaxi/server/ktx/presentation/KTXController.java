@@ -4,10 +4,8 @@ import com.itaxi.server.docs.ApiDoc;
 import com.itaxi.server.ktx.application.KTXService;
 import com.itaxi.server.ktx.application.dto.*;
 import com.itaxi.server.ktx.presentation.request.KTXGetDetailRequest;
-import com.itaxi.server.ktxPlace.application.KTXPlaceService;
 import com.itaxi.server.member.application.dto.MemberUidDTO;
 import com.itaxi.server.member.domain.Member;
-import com.itaxi.server.post.application.dto.PostLogDetail;
 import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -26,7 +23,6 @@ import java.util.List;
 @RequestMapping("/api/ktx")
 public class KTXController {
     private final KTXService ktxService;
-    private final KTXPlaceService ktxPlaceService;
 
     @ApiOperation(value = ApiDoc.KTX_HISTORY)
     @PostMapping(value = "history")
