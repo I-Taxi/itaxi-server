@@ -83,7 +83,7 @@ public class KTXService {
     }
 
     @Transactional
-    public KTXLogDetail getSingleKTXPost(Long ktxId, PostGetLogDetailRequest request) {
+    public KTXLog getSingleKTXPost(Long ktxId) {
 
         Optional<KTX> ktx = ktxRepository.findById(ktxId);
 
@@ -91,18 +91,7 @@ public class KTXService {
             throw new KTXNotFoundException();
         }
 
-        boolean check = false;
-        for(int i =  0; i<ktx.get().getJoiners().size(); i++){
-            if(ktx.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
-                check = true;
-            }
-        }
-
-        if(check == false){
-            throw new KTXNoAuthorityException();
-        }
-
-        return new KTXLogDetail(ktx.get());
+        return new KTXLog(ktx.get());
 
     }
 
