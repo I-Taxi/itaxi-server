@@ -48,9 +48,9 @@ public class PostController {
     }
 
     @ApiOperation(value = ApiDoc.POST_GET_SINGLE)
-    @PostMapping(value = "/{postId}")
-    public ResponseEntity<PostLogDetail> getSinglePost(@PathVariable long postId, @RequestBody PostGetLogDetailRequest request) {
-        return ResponseEntity.ok(postService.getSinglePost(postId,request));
+    @GetMapping(value = "/{postId}")
+    public ResponseEntity<PostLog> getSinglePost(@PathVariable long postId) {
+        return ResponseEntity.ok(postService.getSinglePost(postId));
     }
 
     @ApiOperation(value = ApiDoc.POST_CREATE)

@@ -258,26 +258,14 @@ public class PostService {
         return resultList;
     }
     @Transactional
-    public PostLogDetail getSinglePost(Long postId, PostGetLogDetailRequest request) {
+    public PostLog getSinglePost(Long postId) {
 
         Optional<Post> post = postRepository.findById(postId);
 
         if(!post.isPresent()) {
             throw new PostNotFoundException();
         }
-
-        boolean check = false;
-        for(int i =  0; i<post.get().getJoiners().size(); i++){
-            if(post.get().getJoiners().get(i).getMember().getUid().equals(request.getUid())){
-                check = true;
-            }
-        }
-
-        if(check == false ){
-            throw new PostNoAuthorityException();
-        }
-
-        return new PostLogDetail(post.get());
+        return new PostLog(post.get());
     }
 
     @Transactional

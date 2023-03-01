@@ -43,9 +43,9 @@ public class KTXController {
     }
 
     @ApiOperation(value = ApiDoc.KTX_GET_SINGLE)
-    @PostMapping(value = "/{ktxId}")
-    public ResponseEntity<KTXLogDetail> getSinglePost(@PathVariable long ktxId, @RequestBody PostGetLogDetailRequest request) {
-        return ResponseEntity.ok(ktxService.getSingleKTXPost(ktxId,request));
+    @GetMapping(value = "/{ktxId}")
+    public ResponseEntity<KTXLog> getSinglePost(@PathVariable long ktxId) {
+        return ResponseEntity.ok(ktxService.getSingleKTXPost(ktxId));
     }
 
     @ApiOperation(value = ApiDoc.KTX_CREATE)
