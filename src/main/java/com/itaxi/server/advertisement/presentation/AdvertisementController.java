@@ -27,11 +27,10 @@ public class AdvertisementController {
         return ResponseEntity.ok(advertisementService.getAdvertisement(imgName));
     }
 
-    @PostMapping("/{name}")
-    public ResponseEntity<AdGetImageResponse> getAdvertisementImage(@RequestBody AdGetImageRequest request){
+    @GetMapping("/image/{imgName}")
+    public ResponseEntity<AdGetImageResponse> getAdvertisementImage(@PathVariable String imgName){
 
-
-        return ResponseEntity.ok(advertisementService.getAdvertisementImage(request.getImgName()));
+        return ResponseEntity.ok(advertisementService.getAdvertisementImage(imgName));
     }
 
     @GetMapping

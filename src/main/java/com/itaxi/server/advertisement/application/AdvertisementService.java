@@ -33,12 +33,13 @@ public class AdvertisementService {
     private ArrayList<String> types = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
 
     @Transactional
-    public AdGetImageResponse getAdvertisementImage(String name) {
+    public AdGetImageResponse getAdvertisementImage(String imgName) {
         byte[] image;
-        Optional<Advertisement> advertisement = advertisementRepository.findByImgName(name);
+        Optional<Advertisement> advertisement = advertisementRepository.findByImgName(imgName);
         if(!advertisement.isPresent()) throw new ImageNotFoundException();
 
-        String path = advertisement.get().getPath() + name + '.' + advertisement.get().getImgType();
+        String path = advertisement.get().getPath() + imgName + '.' + advertisement.get().getImgType();
+        System.out.println(path);
 
         try {
             image = FileUtils.readFileToByteArray(new File(path));
