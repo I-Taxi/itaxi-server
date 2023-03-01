@@ -58,12 +58,15 @@ public class PostService {
         if(!member.isPresent()) {
             throw new MemberNotFoundException();
         }
-        if (member.get().isDeleted())
+        if (member.get().isDeleted()) {
             throw new MemberNotFoundException();
+        }
+
         MemberJoinInfo joinInfo = new MemberJoinInfo(member.get());
         MemberKTXJoinInfo ktxJoinInfo = new MemberKTXJoinInfo(member.get());
         List<PostLog> postLogs = new ArrayList<>();
         PriorityQueue<PostLog> pQueue = new PriorityQueue<>(Collections.reverseOrder());
+
         for(Post post : joinInfo.getPosts()) {
             pQueue.add(new PostLog(post));
         }
@@ -73,6 +76,7 @@ public class PostService {
         while(pQueue.size() > 0) {
             postLogs.add(pQueue.poll());
         }
+
         return postLogs;
     }
 
@@ -137,11 +141,13 @@ public class PostService {
         Post resPost = post.get();
         Place place = null;
         Stopover stopover = null;
+
         for (Long id : stopoverList) {
             place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
             stopover = new Stopover(new StopoverCreateDto(place, resPost));
             stopoverRepository.save(stopover);
         }
+
         List<Stopover> stopovers = stopoverRepository.findStopoversByPost(resPost);
         resPost.setStopovers(stopovers);
 
@@ -149,9 +155,11 @@ public class PostService {
         PostInfoResponse response = joinPost(result.getId(), joinDto);
 
         List<Long> stopoverIds = dto.getStopoverIds();
+
         for (Long id : stopoverIds) {
             placeService.updateView(id);
         }
+
         placeService.updateView(dto.getDepId());
         placeService.updateView(dto.getDstId());
 
@@ -184,7 +192,6 @@ public class PostService {
                 posts = postRepository.findAllByDeptTimeBetweenOrderByDeptTime(startDateTime, endDateTime);
             } else if (depId == null) {
                 posts = postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(destination, startDateTime, endDateTime);
-
                 places = getPlacesByPlaceType(destination.getPlaceType());
                 if (places != null) {
                     for (int i = 0; i < places.size(); i++) {
@@ -193,7 +200,6 @@ public class PostService {
                 }
             } else if (dstId == null) {
                 posts = postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(departure, startDateTime, endDateTime);
-
                 places = getPlacesByPlaceType(departure.getPlaceType());
                 if (places != null) {
                     for (int i = 0; i < places.size(); i++) {
@@ -202,7 +208,6 @@ public class PostService {
                 }
             } else {
                 posts = postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, destination, startDateTime, endDateTime);
-
                 List<Place> deptPlaces = getPlacesByPlaceType(departure.getPlaceType());
                 List<Place> dstPlaces = getPlacesByPlaceType(destination.getPlaceType());
                 if (deptPlaces != null && dstPlaces != null) {
@@ -218,7 +223,6 @@ public class PostService {
                 posts = postRepository.findAllByPostTypeAndDeptTimeBetweenOrderByDeptTime(postType, startDateTime, endDateTime);
             } else if (depId == null) {
                 posts = postRepository.findAllByPostTypeAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, destination, startDateTime, endDateTime);
-
                 places = getPlacesByPlaceType(destination.getPlaceType());
                 if (places != null) {
                     for (int i = 0; i < places.size(); i++) {
@@ -227,7 +231,6 @@ public class PostService {
                 }
             } else if (dstId == null) {
                 posts = postRepository.findAllByPostTypeAndDepartureAndDeptTimeBetweenOrderByDeptTime(postType, departure, startDateTime, endDateTime);
-
                 places = getPlacesByPlaceType(departure.getPlaceType());
                 if (places != null) {
                     for (int i = 0; i < places.size(); i++) {
@@ -236,7 +239,6 @@ public class PostService {
                 }
             } else {
                 posts = postRepository.findAllByPostTypeAndDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(postType, departure, destination, startDateTime, endDateTime);
-
                 List<Place> deptPlaces = getPlacesByPlaceType(departure.getPlaceType());
                 List<Place> dstPlaces = getPlacesByPlaceType(destination.getPlaceType());
                 if (deptPlaces != null && dstPlaces != null) {
@@ -263,9 +265,7 @@ public class PostService {
         if(!post.isPresent()) {
             throw new PostNotFoundException();
         }
-
         return new PostLog(post.get());
-
     }
 
     @Transactional
@@ -293,8 +293,10 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
-        if (member.get().isDeleted())
+
+        if (member.get().isDeleted()) {
             throw new MemberNotFoundException();
+        }
 
         Optional<Joiner> joiner = joinerRepository.findJoinerByPostAndMember(postInfo, memberInfo);
         if (!joiner.isPresent()) {
@@ -376,8 +378,6 @@ public class PostService {
             else{
                 newOwner = joinerInfo.getMember();
             }
-
-
         } else {
             throw new JoinerNotFoundException();
         }
@@ -406,8 +406,10 @@ public class PostService {
         } else {
             throw new MemberNotFoundException();
         }
-        if (member.get().isDeleted())
+
+        if (member.get().isDeleted()) {
             throw new MemberNotFoundException();
+        }
 
         long checkChangeMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), postInfo.getDeptTime());
         if (checkChangeMinutes < 3) {

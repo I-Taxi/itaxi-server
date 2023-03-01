@@ -1,7 +1,6 @@
 package com.itaxi.server.post.presentation;
 
 import com.itaxi.server.history.application.HistoryService;
-import com.itaxi.server.history.application.dto.HistoryLogDetail;
 import com.itaxi.server.member.domain.Member;
 import com.itaxi.server.post.application.dto.*;
 import com.itaxi.server.post.presentation.request.PostGetLogDetailRequest;

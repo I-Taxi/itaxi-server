@@ -1,6 +1,8 @@
 package com.itaxi.server.ktxPlace.application;
 
 import com.itaxi.server.cheaker.AdminChecker;
+import com.itaxi.server.exception.ktx.KTXBadCntException;
+import com.itaxi.server.exception.ktx.KTXNameEmptyException;
 import com.itaxi.server.exception.member.MemberNotAdminException;
 import com.itaxi.server.exception.place.PlaceNameDuplicationException;
 import com.itaxi.server.ktxPlace.application.dto.AddKTXPlaceDto;
@@ -24,10 +26,12 @@ import java.util.stream.Collectors;
 public class KTXPlaceService {
     private final KTXPlaceRepository ktxPlaceRepository;
     private final AdminChecker adminChecker;
-
     private final PlaceService placeService;
     @Transactional
     public KTXPlace create(AddKTXPlaceDto dto) {
+        if (dto.getName().equals(null) || dto.getName().equals("") || dto.getName().equals(" ")) throw new KTXNameEmptyException();
+        if (dto.getCnt() < 0) throw new KTXBadCntException();
+
         KTXPlace savedPlace = null;
 
         if (adminChecker.isAdmin(dto.getUid())) {
@@ -39,8 +43,6 @@ public class KTXPlaceService {
         } else {
             throw new MemberNotAdminException();
         }
-
-
 
         return savedPlace;
     }

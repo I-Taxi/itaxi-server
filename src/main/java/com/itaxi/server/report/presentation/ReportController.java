@@ -7,7 +7,6 @@ import com.itaxi.server.report.application.ReportService;
 import com.itaxi.server.report.application.dto.AddReportDto;
 import com.itaxi.server.report.application.dto.ReportGetResDto;
 import com.itaxi.server.report.application.dto.UpdateReportDto;
-import com.itaxi.server.report.presentation.response.ReportResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

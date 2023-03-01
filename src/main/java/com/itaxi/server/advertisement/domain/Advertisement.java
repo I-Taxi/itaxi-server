@@ -7,7 +7,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.nio.file.FileStore;
 
 @Where(clause = "deleted=false")
 @Entity
