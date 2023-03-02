@@ -203,7 +203,7 @@ public class PostService {
                 places = getPlacesByPlaceType(departure.getPlaceType());
                 if (places != null) {
                     for (int i = 0; i < places.size(); i++) {
-                        posts.addAll(postRepository.findAllByDestinationAndDeptTimeBetweenOrderByDeptTime(places.get(i), startDateTime, endDateTime));
+                        posts.addAll(postRepository.findAllByDepartureAndDeptTimeBetweenOrderByDeptTime(places.get(i), startDateTime, endDateTime));
                     }
                 }
             } else {
@@ -215,6 +215,14 @@ public class PostService {
                         for (int j = 0; j < dstPlaces.size(); j++) {
                             posts.addAll(postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(deptPlaces.get(i), dstPlaces.get(j), startDateTime, endDateTime));
                         }
+                    }
+                } else if (deptPlaces != null) {
+                    for (int i = 0; i < deptPlaces.size(); i++) {
+                        posts.addAll(postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(deptPlaces.get(i), destination, startDateTime, endDateTime));
+                    }
+                } else if (dstPlaces != null) {
+                    for (int i = 0; i < dstPlaces.size(); i++) {
+                        posts.addAll(postRepository.findAllByDepartureAndDestinationAndDeptTimeBetweenOrderByDeptTime(departure, dstPlaces.get(i), startDateTime, endDateTime));
                     }
                 }
             }
