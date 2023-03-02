@@ -27,7 +27,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("I-taxi Swagger")
                 .description("아이택시")
-                .version("1.0")
+                .version("2.0")
                 .build();
     }
 }

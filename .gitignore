@@ -39,6 +39,7 @@ out/
 ## Config file
 /src/main/resources/*.yaml
 /src/main/resources/*.yml
+/src/main/resources/*.p12
 /*.yml
 /src/main/java/com/itaxi/server/config/
 
