@@ -128,9 +128,9 @@ public class PostService {
         final Place departure = placeRepository.findById(dto.getDepId()).orElseThrow(PlaceNotFoundException::new);
         final Place destination = placeRepository.findById(dto.getDstId()).orElseThrow(PlaceNotFoundException::new);
 
-        if (departure.getPlaceType() < 0 || departure.getPlaceType() > 2) {
+        if (departure.getPlaceType() < 0 || departure.getPlaceType() > 5) {
             throw new PlaceBadPostTypeException();
-        } else if (destination.getPlaceType() < 0 || destination.getPlaceType() > 2) {
+        } else if (destination.getPlaceType() < 0 || destination.getPlaceType() > 5) {
             throw new PlaceBadPostTypeException();
         }
 
